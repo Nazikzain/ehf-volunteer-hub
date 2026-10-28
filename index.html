@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Volunteer with Ethnic Health Forum. Share your skills, support our community and make a difference.">
+  <title>Volunteer With Us | Ethnic Health Forum</title>
+
+  <style>
+    :root {
+      --navy: #10143b;
+      --blue: #2864d7;
+      --green: #398344;
+      --muted: #687087;
+      --border: #e4e7ef;
+      --background: #f5f7fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--navy);
+      background: var(--background);
+      line-height: 1.6;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+    }
+
+    .header-inner {
+      max-width: 1080px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .brand {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 42px auto;
+      padding: 0 20px;
+    }
+
+    .intro {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 30px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 43px);
+      line-height: 1.15;
+      margin: 12px 0;
+      letter-spacing: -1px;
+    }
+
+    .intro p { color: var(--muted); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 0.8fr 1.4fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .welcome, .form-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(16, 20, 59, 0.04);
+    }
+
+    .welcome {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .welcome h2 { font-size: 24px; }
+
+    .welcome p, .welcome li { color: #e1e5f3; }
+
+    .welcome ul { padding-left: 20px; }
+
+    .form-card h2 {
+      margin: 0 0 6px;
+      font-size: 23px;
+    }
+
+    .form-note {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 0;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 17px;
+      margin-top: 22px;
+    }
+
+    .field { min-width: 0; }
+    .full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #d5d9e5;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--navy);
+      font: inherit;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #b8cdfb;
+      border-color: var(--blue);
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    .consent input {
+      width: 17px;
+      height: 17px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      background: var(--blue);
+      color: white;
+      padding: 14px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover { background: #1d4fae; }
+    button:disabled { opacity: 0.65; cursor: wait; }
+
+    .message {
+      display: none;
+      padding: 13px;
+      border-radius: 9px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .message.success {
+      display: block;
+      color: #17622b;
+      background: #e9f7ec;
+    }
+
+    .message.error {
+      display: block;
+      color: #a32323;
+      background: #fff0f0;
+    }
+
+    .honeypot {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 25px 15px;
+    }
+
+    @media (max-width: 760px) {
+      main { margin: 26px auto; padding: 0 14px; }
+      .layout { grid-template-columns: 1fr; }
+      .welcome, .form-card { padding: 22px; }
+      .fields { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      header { padding: 14px 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <img class="logo" src="ehf-logo.png"
+           alt="Ethnic Health Forum logo"
+           onerror="this.style.display='none'">
+      <div class="brand">
+        Ethnic Health Forum
+        <small>Volunteering & Community Support</small>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div class="eyebrow">Make a difference</div>
+      <h1>Share Your Skills.<br>Strengthen Our Community.</h1>
+      <p>
+        Join Ethnic Health Forum as a volunteer. Tell us about your
+        skills, interests and availability so we can explore suitable
+        opportunities across our community projects.
+      </p>
+    </section>
+
+    <div class="layout">
+      <aside class="welcome">
+        <h2>Your time can make a difference.</h2>
+        <p>
+          We welcome people with different skills, experiences
+          and interests. Your application will help our team
+          understand how you may contribute.
+        </p>
+        <ul>
+          <li>Community engagement and outreach</li>
+          <li>Administration and project support</li>
+          <li>IT and digital skills</li>
+          <li>Events, communication and wellbeing</li>
+        </ul>
+        <p>Thank you for your interest in volunteering with EHF.</p>
+      </aside>
+
+      <section class="form-card">
+        <h2>Volunteer Registration</h2>
+        <p class="form-note">Fields marked * are required.</p>
+
+        <form id="volunteer-form">
+          <div class="fields">
+            <div class="field">
+              <label for="full_name">Full name *</label>
+              <input id="full_name" name="full_name"
+                     autocomplete="name" required maxlength="150">
+            </div>
+
+            <div class="field">
+              <label for="email">Email address *</label>
+              <input id="email" name="email" type="email"
+                     autocomplete="email" required maxlength="254">
+            </div>
+
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="phone" type="tel"
+                     autocomplete="tel" maxlength="40">
+            </div>
+
+            <div class="field">
+              <label for="expertise">Skills or area of expertise *</label>
+              <select id="expertise" name="expertise" required>
+                <option value="">Select an area</option>
+                <option>Community Engagement</option>
+                <option>Health and Wellbeing</option>
+                <option>Administration</option>
+                <option>IT & Digital Skills</option>
+                <option>Data Analysis</option>
+                <option>Marketing & Communications</option>
+                <option>Events & Activities</option>
+                <option>Translation & Languages</option>
+                <option>Project Management</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="availability">Availability *</label>
+              <select id="availability" name="availability" required>
+                <option value="">Select availability</option>
+                <option>Weekdays</option>
+                <option>Weekends</option>
+                <option>Evenings</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="referral_source">How did you hear about us?</label>
+              <select id="referral_source" name="referral_source">
+                <option value="">Select an option</option>
+                <option>Website</option>
+                <option>Social Media</option>
+                <option>Friend or Family</option>
+                <option>Community Organisation</option>
+                <option>Event</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="motivation">Why would you like to volunteer?</label>
+              <textarea id="motivation" name="motivation"
+                        maxlength="2000"
+                        placeholder="Tell us about your interests, experience or the skills you would like to contribute."></textarea>
+            </div>
+
+            <div class="field full">
+              <label class="consent" for="privacy_consent">
+                <input id="privacy_consent" type="checkbox" required>
+                <span>
+                  I agree that Ethnic Health Forum may use the information
+                  I provide to review my volunteer application and contact
+                  me about volunteering, in accordance with its privacy notice. *
+                </span>
+              </label>
+            </div>
+
+            <div class="honeypot" aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input id="website" name="website" tabindex="-1"
+                     autocomplete="off">
+            </div>
+
+            <div class="field full">
+              <button id="submit-button" type="submit">
+                Submit Volunteer Application
+              </button>
+              <div id="form-message" class="message" role="status"
+                   aria-live="polite"></div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    Ethnic Health Forum · Volunteer Registration
+  </footer>
+
+  <script>
+    const endpoint =
+      "https://ybbxfgxrxeonbfwhpdjf.supabase.co/functions/v1/volunteer-registration";
+
+    const form = document.getElementById("volunteer-form");
+    const button = document.getElementById("submit-button");
+    const message = document.getElementById("form-message");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      message.className = "message";
+      message.textContent = "";
+
+      if (document.getElementById("website").value) {
+        return;
+      }
+
+      const payload = {
+        full_name: document.getElementById("full_name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        expertise: document.getElementById("expertise").value,
+        availability: document.getElementById("availability").value,
+        motivation: document.getElementById("motivation").value.trim(),
+        referral_source: document.getElementById("referral_source").value,
+        privacy_consent: document.getElementById("privacy_consent").checked
+      };
+
+      if (!payload.privacy_consent) {
+        message.className = "message error";
+        message.textContent = "Please agree to the privacy notice before submitting.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Submitting...";
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok || !result.success) {
+          throw new Error("The application could not be submitted.");
+        }
+
+        message.className = "message success";
+        message.textContent =
+          "Thank you! Your volunteer application has been submitted successfully.";
+        form.reset();
+      } catch (error) {
+        message.className = "message error";
+        message.textContent =
+          "We could not submit your application right now. Please try again later.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Submit Volunteer Application";
+      }
+    });
+  </script>
+</body>
+</html>
