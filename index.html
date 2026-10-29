@@ -333,16 +333,28 @@
               </select>
             </div>
 
-            <div class="field">
-              <label for="availability">Availability *</label>
-              <select id="availability" name="availability" required>
-                <option value="">Select availability</option>
-                <option>Weekdays</option>
-                <option>Weekends</option>
-                <option>Evenings</option>
-                <option>Flexible</option>
-              </select>
-            </div>
+           
+<div class="field">
+  <label for="availability">Availability *</label>
+  <select id="availability" name="availability" required>
+    <option value="">Select availability</option>
+    <option value="Specific Days">Specific Days</option>
+    <option value="Flexible">Flexible</option>
+  </select>
+</div>
+
+<div class="field" id="specific-days-field" style="display: none;">
+  <label>Which days are you available? *</label>
+  <div class="days-options">
+    <label><input type="checkbox" name="available_days" value="Monday"> Monday</label>
+    <label><input type="checkbox" name="available_days" value="Tuesday"> Tuesday</label>
+    <label><input type="checkbox" name="available_days" value="Wednesday"> Wednesday</label>
+    <label><input type="checkbox" name="available_days" value="Thursday"> Thursday</label>
+    <label><input type="checkbox" name="available_days" value="Friday"> Friday</label>
+    <label><input type="checkbox" name="available_days" value="Saturday"> Saturday</label>
+    <label><input type="checkbox" name="available_days" value="Sunday"> Sunday</label>
+  </div>
+</div>
 
             <div class="field">
               <label for="referral_source">How did you hear about us?</label>
@@ -405,7 +417,14 @@
     const form = document.getElementById("volunteer-form");
     const button = document.getElementById("submit-button");
     const message = document.getElementById("form-message");
+    
+const availabilitySelect = document.getElementById("availability");
+const specificDaysField = document.getElementById("specific-days-field");
 
+availabilitySelect.addEventListener("change", () => {
+  specificDaysField.style.display =
+    availabilitySelect.value === "Specific Days" ? "block" : "none";
+});
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
@@ -423,6 +442,11 @@
         postcode: document.getElementById("postcode").value.trim(),
         expertise: document.getElementById("expertise").value,
         availability: document.getElementById("availability").value,
+
+        available_days: Array.from(
+  document.querySelectorAll('input[name="available_days"]:checked')
+).map(input => input.value),
+        
         motivation: document.getElementById("motivation").value.trim(),
         referral_source: document.getElementById("referral_source").value,
         privacy_consent: document.getElementById("privacy_consent").checked
