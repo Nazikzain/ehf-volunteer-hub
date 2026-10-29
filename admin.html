@@ -222,22 +222,132 @@
   </main>
 
   <script>
-    // No database connection is configured yet.
-    // Do not add service_role keys or passwords to this file.
+   
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL =
+    "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-    const loginForm = document.getElementById("login-form");
-    const loginMessage = document.getElementById("login-message");
+  // Replace this placeholder with your Publishable key.
+  // Never use a Secret key or service_role key here.
+  const SUPABASE_PUBLISHABLE_KEY =
+    "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
-    loginForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      loginMessage.textContent =
-        "Secure sign-in is not connected yet. Please complete the Supabase authentication setup before using this dashboard.";
-    });
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
-    document.getElementById("sign-out").addEventListener("click", () => {
-      document.getElementById("dashboard").style.display = "none";
-      document.getElementById("login-panel").style.display = "block";
-    });
+  const loginForm = document.getElementById("login-form");
+  const loginPanel = document.getElementById("login-panel");
+  const dashboard = document.getElementById("dashboard");
+  const loginMessage = document.getElementById("login-message");
+
+  function showMessage(text, isError = false) {
+    loginMessage.textContent = text;
+    loginMessage.style.color = isError ? "#b91c1c" : "#4e733b";
+  }
+
+  async function checkAdminAccess() {
+    const { data: { session }, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError || !session) {
+      loginPanel.style.display = "block";
+      dashboard.style.display = "none";
+      return;
+    }
+
+    const { data: roleRecord, error: roleError } = await client
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+
+    if (roleError || !roleRecord ||
+        !["admin"].includes(roleRecord.role)) {
+      await client.auth.signOut();
+      loginPanel.style.display = "block";
+      dashboard.style.display = "none";
+      showMessage(
+        "Access denied. An authorised EHF administrator account is required.",
+        true
+      );
+      return;
+    }
+
+    loginPanel.style.display = "none";
+    dashboard.style.display = "block";
+    showMessage("");
+  }
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (SUPABASE_PUBLISHABLE_KEY ===
+        sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC") {
+      showMessage(
+        "Please add your Supabase Publishable key to admin.html.",
+        true
+      );
+      return;
+    }
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const submitButton = loginForm.querySelector(
+      'button[type="submit"]'
+    );
+    submitButton.disabled = true;
+    showMessage("Signing in...");
+
+    try {
+      const { error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        showMessage(
+          "Sign-in failed. Check your email and password.",
+          true
+        );
+        return;
+      }
+
+      await checkAdminAccess();
+    } catch (error) {
+      showMessage(
+        "Unable to connect. Please try again later.",
+        true
+      );
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+
+  document.getElementById("sign-out").addEventListener(
+    "click",
+    async () => {
+      await client.auth.signOut();
+      dashboard.style.display = "none";
+      loginPanel.style.display = "block";
+      loginForm.reset();
+      showMessage("You have signed out.");
+    }
+  );
+
+  client.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") {
+      loginPanel.style.display = "block";
+      dashboard.style.display = "none";
+    }
+  });
+
+  checkAdminAccess();
+</script>
+
   </script>
 </body>
 </html>
