@@ -304,10 +304,17 @@
             </div>
 
             <div class="field">
-              <label for="phone">Phone number</label>
-              <input id="phone" name="phone" type="tel"
-                     autocomplete="tel" maxlength="40">
-            </div>
+    <label for="phone">Phone number</label>
+    <input id="phone" name="phone" type="tel"
+           autocomplete="tel" maxlength="40">
+</div>
+
+<div class="field">
+    <label for="postcode">Postcode</label>
+    <input id="postcode" name="postcode"
+           type="text" autocomplete="postal-code"
+           maxlength="12" placeholder="e.g. M1 1AE">
+</div>
 
             <div class="field">
               <label for="expertise">Skills or area of expertise *</label>
@@ -413,6 +420,7 @@
         full_name: document.getElementById("full_name").value.trim(),
         email: document.getElementById("email").value.trim(),
         phone: document.getElementById("phone").value.trim(),
+        postcode: document.getElementById("postcode").value.trim(),
         expertise: document.getElementById("expertise").value,
         availability: document.getElementById("availability").value,
         motivation: document.getElementById("motivation").value.trim(),
