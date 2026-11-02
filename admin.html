@@ -4,12 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta
-    name="description"
-    content="Ethnic Health Forum Volunteer Management Portal"
-  >
-
+  <meta name="description" content="EHF Volunteer Management Portal">
   <title>EHF | Volunteer Management</title>
 
   <style>
@@ -20,14 +15,12 @@
       --text: #1f2937;
       --muted: #64748b;
       --border: #e2e8f0;
-      --white: #ffffff;
+      --white: #fff;
       --danger: #b91c1c;
-      --success: #287a3e;
+      --orange: #b45309;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -37,7 +30,7 @@
     }
 
     header {
-      background: var(--white);
+      background: white;
       padding: 18px 5%;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -53,27 +46,27 @@
 
     header h1 {
       margin: 0;
-      font-size: 20px;
       color: var(--green);
+      font-size: 20px;
     }
 
     header p {
       margin: 5px 0 0;
-      font-size: 13px;
       color: var(--muted);
+      font-size: 13px;
     }
 
     main {
-      max-width: 1100px;
+      max-width: 1250px;
       margin: 35px auto;
       padding: 0 20px;
     }
 
     .panel {
-      background: var(--white);
+      background: white;
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 28px;
+      padding: 24px;
       box-shadow: 0 4px 16px #0f172a08;
     }
 
@@ -81,15 +74,23 @@
     #reset-panel {
       max-width: 600px;
       margin: 0 auto;
+      padding: 28px;
     }
 
-    h2 {
-      margin-top: 0;
+    #dashboard,
+    #reset-panel,
+    #details-panel {
+      display: none;
     }
 
-    .field {
-      margin: 20px 0;
+    h2 { margin-top: 0; }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
     }
+
+    .field { margin: 18px 0; }
 
     label {
       display: block;
@@ -98,15 +99,17 @@
       margin-bottom: 8px;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 12px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      font-size: 15px;
+      font-size: 14px;
+      background: white;
+      color: var(--text);
     }
 
-    input:focus {
+    input:focus, select:focus {
       outline: 2px solid #4e733b40;
       border-color: var(--green);
     }
@@ -116,47 +119,43 @@
       color: white;
       border: 0;
       border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 15px;
+      padding: 11px 17px;
+      font-size: 14px;
       cursor: pointer;
     }
 
-    button:hover {
-      opacity: .92;
-    }
+    button:hover { opacity: .9; }
 
     button:disabled {
-      opacity: .6;
+      opacity: .55;
       cursor: not-allowed;
     }
 
-    .secondary {
-      background: var(--blue);
-    }
+    .secondary { background: var(--blue); }
+    .danger { background: var(--danger); }
+    .warning { background: var(--orange); }
 
     .text-button {
       background: transparent;
       color: var(--blue);
-      padding: 10px 0;
       text-decoration: underline;
-    }
-
-    .muted {
-      color: var(--muted);
-      line-height: 1.6;
+      padding: 10px 0;
     }
 
     .message {
-      margin-top: 16px;
+      min-height: 20px;
+      margin-top: 14px;
       font-size: 14px;
       line-height: 1.6;
       overflow-wrap: anywhere;
-      min-height: 20px;
     }
 
-    #dashboard,
-    #reset-panel {
-      display: none;
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     .stats {
@@ -185,913 +184,1257 @@
       font-size: 28px;
     }
 
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 12px;
+      margin: 20px 0;
     }
 
-    .section-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 750px;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    tr:hover td { background: #f8fafc; }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .view-button {
+      background: var(--blue);
+      padding: 8px 12px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .detail-item {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .detail-item strong {
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-top: 20px;
     }
 
-    .section-card h3 {
-      margin-top: 0;
-    }
+    .hidden { display: none !important; }
 
-    @media (max-width: 650px) {
+    @media (max-width: 750px) {
       .stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .panel {
-        padding: 20px;
+      .toolbar {
+        grid-template-columns: 1fr;
       }
 
-      header {
-        padding: 15px 20px;
+      .detail-grid {
+        grid-template-columns: 1fr;
       }
+
+      .panel { padding: 18px; }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <img src="./ehf-logo.png" alt="EHF logo">
+<header>
+  <img src="./ehf-logo.png" alt="EHF logo">
+  <div>
+    <h1>EHF Volunteer Management</h1>
+    <p>Volunteer recruitment, performance and project tracking</p>
+  </div>
+</header>
 
-    <div>
-      <h1>EHF Volunteer Management</h1>
-      <p>
-        Volunteer recruitment, performance and project tracking
-      </p>
+<main>
+
+  <!-- LOGIN -->
+
+  <section class="panel" id="login-panel">
+    <h2>Management Login</h2>
+    <p class="muted">
+      Sign in using your authorised EHF management account.
+    </p>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password"
+          autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" id="login-button">Sign in</button>
+
+      <button type="button" class="text-button"
+        id="forgot-password">Forgot Password?</button>
+
+      <p id="login-message" class="message"
+        role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+
+  <!-- PASSWORD RESET -->
+
+  <section class="panel" id="reset-panel">
+    <h2>Set New Password</h2>
+    <p class="muted">Enter and confirm your new password.</p>
+
+    <form id="reset-form">
+      <div class="field">
+        <label for="new-password">New password</label>
+        <input id="new-password" type="password"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Confirm new password</label>
+        <input id="confirm-password" type="password"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" id="update-password-button">
+        Update Password
+      </button>
+
+      <p id="reset-message" class="message"
+        role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+
+  <!-- DASHBOARD -->
+
+  <section id="dashboard">
+
+    <div class="dashboard-header">
+      <div>
+        <h2>Management Dashboard</h2>
+        <p class="muted">Volunteer applications and programme overview</p>
+      </div>
+
+      <button id="sign-out" class="secondary" type="button">
+        Sign out
+      </button>
     </div>
-  </header>
-
-  <main>
-
-    <!-- MANAGEMENT LOGIN -->
-
-    <section class="panel" id="login-panel">
-
-      <h2>Management Login</h2>
-
-      <p class="muted">
-        Sign in using your authorised EHF management account.
-      </p>
-
-      <form id="login-form">
-
-        <div class="field">
-          <label for="email">Email address</label>
-
-          <input
-            id="email"
-            type="email"
-            autocomplete="username"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label for="password">Password</label>
-
-          <input
-            id="password"
-            type="password"
-            autocomplete="current-password"
-            required
-          >
-        </div>
-
-        <button type="submit" id="login-button">
-          Sign in
-        </button>
-
-        <button
-          type="button"
-          class="text-button"
-          id="forgot-password"
-        >
-          Forgot Password?
-        </button>
-
-        <p
-          id="login-message"
-          class="message"
-          role="status"
-          aria-live="polite"
-        ></p>
-
-      </form>
-
-    </section>
 
 
-    <!-- PASSWORD RECOVERY -->
+    <!-- STATISTICS -->
 
-    <section class="panel" id="reset-panel">
+    <div class="stats">
+      <div class="stat">
+        <span>Total applications</span>
+        <strong id="total-count">0</strong>
+      </div>
 
-      <h2>Set New Password</h2>
+      <div class="stat">
+        <span>Pending</span>
+        <strong id="pending-count">0</strong>
+      </div>
 
-      <p class="muted">
-        Enter and confirm your new password.
-      </p>
+      <div class="stat">
+        <span>Approved</span>
+        <strong id="approved-count">0</strong>
+      </div>
 
-      <form id="reset-form">
-
-        <div class="field">
-          <label for="new-password">
-            New password
-          </label>
-
-          <input
-            id="new-password"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label for="confirm-password">
-            Confirm new password
-          </label>
-
-          <input
-            id="confirm-password"
-            type="password"
-            minlength="8"
-            autocomplete="new-password"
-            required
-          >
-        </div>
-
-        <button
-          type="submit"
-          id="update-password-button"
-        >
-          Update Password
-        </button>
-
-        <p
-          id="reset-message"
-          class="message"
-          role="status"
-          aria-live="polite"
-        ></p>
-
-      </form>
-
-    </section>
+      <div class="stat">
+        <span>Rejected</span>
+        <strong id="rejected-count">0</strong>
+      </div>
+    </div>
 
 
-    <!-- ADMIN DASHBOARD -->
+    <!-- APPLICATIONS -->
 
-    <section id="dashboard">
-
+    <section class="panel">
       <div class="dashboard-header">
-
         <div>
-          <h2>Management Dashboard</h2>
-
+          <h2>Volunteer Applications</h2>
           <p class="muted">
-            Volunteer applications and programme overview
+            Review and manage volunteer registration requests.
           </p>
         </div>
 
-        <button
-          id="sign-out"
-          class="secondary"
-          type="button"
-        >
-          Sign out
+        <button id="refresh-button" class="secondary" type="button">
+          Refresh
         </button>
-
       </div>
 
+      <div class="toolbar">
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Search by name or email..."
+        >
 
-      <!-- APPLICATION STATISTICS -->
+        <select id="status-filter" aria-label="Filter by status">
+          <option value="all">All applications</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
 
-      <div class="stats">
-
-        <div class="stat">
-          <span>Total applications</span>
-          <strong id="total-count">—</strong>
-        </div>
-
-        <div class="stat">
-          <span>Pending</span>
-          <strong id="pending-count">—</strong>
-        </div>
-
-        <div class="stat">
-          <span>Approved</span>
-          <strong id="approved-count">—</strong>
-        </div>
-
-        <div class="stat">
-          <span>Rejected</span>
-          <strong id="rejected-count">—</strong>
-        </div>
-
+        <button id="clear-search" class="secondary" type="button">
+          Clear
+        </button>
       </div>
 
+      <p id="applications-message" class="message"
+        role="status" aria-live="polite"></p>
 
-      <!-- VOLUNTEER MANAGEMENT -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Expertise</th>
+              <th>Availability</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-      <div class="section-card">
-
-        <h3>Volunteer Management</h3>
-
-        <p class="muted">
-          Application review, approved hours, projects,
-          performance reviews and certificates will be
-          connected to the database in the next development stage.
-        </p>
-
+          <tbody id="applications-body">
+            <tr>
+              <td colspan="7">Loading applications...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
     </section>
 
-  </main>
+
+    <!-- APPLICATION DETAILS -->
+
+    <section class="panel" id="details-panel" style="margin-top:22px">
+      <div class="dashboard-header">
+        <h2>Application Details</h2>
+        <button id="close-details" class="secondary" type="button">
+          Close
+        </button>
+      </div>
+
+      <div id="details-content" class="detail-grid"></div>
+
+      <div class="actions">
+        <button id="approve-button" type="button">
+          Approve Application
+        </button>
+
+        <button id="reject-button" class="danger" type="button">
+          Reject Application
+        </button>
+
+        <button id="pending-button" class="warning" type="button">
+          Set as Pending
+        </button>
+      </div>
+
+      <p id="details-message" class="message"
+        role="status" aria-live="polite"></p>
+    </section>
+
+  </section>
+
+</main>
 
 
-  <!-- SUPABASE LIBRARY -->
+<!-- SUPABASE -->
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script>
+<script>
 
-    // ==========================================
-    // 1. SUPABASE CONFIGURATION
-    // ==========================================
+  // ==========================================
+  // 1. SUPABASE CONFIGURATION
+  // ==========================================
 
-    const SUPABASE_URL =
-      "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
+  const SUPABASE_URL =
+    "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-    // IMPORTANT:
-    // Keep your existing Supabase Publishable key.
-    // Never use a Secret key or service_role key.
+  // Keep your existing Publishable key here.
+  // Never use a Secret key or service_role key.
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC";
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC";
 
-    const client = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  // ==========================================
+  // 2. APPLICATION STATE
+  // ==========================================
+
+  let applications = [];
+  let selectedApplication = null;
+  let recoveryMode = false;
+
+  const loginPanel = document.getElementById("login-panel");
+  const resetPanel = document.getElementById("reset-panel");
+  const dashboard = document.getElementById("dashboard");
+  const loginForm = document.getElementById("login-form");
+  const resetForm = document.getElementById("reset-form");
+
+  const applicationsBody =
+    document.getElementById("applications-body");
+
+
+  // ==========================================
+  // 3. MESSAGE FUNCTION
+  // ==========================================
+
+  function showMessage(id, message, isError = false) {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent = message;
+    element.style.color = isError ? "#b91c1c" : "#287a3e";
+  }
+
+
+  // ==========================================
+  // 4. PAGE DISPLAY
+  // ==========================================
+
+  function showLogin() {
+    loginPanel.style.display = "block";
+    resetPanel.style.display = "none";
+    dashboard.style.display = "none";
+  }
+
+  function showPasswordReset() {
+    loginPanel.style.display = "none";
+    resetPanel.style.display = "block";
+    dashboard.style.display = "none";
+
+    resetForm.reset();
+
+    showMessage(
+      "reset-message",
+      "Enter your new password."
     );
+  }
+
+  function showDashboard() {
+    loginPanel.style.display = "none";
+    resetPanel.style.display = "none";
+    dashboard.style.display = "block";
+  }
 
 
-    // ==========================================
-    // 2. PAGE ELEMENTS
-    // ==========================================
+  // ==========================================
+  // 5. VERIFY ADMIN ROLE
+  // ==========================================
 
-    const loginPanel =
-      document.getElementById("login-panel");
+  async function checkAdminAccess() {
+    const {
+      data: { session },
+      error: sessionError
+    } = await client.auth.getSession();
 
-    const resetPanel =
-      document.getElementById("reset-panel");
-
-    const dashboard =
-      document.getElementById("dashboard");
-
-    const loginForm =
-      document.getElementById("login-form");
-
-    const resetForm =
-      document.getElementById("reset-form");
-
-    let recoveryMode = false;
-
-
-    // ==========================================
-    // 3. MESSAGE HANDLING
-    // ==========================================
-
-    function showMessage(
-      elementId,
-      message,
-      isError = false
-    ) {
-
-      const element =
-        document.getElementById(elementId);
-
-      if (!element) return;
-
-      element.textContent = message;
-
-      element.style.color = isError
-        ? "#b91c1c"
-        : "#287a3e";
+    if (sessionError) {
+      showLogin();
+      showMessage(
+        "login-message",
+        "Session error: " + sessionError.message,
+        true
+      );
+      return false;
     }
 
-
-    // ==========================================
-    // 4. PAGE DISPLAY FUNCTIONS
-    // ==========================================
-
-    function showLogin() {
-
-      loginPanel.style.display = "block";
-      resetPanel.style.display = "none";
-      dashboard.style.display = "none";
-
+    if (!session) {
+      showLogin();
+      return false;
     }
 
+    const {
+      data: roleRecord,
+      error: roleError
+    } = await client
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
 
-    function showPasswordReset() {
-
-      loginPanel.style.display = "none";
-      resetPanel.style.display = "block";
-      dashboard.style.display = "none";
+    if (roleError) {
+      console.error("Role verification error:", roleError);
+      showLogin();
 
       showMessage(
-        "reset-message",
-        "Enter your new password."
+        "login-message",
+        "Role verification error: " + roleError.message,
+        true
       );
 
+      return false;
     }
 
+    if (!roleRecord) {
+      showLogin();
 
-    function showDashboard() {
+      showMessage(
+        "login-message",
+        "No role record found for user: " + session.user.id,
+        true
+      );
 
-      loginPanel.style.display = "none";
-      resetPanel.style.display = "none";
-      dashboard.style.display = "block";
-
+      return false;
     }
 
+    if (roleRecord.role !== "admin") {
+      showLogin();
 
-    // ==========================================
-    // 5. ADMIN ROLE VERIFICATION
-    // ==========================================
+      showMessage(
+        "login-message",
+        "Incorrect role: " + roleRecord.role,
+        true
+      );
 
-    async function checkAdminAccess() {
+      return false;
+    }
+
+    showDashboard();
+
+    await loadApplications();
+
+    return true;
+  }
+
+
+  // ==========================================
+  // 6. LOGIN
+  // ==========================================
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    const button =
+      document.getElementById("login-button");
+
+    button.disabled = true;
+
+    showMessage("login-message", "Signing in...");
+
+    try {
+      const { error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        showMessage(
+          "login-message",
+          "Sign-in failed: " + error.message,
+          true
+        );
+        return;
+      }
+
+      await checkAdminAccess();
+
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        "login-message",
+        "Unexpected error: " + error.message,
+        true
+      );
+
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+
+  // ==========================================
+  // 7. FORGOT PASSWORD
+  // ==========================================
+
+  document.getElementById("forgot-password")
+    .addEventListener("click", async () => {
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      if (!email) {
+        showMessage(
+          "login-message",
+          "Enter your email address first.",
+          true
+        );
+        return;
+      }
+
+      const button =
+        document.getElementById("forgot-password");
+
+      button.disabled = true;
+
+      showMessage(
+        "login-message",
+        "Sending recovery email..."
+      );
+
+      try {
+        const { error } =
+          await client.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/admin.html"
+          });
+
+        if (error) {
+          showMessage(
+            "login-message",
+            "Recovery error: " + error.message,
+            true
+          );
+        } else {
+          showMessage(
+            "login-message",
+            "Recovery email sent. Check your inbox and spam folder."
+          );
+        }
+
+      } catch (error) {
+        showMessage(
+          "login-message",
+          error.message,
+          true
+        );
+
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+
+  // ==========================================
+  // 8. UPDATE PASSWORD
+  // ==========================================
+
+  resetForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const password =
+      document.getElementById("new-password").value;
+
+    const confirm =
+      document.getElementById("confirm-password").value;
+
+    const button =
+      document.getElementById("update-password-button");
+
+    if (password.length < 8) {
+      showMessage(
+        "reset-message",
+        "Password must contain at least 8 characters.",
+        true
+      );
+      return;
+    }
+
+    if (password !== confirm) {
+      showMessage(
+        "reset-message",
+        "Passwords do not match.",
+        true
+      );
+      return;
+    }
+
+    button.disabled = true;
+
+    showMessage("reset-message", "Updating password...");
+
+    try {
+      const { error } = await client.auth.updateUser({
+        password
+      });
+
+      if (error) {
+        showMessage(
+          "reset-message",
+          "Password update failed: " + error.message,
+          true
+        );
+        return;
+      }
+
+      await client.auth.signOut();
+
+      recoveryMode = false;
+      resetForm.reset();
+      loginForm.reset();
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Password updated. You can now sign in."
+      );
+
+    } catch (error) {
+      showMessage(
+        "reset-message",
+        error.message,
+        true
+      );
+
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+
+  // ==========================================
+  // 9. LOAD VOLUNTEER APPLICATIONS
+  // ==========================================
+
+  async function loadApplications() {
+
+    applicationsBody.innerHTML = `
+      <tr><td colspan="7">Loading applications...</td></tr>
+    `;
+
+    showMessage(
+      "applications-message",
+      "Loading applications..."
+    );
+
+    const {
+      data,
+      error
+    } = await client
+      .from("volunteer_intake")
+      .select(`
+        id,
+        full_name,
+        email,
+        phone,
+        postcode,
+        expertise,
+        availability,
+        available_days,
+        motivation,
+        referral_source,
+        privacy_consent,
+        status,
+        submitted_at
+      `)
+      .order("submitted_at", { ascending: false });
+
+    if (error) {
+      console.error("Applications loading error:", error);
+
+      applicationsBody.innerHTML = `
+        <tr>
+          <td colspan="7">Unable to load applications.</td>
+        </tr>
+      `;
+
+      showMessage(
+        "applications-message",
+        "Database error: " + error.message,
+        true
+      );
+
+      return;
+    }
+
+    applications = data || [];
+
+    updateStatistics();
+    renderApplications();
+
+    showMessage(
+      "applications-message",
+      applications.length === 0
+        ? "No volunteer applications have been submitted yet. You can test the registration form."
+        : applications.length + " application(s) loaded successfully."
+    );
+  }
+
+
+  // ==========================================
+  // 10. UPDATE STATISTICS
+  // ==========================================
+
+  function updateStatistics() {
+
+    const total = applications.length;
+
+    const pending = applications.filter(
+      item => item.status === "pending"
+    ).length;
+
+    const approved = applications.filter(
+      item => item.status === "approved"
+    ).length;
+
+    const rejected = applications.filter(
+      item => item.status === "rejected"
+    ).length;
+
+    document.getElementById("total-count").textContent = total;
+    document.getElementById("pending-count").textContent = pending;
+    document.getElementById("approved-count").textContent = approved;
+    document.getElementById("rejected-count").textContent = rejected;
+  }
+
+
+  // ==========================================
+  // 11. SAFE TEXT DISPLAY
+  // ==========================================
+
+  function makeCell(value) {
+    const cell = document.createElement("td");
+    cell.textContent = value ?? "—";
+    return cell;
+  }
+
+  function makeStatus(status) {
+    const span = document.createElement("span");
+
+    span.className = "status status-" + status;
+    span.textContent = status || "unknown";
+
+    return span;
+  }
+
+
+  // ==========================================
+  // 12. RENDER APPLICATIONS TABLE
+  // ==========================================
+
+  function renderApplications() {
+
+    const search =
+      document.getElementById("search-input")
+        .value.trim().toLowerCase();
+
+    const filter =
+      document.getElementById("status-filter").value;
+
+    const filtered = applications.filter(item => {
+
+      const matchesSearch =
+        (item.full_name || "").toLowerCase().includes(search) ||
+        (item.email || "").toLowerCase().includes(search);
+
+      const matchesStatus =
+        filter === "all" || item.status === filter;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    applicationsBody.innerHTML = "";
+
+    if (filtered.length === 0) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 7;
+      cell.textContent = applications.length === 0
+        ? "No applications available."
+        : "No matching applications found.";
+
+      row.appendChild(cell);
+      applicationsBody.appendChild(row);
+
+      return;
+    }
+
+    filtered.forEach(item => {
+
+      const row = document.createElement("tr");
+
+      row.appendChild(makeCell(item.full_name));
+      row.appendChild(makeCell(item.email));
+      row.appendChild(makeCell(item.expertise));
+      row.appendChild(makeCell(item.availability));
+
+      const date = item.submitted_at
+        ? new Date(item.submitted_at).toLocaleDateString()
+        : "—";
+
+      row.appendChild(makeCell(date));
+
+      const statusCell = document.createElement("td");
+      statusCell.appendChild(makeStatus(item.status));
+      row.appendChild(statusCell);
+
+      const actionCell = document.createElement("td");
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.className = "view-button";
+      button.textContent = "View details";
+
+      button.addEventListener("click", () => {
+        openApplicationDetails(item.id);
+      });
+
+      actionCell.appendChild(button);
+      row.appendChild(actionCell);
+
+      applicationsBody.appendChild(row);
+    });
+  }
+
+
+  // ==========================================
+  // 13. APPLICATION DETAILS
+  // ==========================================
+
+  function addDetail(label, value) {
+
+    const item = document.createElement("div");
+    item.className = "detail-item";
+
+    const title = document.createElement("span");
+    title.textContent = label;
+
+    const content = document.createElement("strong");
+    content.textContent = value ?? "Not provided";
+
+    item.appendChild(title);
+    item.appendChild(content);
+
+    return item;
+  }
+
+
+  function openApplicationDetails(id) {
+
+    const item = applications.find(
+      application => application.id === id
+    );
+
+    if (!item) return;
+
+    selectedApplication = item;
+
+    const content =
+      document.getElementById("details-content");
+
+    content.innerHTML = "";
+
+    const details = [
+      ["Full name", item.full_name],
+      ["Email", item.email],
+      ["Phone", item.phone],
+      ["Postcode", item.postcode],
+      ["Expertise", item.expertise],
+      ["Availability", item.availability],
+      [
+        "Available days",
+        Array.isArray(item.available_days)
+          ? item.available_days.join(", ")
+          : "Not provided"
+      ],
+      ["Motivation", item.motivation],
+      ["Referral source", item.referral_source],
+      [
+        "Privacy consent",
+        item.privacy_consent ? "Accepted" : "Not accepted"
+      ],
+      ["Status", item.status],
+      [
+        "Submitted at",
+        item.submitted_at
+          ? new Date(item.submitted_at).toLocaleString()
+          : "Not available"
+      ],
+      ["Application ID", item.id]
+    ];
+
+    details.forEach(([label, value]) => {
+      content.appendChild(addDetail(label, value));
+    });
+
+    const panel =
+      document.getElementById("details-panel");
+
+    panel.style.display = "block";
+
+    showMessage(
+      "details-message",
+      "Review the application before changing its status."
+    );
+
+    document.getElementById("approve-button").disabled =
+      item.status === "approved";
+
+    document.getElementById("reject-button").disabled =
+      item.status === "rejected";
+
+    document.getElementById("pending-button").disabled =
+      item.status === "pending";
+
+    panel.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+
+  // ==========================================
+  // 14. UPDATE APPLICATION STATUS
+  // ==========================================
+
+  async function updateApplicationStatus(newStatus) {
+
+    if (!selectedApplication) return;
+
+    const allowedStatuses = [
+      "pending",
+      "approved",
+      "rejected"
+    ];
+
+    if (!allowedStatuses.includes(newStatus)) {
+      showMessage(
+        "details-message",
+        "Invalid application status.",
+        true
+      );
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to change this application to " +
+      newStatus + "?"
+    );
+
+    if (!confirmed) return;
+
+    const buttons = [
+      document.getElementById("approve-button"),
+      document.getElementById("reject-button"),
+      document.getElementById("pending-button")
+    ];
+
+    buttons.forEach(button => button.disabled = true);
+
+    showMessage(
+      "details-message",
+      "Updating application status..."
+    );
+
+    const {
+      data,
+      error
+    } = await client
+      .from("volunteer_intake")
+      .update({ status: newStatus })
+      .eq("id", selectedApplication.id)
+      .select("id, status")
+      .single();
+
+    if (error) {
+      console.error("Status update error:", error);
+
+      showMessage(
+        "details-message",
+        "Update failed: " + error.message,
+        true
+      );
+
+      buttons.forEach(button => button.disabled = false);
+
+      return;
+    }
+
+    if (!data) {
+      showMessage(
+        "details-message",
+        "No updated record was returned. Check the database policy.",
+        true
+      );
+
+      buttons.forEach(button => button.disabled = false);
+
+      return;
+    }
+
+    showMessage(
+      "details-message",
+      "Application status updated successfully."
+    );
+
+    selectedApplication.status = data.status;
+
+    await loadApplications();
+
+    openApplicationDetails(selectedApplication.id);
+  }
+
+
+  document.getElementById("approve-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("approved");
+    });
+
+  document.getElementById("reject-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("rejected");
+    });
+
+  document.getElementById("pending-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("pending");
+    });
+
+
+  // ==========================================
+  // 15. SEARCH AND FILTER
+  // ==========================================
+
+  document.getElementById("search-input")
+    .addEventListener("input", renderApplications);
+
+  document.getElementById("status-filter")
+    .addEventListener("change", renderApplications);
+
+  document.getElementById("clear-search")
+    .addEventListener("click", () => {
+
+      document.getElementById("search-input").value = "";
+      document.getElementById("status-filter").value = "all";
+
+      renderApplications();
+    });
+
+
+  // ==========================================
+  // 16. REFRESH APPLICATIONS
+  // ==========================================
+
+  document.getElementById("refresh-button")
+    .addEventListener("click", async () => {
+
+      const button =
+        document.getElementById("refresh-button");
+
+      button.disabled = true;
+      button.textContent = "Refreshing...";
+
+      await loadApplications();
+
+      button.disabled = false;
+      button.textContent = "Refresh";
+    });
+
+
+  // ==========================================
+  // 17. CLOSE DETAILS
+  // ==========================================
+
+  document.getElementById("close-details")
+    .addEventListener("click", () => {
+
+      document.getElementById("details-panel")
+        .style.display = "none";
+
+      selectedApplication = null;
+    });
+
+
+  // ==========================================
+  // 18. SIGN OUT
+  // ==========================================
+
+  document.getElementById("sign-out")
+    .addEventListener("click", async () => {
+
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        alert("Sign out failed: " + error.message);
+        return;
+      }
+
+      applications = [];
+      selectedApplication = null;
+      loginForm.reset();
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "You have signed out successfully."
+      );
+    });
+
+
+  // ==========================================
+  // 19. AUTHENTICATION STATE
+  // ==========================================
+
+  client.auth.onAuthStateChange((event) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryMode = true;
+      showPasswordReset();
+    }
+
+    if (event === "SIGNED_OUT") {
+      recoveryMode = false;
+      showLogin();
+    }
+
+  });
+
+
+  // ==========================================
+  // 20. INITIALISE
+  // ==========================================
+
+  async function initialise() {
+
+    if (
+      SUPABASE_PUBLISHABLE_KEY ===
+      "PASTE_YOUR_PUBLISHABLE_KEY_HERE"
+    ) {
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Please configure your Supabase Publishable key.",
+        true
+      );
+
+      return;
+    }
+
+    try {
 
       const {
         data: { session },
-        error: sessionError
+        error
       } = await client.auth.getSession();
 
-
-      // Check session
-
-      if (sessionError) {
-
+      if (error) {
         showLogin();
 
         showMessage(
           "login-message",
-          "Session error: " + sessionError.message,
-          true
-        );
-
-        return false;
-      }
-
-
-      if (!session) {
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "No active session. Please sign in.",
-          true
-        );
-
-        return false;
-      }
-
-
-      // Check user role in Supabase
-
-      const {
-        data: roleRecord,
-        error: roleError
-      } = await client
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-
-
-      // Display the actual database error
-
-      if (roleError) {
-
-        console.error(
-          "Role verification error:",
-          roleError
-        );
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "Role verification error: " +
-          roleError.message,
-          true
-        );
-
-        return false;
-      }
-
-
-      // Check whether the user has a role record
-
-      if (!roleRecord) {
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "No role record found for user: " +
-          session.user.id,
-          true
-        );
-
-        return false;
-      }
-
-
-      // Check administrator permission
-
-      if (roleRecord.role !== "admin") {
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "Incorrect role: " + roleRecord.role,
-          true
-        );
-
-        return false;
-      }
-
-
-      // Access granted
-
-      console.log(
-        "Administrator access granted:",
-        session.user.id
-      );
-
-      showDashboard();
-
-      return true;
-
-    }
-
-
-    // ==========================================
-    // 6. ADMIN LOGIN
-    // ==========================================
-
-    loginForm.addEventListener(
-      "submit",
-      async (event) => {
-
-        event.preventDefault();
-
-        const email =
-          document.getElementById("email").value.trim();
-
-        const password =
-          document.getElementById("password").value;
-
-        const button =
-          document.getElementById("login-button");
-
-        button.disabled = true;
-
-        showMessage(
-          "login-message",
-          "Signing in..."
-        );
-
-        try {
-
-          const { error } =
-            await client.auth.signInWithPassword({
-
-              email: email,
-              password: password
-
-            });
-
-
-          if (error) {
-
-            console.error(
-              "Login error:",
-              error
-            );
-
-            showMessage(
-              "login-message",
-              "Sign-in failed: " + error.message,
-              true
-            );
-
-            return;
-          }
-
-
-          await checkAdminAccess();
-
-        } catch (error) {
-
-          console.error(error);
-
-          showMessage(
-            "login-message",
-            "Unexpected error: " + error.message,
-            true
-          );
-
-        } finally {
-
-          button.disabled = false;
-
-        }
-
-      }
-    );
-
-
-    // ==========================================
-    // 7. FORGOT PASSWORD
-    // ==========================================
-
-    document
-      .getElementById("forgot-password")
-      .addEventListener(
-        "click",
-        async () => {
-
-          const email =
-            document.getElementById("email").value.trim();
-
-
-          if (!email) {
-
-            showMessage(
-              "login-message",
-              "Please enter your email address first.",
-              true
-            );
-
-            return;
-          }
-
-
-          const button =
-            document.getElementById("forgot-password");
-
-          button.disabled = true;
-
-          showMessage(
-            "login-message",
-            "Sending recovery email..."
-          );
-
-
-          try {
-
-            const { error } =
-              await client.auth.resetPasswordForEmail(
-                email,
-                {
-                  redirectTo:
-                    window.location.origin + "/admin.html"
-                }
-              );
-
-
-            if (error) {
-
-              console.error(
-                "Recovery email error:",
-                error
-              );
-
-              showMessage(
-                "login-message",
-                "Recovery error: " + error.message,
-                true
-              );
-
-            } else {
-
-              showMessage(
-                "login-message",
-                "Recovery email sent. Check your inbox and spam folder."
-              );
-
-            }
-
-          } catch (error) {
-
-            console.error(error);
-
-            showMessage(
-              "login-message",
-              "Unable to send recovery email.",
-              true
-            );
-
-          } finally {
-
-            button.disabled = false;
-
-          }
-
-        }
-      );
-
-
-    // ==========================================
-    // 8. UPDATE PASSWORD
-    // ==========================================
-
-    resetForm.addEventListener(
-      "submit",
-      async (event) => {
-
-        event.preventDefault();
-
-        const password =
-          document.getElementById("new-password").value;
-
-        const confirmPassword =
-          document.getElementById("confirm-password").value;
-
-        const button =
-          document.getElementById("update-password-button");
-
-
-        if (password.length < 8) {
-
-          showMessage(
-            "reset-message",
-            "Password must contain at least 8 characters.",
-            true
-          );
-
-          return;
-        }
-
-
-        if (password !== confirmPassword) {
-
-          showMessage(
-            "reset-message",
-            "Passwords do not match.",
-            true
-          );
-
-          return;
-        }
-
-
-        button.disabled = true;
-
-        showMessage(
-          "reset-message",
-          "Updating password..."
-        );
-
-
-        try {
-
-          const { error } =
-            await client.auth.updateUser({
-
-              password: password
-
-            });
-
-
-          if (error) {
-
-            console.error(
-              "Password update error:",
-              error
-            );
-
-            showMessage(
-              "reset-message",
-              "Password update failed: " + error.message,
-              true
-            );
-
-            return;
-          }
-
-
-          await client.auth.signOut();
-
-          recoveryMode = false;
-
-          resetForm.reset();
-
-          showLogin();
-
-          showMessage(
-            "login-message",
-            "Password updated successfully. Please sign in."
-          );
-
-        } catch (error) {
-
-          console.error(error);
-
-          showMessage(
-            "reset-message",
-            "Unable to update password: " + error.message,
-            true
-          );
-
-        } finally {
-
-          button.disabled = false;
-
-        }
-
-      }
-    );
-
-
-    // ==========================================
-    // 9. SIGN OUT
-    // ==========================================
-
-    document
-      .getElementById("sign-out")
-      .addEventListener(
-        "click",
-        async () => {
-
-          const { error } =
-            await client.auth.signOut();
-
-
-          if (error) {
-
-            alert(
-              "Sign out failed: " + error.message
-            );
-
-            return;
-          }
-
-
-          recoveryMode = false;
-
-          loginForm.reset();
-
-          showLogin();
-
-          showMessage(
-            "login-message",
-            "You have signed out successfully."
-          );
-
-        }
-      );
-
-
-    // ==========================================
-    // 10. AUTHENTICATION STATE
-    // ==========================================
-
-    client.auth.onAuthStateChange(
-      (event, session) => {
-
-        console.log(
-          "Authentication event:",
-          event
-        );
-
-
-        if (event === "PASSWORD_RECOVERY") {
-
-          recoveryMode = true;
-
-          showPasswordReset();
-
-        }
-
-
-        if (event === "SIGNED_OUT") {
-
-          recoveryMode = false;
-
-          showLogin();
-
-        }
-
-      }
-    );
-
-
-    // ==========================================
-    // 11. APPLICATION INITIALISATION
-    // ==========================================
-
-    async function initialise() {
-
-      if (
-        SUPABASE_PUBLISHABLE_KEY ===
-        "PASTE_YOUR_PUBLISHABLE_KEY_HERE"
-      ) {
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "Supabase Publishable key is not configured.",
+          "Session error: " + error.message,
           true
         );
 
         return;
       }
 
-
-      try {
-
-        const {
-          data: { session },
-          error
-        } = await client.auth.getSession();
-
-
-        if (error) {
-
-          showLogin();
-
-          showMessage(
-            "login-message",
-            "Session error: " + error.message,
-            true
-          );
-
-          return;
-        }
-
-
-        if (recoveryMode) {
-
-          showPasswordReset();
-
-          return;
-        }
-
-
-        if (session) {
-
-          await checkAdminAccess();
-
-        } else {
-
-          showLogin();
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Initialisation error:",
-          error
-        );
-
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "Application error: " + error.message,
-          true
-        );
-
+      if (recoveryMode) {
+        showPasswordReset();
+        return;
       }
 
+      if (session) {
+        await checkAdminAccess();
+      } else {
+        showLogin();
+      }
+
+    } catch (error) {
+
+      console.error("Initialisation error:", error);
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Application error: " + error.message,
+        true
+      );
     }
+  }
 
+  initialise();
 
-    initialise();
-
-  </script>
+</script>
 
 </body>
 </html>
