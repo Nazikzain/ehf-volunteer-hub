@@ -317,6 +317,17 @@
 .module-panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:22px;margin:17px 0}
 .module-placeholder{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:9px;padding:20px;color:var(--muted);line-height:1.7}
 .module-placeholder strong{display:block;color:var(--text);margin-bottom:6px}
+
+.profile-candidate-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:14px}
+.profile-candidate{border:1px solid var(--border);border-radius:10px;padding:16px;background:#fff;min-width:0}
+.profile-candidate h4{margin:0 0 8px;color:var(--text)}
+.profile-candidate p{margin:5px 0;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.profile-create-form{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end;margin-top:13px}
+.profile-create-form label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.profile-create-form input,.profile-create-form select{width:100%;padding:9px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text)}
+.profile-status{display:inline-block;padding:4px 9px;border-radius:20px;background:#e8eef7;color:#2c5282;font-size:12px;text-transform:capitalize}
+@media(max-width:800px){.profile-candidate-list{grid-template-columns:1fr}.profile-create-form{grid-template-columns:1fr}}
+
 @media(max-width:1050px){.workspace{grid-template-columns:205px minmax(0,1fr)}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.workspace{grid-template-columns:1fr}.sidebar{position:static;min-height:0}.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.nav-label{grid-column:1/-1}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:0 12px}}
 
@@ -557,7 +568,23 @@
     </section>
 
 
-        <div class="section-view" id="profiles-view"><div class="module-panel"><h2>Volunteer Profiles</h2><div class="module-placeholder"><strong>Volunteer profile management</strong>Manage accepted applicants, volunteer status, start dates and end dates. Database workflow connection is the next development stage.</div></div></div>
+        <div class="section-view" id="profiles-view">
+          <section class="module-panel">
+            <div class="dashboard-header">
+              <div><h2>Volunteer Profiles</h2><p class="muted">Create official volunteer records from accepted applications and manage their status.</p></div>
+              <button class="secondary" id="refresh-profiles" type="button">Refresh</button>
+            </div>
+            <p id="profiles-message" class="message" role="status" aria-live="polite"></p>
+            <h3>Accepted applicants awaiting a profile</h3>
+            <p class="muted">Only accepted applications that do not already have a volunteer profile are listed here.</p>
+            <div id="eligible-applicants" class="profile-candidate-list"><p class="muted">Open this section to load accepted applicants.</p></div>
+          </section>
+          <section class="module-panel">
+            <h3>Registered volunteer profiles</h3>
+            <div class="toolbar"><input id="profile-search" type="search" placeholder="Search by name or email..." aria-label="Search volunteer profiles"></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Expertise</th><th>Start date</th><th>End date</th><th>Status</th></tr></thead><tbody id="profiles-body"><tr><td colspan="6">Profiles will load when this section is opened.</td></tr></tbody></table></div>
+          </section>
+        </div>
         <div class="section-view" id="hours-view"><div class="module-panel"><h2>Attendance &amp; Volunteer Hours</h2><div class="module-placeholder"><strong>Time log review</strong>Review pending submissions, approve or reject hours, and inspect reviewer comments.</div></div></div>
         <div class="section-view" id="performance-view"><div class="module-panel"><h2>Performance Reviews</h2><div class="module-placeholder"><strong>Volunteer performance</strong>Record reliability, teamwork, communication and quality scores, achievements and improvement areas.</div></div></div>
         <div class="section-view" id="certificates-view"><div class="module-panel"><h2>Certificates</h2><div class="module-placeholder"><strong>Certificate management</strong>Track eligibility, required hours, approval, issue and delivery status.</div></div></div>
@@ -1477,6 +1504,137 @@
 
 
 
+  // ==========================================
+  // VOLUNTEER PROFILE MANAGEMENT
+  // ==========================================
+  function escapeProfileText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[character]);
+  }
+
+  async function loadVolunteerProfiles() {
+    const candidateBox = document.getElementById("eligible-applicants");
+    const profileBody = document.getElementById("profiles-body");
+    showMessage("profiles-message", "Loading volunteer profiles...");
+    candidateBox.innerHTML = '<p class="muted">Loading accepted applicants...</p>';
+    profileBody.innerHTML = '<tr><td colspan="6">Loading profiles...</td></tr>';
+
+    const { data: profileRows, error: profileError } = await client
+      .from("volunteer_profiles")
+      .select("id, intake_id, start_date, end_date, volunteer_status, created_at")
+      .order("created_at", { ascending: false });
+    if (profileError) {
+      console.error("Volunteer profiles load error:", profileError);
+      candidateBox.textContent = "Unable to load volunteer profiles.";
+      profileBody.innerHTML = '<tr><td colspan="6">Unable to load profiles.</td></tr>';
+      showMessage("profiles-message", "Database error: " + profileError.message, true);
+      return;
+    }
+
+    const profiles = profileRows || [];
+    const profileIntakeIds = new Set(profiles.map(row => String(row.intake_id)));
+    const profileIds = profiles.map(row => String(row.intake_id)).filter(Boolean);
+    let linkedApplications = [];
+    if (profileIds.length) {
+      const { data, error } = await client.from("volunteer_intake")
+        .select("id, full_name, email, expertise")
+        .in("id", profileIds);
+      if (error) {
+        console.error("Linked application lookup error:", error);
+      } else {
+        linkedApplications = data || [];
+      }
+    }
+    const applicationById = new Map(linkedApplications.map(row => [String(row.id), row]));
+
+    const acceptedWithoutProfile = applications.filter(row =>
+      row.status === "accepted" && !profileIntakeIds.has(String(row.id))
+    );
+    if (!acceptedWithoutProfile.length) {
+      candidateBox.innerHTML = '<div class="module-placeholder">There are no accepted applicants awaiting a profile.</div>';
+    } else {
+      candidateBox.innerHTML = acceptedWithoutProfile.map(row => `
+        <article class="profile-candidate">
+          <h4>${escapeProfileText(row.full_name)}</h4>
+          <p>${escapeProfileText(row.email)}</p>
+          <p>Expertise: ${escapeProfileText(row.expertise || "Not specified")}</p>
+          <form class="profile-create-form" data-intake-id="${escapeProfileText(row.id)}">
+            <div><label>Start date</label><input name="start_date" type="date" required></div>
+            <div><label>Initial status</label><select name="volunteer_status" required><option value="approved" selected>Approved</option><option value="active">Active</option></select></div>
+            <button type="submit">Create Profile</button>
+          </form>
+        </article>`).join("");
+    }
+
+    const search = (document.getElementById("profile-search").value || "").trim().toLowerCase();
+    const visibleProfiles = profiles.map(profile => ({
+      ...profile,
+      application: applicationById.get(String(profile.intake_id)) || null
+    })).filter(profile => {
+      const name = profile.application?.full_name || "";
+      const email = profile.application?.email || "";
+      return name.toLowerCase().includes(search) || email.toLowerCase().includes(search);
+    });
+
+    if (!visibleProfiles.length) {
+      profileBody.innerHTML = '<tr><td colspan="6">No volunteer profiles found.</td></tr>';
+    } else {
+      profileBody.innerHTML = visibleProfiles.map(profile => `
+        <tr>
+          <td>${escapeProfileText(profile.application?.full_name || "Application not found")}</td>
+          <td>${escapeProfileText(profile.application?.email || "—")}</td>
+          <td>${escapeProfileText(profile.application?.expertise || "—")}</td>
+          <td>${escapeProfileText(profile.start_date || "—")}</td>
+          <td>${escapeProfileText(profile.end_date || "—")}</td>
+          <td><span class="profile-status">${escapeProfileText(profile.volunteer_status || "unknown").replace(/_/g," ")}</span></td>
+        </tr>`).join("");
+    }
+    showMessage("profiles-message", `${profiles.length} volunteer profile(s) loaded. ${acceptedWithoutProfile.length} accepted applicant(s) awaiting a profile.`);
+  }
+
+  document.getElementById("eligible-applicants").addEventListener("submit", async event => {
+    const form = event.target.closest("form.profile-create-form");
+    if (!form) return;
+    event.preventDefault();
+    const intakeId = form.dataset.intakeId;
+    const formData = new FormData(form);
+    const startDate = formData.get("start_date");
+    const volunteerStatus = formData.get("volunteer_status");
+    const application = applications.find(row => String(row.id) === String(intakeId));
+    if (!application || application.status !== "accepted") {
+      showMessage("profiles-message", "Only accepted applications can be converted into volunteer profiles.", true);
+      return;
+    }
+    if (!startDate || !["approved", "active"].includes(volunteerStatus)) {
+      showMessage("profiles-message", "Please select a valid start date and status.", true);
+      return;
+    }
+    const submitButton = form.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    submitButton.textContent = "Creating...";
+    const { error } = await client.from("volunteer_profiles").insert({
+      intake_id: String(intakeId),
+      start_date: startDate,
+      volunteer_status: volunteerStatus
+    });
+    if (error) {
+      console.error("Create volunteer profile error:", error);
+      showMessage("profiles-message", "Could not create profile: " + error.message, true);
+      submitButton.disabled = false;
+      submitButton.textContent = "Create Profile";
+      return;
+    }
+    showMessage("profiles-message", `Volunteer profile created for ${application.full_name}.`);
+    await loadVolunteerProfiles();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("refresh-profiles").addEventListener("click", loadVolunteerProfiles);
+  document.getElementById("profile-search").addEventListener("input", () => {
+    if (document.getElementById("profiles-view").classList.contains("active")) loadVolunteerProfiles();
+  });
+
   // Dashboard section navigation
   function showSection(viewId) {
     document.querySelectorAll(".section-view").forEach(view => {
@@ -1490,6 +1648,9 @@
       active ? active.textContent.trim() : "Dashboard Overview";
     if (viewId !== "applications-view") {
       document.getElementById("details-panel").style.display = "none";
+    }
+    if (viewId === "profiles-view") {
+      loadVolunteerProfiles();
     }
   }
   document.querySelectorAll(".nav-link").forEach(button => {
