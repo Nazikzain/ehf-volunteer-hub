@@ -298,7 +298,29 @@
 
       .panel { padding: 18px; }
     }
-  </style>
+  
+/* EHF dashboard workspace */
+.workspace{display:grid;grid-template-columns:245px minmax(0,1fr);gap:20px;align-items:start}
+.sidebar{background:#18372c;color:#fff;border-radius:15px;padding:18px 13px;position:sticky;top:15px;min-height:calc(100vh - 130px)}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:5px 7px 18px;border-bottom:1px solid #ffffff30;margin-bottom:12px}
+.sidebar-brand img{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
+.sidebar-brand strong{display:block;font-size:13px}.sidebar-brand small{display:block;color:#c9d9ce;font-size:11px;margin-top:4px}
+.nav-label{font-size:10px;letter-spacing:1px;color:#a9c0b0;padding:12px 9px 5px}
+.nav-link{display:block;width:100%;text-align:left;background:transparent;color:#edf4ef;padding:10px;border-radius:8px;font-size:12px;margin:2px 0}
+.nav-link:hover,.nav-link.active{background:#ffffff20;opacity:1}
+.workspace-main{min-width:0}.topbar{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.topbar small{display:block;color:var(--muted);margin-top:4px}
+.section-view{display:none}.section-view.active{display:block}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:20px 0}
+.metric-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:17px}
+.metric-card span{font-size:12px;color:var(--muted)}.metric-card strong{display:block;font-size:27px;margin-top:12px}
+.module-panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:22px;margin:17px 0}
+.module-placeholder{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:9px;padding:20px;color:var(--muted);line-height:1.7}
+.module-placeholder strong{display:block;color:var(--text);margin-bottom:6px}
+@media(max-width:1050px){.workspace{grid-template-columns:205px minmax(0,1fr)}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.workspace{grid-template-columns:1fr}.sidebar{position:static;min-height:0}.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.nav-label{grid-column:1/-1}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:0 12px}}
+
+</style>
 </head>
 
 <body>
@@ -376,54 +398,56 @@
   </section>
 
 
+
   <!-- DASHBOARD -->
   <section id="dashboard">
-
-    <div class="dashboard-header">
-      <div>
-        <h2>Management Dashboard</h2>
-        <p class="muted">
-          Volunteer applications and programme overview
-        </p>
-      </div>
-
-      <button id="sign-out" class="secondary" type="button">
-        Sign out
-      </button>
-    </div>
-
-
-    <!-- STATISTICS -->
-    <div class="stats">
-
-      <div class="stat">
-        <span>Total applications</span>
-        <strong id="total-count">0</strong>
-      </div>
-
-      <div class="stat">
-        <span>Pending</span>
-        <strong id="pending-count">0</strong>
-      </div>
-
-      <div class="stat">
-        <span>Under review</span>
-        <strong id="review-count">0</strong>
-      </div>
-
-      <div class="stat">
-        <span>Accepted</span>
-        <strong id="accepted-count">0</strong>
-      </div>
-
-      <div class="stat">
-        <span>Rejected</span>
-        <strong id="rejected-count">0</strong>
-      </div>
-
-    </div>
-
-
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-brand"><img src="./ehf-logo.png" alt="EHF logo"><div><strong>EHF Management</strong><small>Administrator Workspace</small></div></div>
+        <nav aria-label="Management navigation">
+          <div class="nav-label">MAIN DASHBOARD</div>
+          <button class="nav-link active" data-view="overview-view">▦ Dashboard Overview</button>
+          <div class="nav-label">VOLUNTEERS</div>
+          <button class="nav-link" data-view="applications-view">✉ Volunteer Applications</button>
+          <button class="nav-link" data-view="profiles-view">♙ Volunteer Profiles</button>
+          <button class="nav-link" data-view="hours-view">◷ Attendance &amp; Hours</button>
+          <button class="nav-link" data-view="performance-view">★ Performance Reviews</button>
+          <button class="nav-link" data-view="certificates-view">▤ Certificates</button>
+          <div class="nav-label">OPERATIONS</div>
+          <button class="nav-link" data-view="projects-view">▣ Projects</button>
+          <button class="nav-link" data-view="tasks-view">☑ Tasks &amp; Assignments</button>
+          <div class="nav-label">ADMINISTRATION</div>
+          <button class="nav-link" data-view="users-view">♧ Users &amp; Permissions</button>
+          <button class="nav-link" data-view="reports-view">▥ Reports &amp; Analytics</button>
+          <button class="nav-link" data-view="settings-view">⚙ System Settings</button>
+          <button class="nav-link" data-view="audit-view">☷ Audit Logs</button>
+        </nav>
+      </aside>
+      <div class="workspace-main">
+        <div class="topbar"><div><strong>Volunteer Management System</strong><small id="current-section-label">Dashboard Overview</small></div><button id="sign-out" class="secondary" type="button">Sign out</button></div>
+        <div class="section-view active" id="overview-view">
+          <h2>Dashboard Overview</h2>
+          <p class="muted">Live overview of volunteer applications and programme activity.</p>
+          <div class="metric-grid">
+            <div class="metric-card"><span>Total Applications</span><strong id="metric-applications">—</strong></div>
+            <div class="metric-card"><span>Active Volunteers</span><strong id="metric-volunteers">—</strong></div>
+            <div class="metric-card"><span>Active Projects</span><strong id="metric-projects">—</strong></div>
+            <div class="metric-card"><span>Tasks In Progress</span><strong id="metric-tasks">—</strong></div>
+            <div class="metric-card"><span>Pending Hours</span><strong id="metric-pending-hours">—</strong></div>
+            <div class="metric-card"><span>Approved Volunteer Hours</span><strong id="metric-approved-hours">—</strong></div>
+            <div class="metric-card"><span>Certificates Issued</span><strong id="metric-certificates">—</strong></div>
+            <div class="metric-card"><span>Pending Applications</span><strong id="metric-pending-apps">—</strong></div>
+          </div>
+          <div class="module-panel"><h2>Application Overview</h2><div class="stats">
+            <div class="stat"><span>Pending</span><strong id="pending-count">0</strong></div>
+            <div class="stat"><span>Under Review</span><strong id="review-count">0</strong></div>
+            <div class="stat"><span>Accepted</span><strong id="accepted-count">0</strong></div>
+            <div class="stat"><span>Rejected</span><strong id="rejected-count">0</strong></div>
+            <div class="stat"><span>Total Applications</span><strong id="total-count">0</strong></div>
+          </div></div>
+          <div class="module-panel"><h2>Programme Management</h2><p class="muted">Use the navigation to manage applications and access the modules planned for the next implementation stages.</p><p id="dashboard-data-message" class="message" role="status" aria-live="polite"></p></div>
+        </div>
+        <div class="section-view" id="applications-view">
     <!-- APPLICATIONS -->
     <section class="panel">
 
@@ -491,6 +515,8 @@
     </section>
 
 
+        </div>
+
     <!-- APPLICATION DETAILS -->
     <section class="panel" id="details-panel"
       style="margin-top:22px">
@@ -530,6 +556,19 @@
 
     </section>
 
+
+        <div class="section-view" id="profiles-view"><div class="module-panel"><h2>Volunteer Profiles</h2><div class="module-placeholder"><strong>Volunteer profile management</strong>Manage accepted applicants, volunteer status, start dates and end dates. Database workflow connection is the next development stage.</div></div></div>
+        <div class="section-view" id="hours-view"><div class="module-panel"><h2>Attendance &amp; Volunteer Hours</h2><div class="module-placeholder"><strong>Time log review</strong>Review pending submissions, approve or reject hours, and inspect reviewer comments.</div></div></div>
+        <div class="section-view" id="performance-view"><div class="module-panel"><h2>Performance Reviews</h2><div class="module-placeholder"><strong>Volunteer performance</strong>Record reliability, teamwork, communication and quality scores, achievements and improvement areas.</div></div></div>
+        <div class="section-view" id="certificates-view"><div class="module-panel"><h2>Certificates</h2><div class="module-placeholder"><strong>Certificate management</strong>Track eligibility, required hours, approval, issue and delivery status.</div></div></div>
+        <div class="section-view" id="projects-view"><div class="module-panel"><h2>Projects</h2><div class="module-placeholder"><strong>Project management</strong>Create and manage projects, descriptions, dates and project status.</div></div></div>
+        <div class="section-view" id="tasks-view"><div class="module-panel"><h2>Tasks &amp; Assignments</h2><div class="module-placeholder"><strong>Task allocation</strong>Create tasks, assign volunteers, set due dates and monitor task status.</div></div></div>
+        <div class="section-view" id="users-view"><div class="module-panel"><h2>Users &amp; Permissions</h2><div class="module-placeholder"><strong>Access management</strong>Role editing is not enabled because current RLS policies do not permit role changes.</div></div></div>
+        <div class="section-view" id="reports-view"><div class="module-panel"><h2>Reports &amp; Analytics</h2><div class="module-placeholder"><strong>Programme reporting</strong>Reports for volunteers, applications, projects, tasks, hours and certificates.</div></div></div>
+        <div class="section-view" id="settings-view"><div class="module-panel"><h2>System Settings</h2><div class="module-placeholder"><strong>Portal configuration</strong>System-wide settings will be added after the operational modules.</div></div></div>
+        <div class="section-view" id="audit-view"><div class="module-panel"><h2>Audit Logs</h2><div class="module-placeholder"><strong>Administrative activity history</strong>An audit log table is not in the current schema; this module is reserved until one is designed.</div></div></div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -690,6 +729,7 @@
     }
 
     showDashboard();
+    showSection("overview-view");
 
     await loadApplications();
 
@@ -954,6 +994,7 @@
 
     updateStatistics();
     renderApplications();
+    await loadDashboardMetrics();
 
     showMessage(
       "applications-message",
@@ -963,6 +1004,45 @@
     );
   }
 
+
+
+  // ==========================================
+  // 9A. LOAD DASHBOARD METRICS
+  // ==========================================
+  async function loadDashboardMetrics() {
+    const setMetric = (id, value) => {
+      document.getElementById(id).textContent = value;
+    };
+    const countRows = async (table, column, value) => {
+      const result = await client.from(table).select("id", { count: "exact", head: true }).eq(column, value);
+      if (result.error) throw new Error(table + ": " + result.error.message);
+      return result.count || 0;
+    };
+    try {
+      const results = await Promise.all([
+        countRows("volunteer_profiles", "volunteer_status", "active"),
+        countRows("volunteer_projects", "project_status", "active"),
+        countRows("volunteer_tasks", "task_status", "in_progress"),
+        countRows("volunteer_time_logs", "approval_status", "pending"),
+        client.from("volunteer_time_logs").select("duration_minutes").eq("approval_status", "approved"),
+        countRows("volunteer_certificates", "certificate_status", "issued")
+      ]);
+      if (results[4].error) throw new Error("Approved hours: " + results[4].error.message);
+      const minutes = (results[4].data || []).reduce((sum, row) => sum + (Number(row.duration_minutes) || 0), 0);
+      setMetric("metric-applications", applications.length);
+      setMetric("metric-volunteers", results[0]);
+      setMetric("metric-projects", results[1]);
+      setMetric("metric-tasks", results[2]);
+      setMetric("metric-pending-hours", results[3]);
+      setMetric("metric-approved-hours", (minutes / 60).toFixed(1));
+      setMetric("metric-certificates", results[5]);
+      setMetric("metric-pending-apps", applications.filter(row => row.status === "pending").length);
+      showMessage("dashboard-data-message", "Dashboard metrics loaded from Supabase.");
+    } catch (error) {
+      console.error("Dashboard metrics:", error);
+      showMessage("dashboard-data-message", "Some metrics could not be loaded: " + error.message, true);
+    }
+  }
 
   // ==========================================
   // 10. UPDATE STATISTICS
@@ -1395,6 +1475,26 @@
       selectedApplication = null;
     });
 
+
+
+  // Dashboard section navigation
+  function showSection(viewId) {
+    document.querySelectorAll(".section-view").forEach(view => {
+      view.classList.toggle("active", view.id === viewId);
+    });
+    document.querySelectorAll(".nav-link").forEach(button => {
+      button.classList.toggle("active", button.dataset.view === viewId);
+    });
+    const active = document.querySelector('.nav-link[data-view="' + viewId + '"]');
+    document.getElementById("current-section-label").textContent =
+      active ? active.textContent.trim() : "Dashboard Overview";
+    if (viewId !== "applications-view") {
+      document.getElementById("details-panel").style.display = "none";
+    }
+  }
+  document.querySelectorAll(".nav-link").forEach(button => {
+    button.addEventListener("click", () => showSection(button.dataset.view));
+  });
 
   // ==========================================
   // 19. SIGN OUT
