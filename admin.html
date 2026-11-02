@@ -4,7 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EHF Volunteer Management Portal">
+
+  <meta
+    name="description"
+    content="Ethnic Health Forum Volunteer Management Portal"
+  >
+
   <title>EHF | Volunteer Management</title>
 
   <style>
@@ -17,6 +22,7 @@
       --border: #e2e8f0;
       --white: #ffffff;
       --danger: #b91c1c;
+      --success: #287a3e;
     }
 
     * {
@@ -71,7 +77,8 @@
       box-shadow: 0 4px 16px #0f172a08;
     }
 
-    #login-panel {
+    #login-panel,
+    #reset-panel {
       max-width: 600px;
       margin: 0 auto;
     }
@@ -143,7 +150,13 @@
       margin-top: 16px;
       font-size: 14px;
       line-height: 1.6;
+      overflow-wrap: anywhere;
       min-height: 20px;
+    }
+
+    #dashboard,
+    #reset-panel {
+      display: none;
     }
 
     .stats {
@@ -172,17 +185,24 @@
       font-size: 28px;
     }
 
-    #dashboard,
-    #reset-panel {
-      display: none;
-    }
-
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 15px;
       flex-wrap: wrap;
+    }
+
+    .section-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 20px;
+    }
+
+    .section-card h3 {
+      margin-top: 0;
     }
 
     @media (max-width: 650px) {
@@ -205,15 +225,19 @@
 
   <header>
     <img src="./ehf-logo.png" alt="EHF logo">
+
     <div>
       <h1>EHF Volunteer Management</h1>
-      <p>Volunteer recruitment, performance and project tracking</p>
+      <p>
+        Volunteer recruitment, performance and project tracking
+      </p>
     </div>
   </header>
 
   <main>
 
-    <!-- LOGIN PANEL -->
+    <!-- MANAGEMENT LOGIN -->
+
     <section class="panel" id="login-panel">
 
       <h2>Management Login</h2>
@@ -226,6 +250,7 @@
 
         <div class="field">
           <label for="email">Email address</label>
+
           <input
             id="email"
             type="email"
@@ -236,6 +261,7 @@
 
         <div class="field">
           <label for="password">Password</label>
+
           <input
             id="password"
             type="password"
@@ -256,25 +282,35 @@
           Forgot Password?
         </button>
 
-        <p id="login-message" class="message" role="status"></p>
+        <p
+          id="login-message"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></p>
 
       </form>
+
     </section>
 
 
-    <!-- PASSWORD RESET PANEL -->
+    <!-- PASSWORD RECOVERY -->
+
     <section class="panel" id="reset-panel">
 
       <h2>Set New Password</h2>
 
       <p class="muted">
-        Enter your new password below.
+        Enter and confirm your new password.
       </p>
 
       <form id="reset-form">
 
         <div class="field">
-          <label for="new-password">New password</label>
+          <label for="new-password">
+            New password
+          </label>
+
           <input
             id="new-password"
             type="password"
@@ -285,7 +321,10 @@
         </div>
 
         <div class="field">
-          <label for="confirm-password">Confirm new password</label>
+          <label for="confirm-password">
+            Confirm new password
+          </label>
+
           <input
             id="confirm-password"
             type="password"
@@ -295,31 +334,51 @@
           >
         </div>
 
-        <button type="submit" id="update-password-button">
+        <button
+          type="submit"
+          id="update-password-button"
+        >
           Update Password
         </button>
 
-        <p id="reset-message" class="message" role="status"></p>
+        <p
+          id="reset-message"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></p>
 
       </form>
+
     </section>
 
 
-    <!-- MANAGEMENT DASHBOARD -->
+    <!-- ADMIN DASHBOARD -->
+
     <section id="dashboard">
 
       <div class="dashboard-header">
+
         <div>
           <h2>Management Dashboard</h2>
+
           <p class="muted">
             Volunteer applications and programme overview
           </p>
         </div>
 
-        <button id="sign-out" class="secondary" type="button">
+        <button
+          id="sign-out"
+          class="secondary"
+          type="button"
+        >
           Sign out
         </button>
+
       </div>
+
+
+      <!-- APPLICATION STATISTICS -->
 
       <div class="stats">
 
@@ -345,14 +404,19 @@
 
       </div>
 
-      <div class="panel">
-        <h2>Volunteer Management</h2>
+
+      <!-- VOLUNTEER MANAGEMENT -->
+
+      <div class="section-card">
+
+        <h3>Volunteer Management</h3>
 
         <p class="muted">
-          Application review, approved hours, projects, performance
-          reviews and certificates will appear here as the management
-          modules are connected.
+          Application review, approved hours, projects,
+          performance reviews and certificates will be
+          connected to the database in the next development stage.
         </p>
+
       </div>
 
     </section>
@@ -360,7 +424,8 @@
   </main>
 
 
-  <!-- SUPABASE -->
+  <!-- SUPABASE LIBRARY -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
@@ -372,8 +437,9 @@
     const SUPABASE_URL =
       "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-    // Replace with your existing Supabase Publishable key.
-    // Never use a Secret key or service_role key here.
+    // IMPORTANT:
+    // Keep your existing Supabase Publishable key.
+    // Never use a Secret key or service_role key.
 
     const SUPABASE_PUBLISHABLE_KEY =
       "sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC";
@@ -385,24 +451,39 @@
 
 
     // ==========================================
-    // 2. ELEMENTS
+    // 2. PAGE ELEMENTS
     // ==========================================
 
-    const loginPanel = document.getElementById("login-panel");
-    const resetPanel = document.getElementById("reset-panel");
-    const dashboard = document.getElementById("dashboard");
+    const loginPanel =
+      document.getElementById("login-panel");
 
-    const loginForm = document.getElementById("login-form");
-    const resetForm = document.getElementById("reset-form");
+    const resetPanel =
+      document.getElementById("reset-panel");
+
+    const dashboard =
+      document.getElementById("dashboard");
+
+    const loginForm =
+      document.getElementById("login-form");
+
+    const resetForm =
+      document.getElementById("reset-form");
+
+    let recoveryMode = false;
 
 
     // ==========================================
-    // 3. MESSAGE FUNCTION
+    // 3. MESSAGE HANDLING
     // ==========================================
 
-    function showMessage(elementId, message, isError = false) {
+    function showMessage(
+      elementId,
+      message,
+      isError = false
+    ) {
 
-      const element = document.getElementById(elementId);
+      const element =
+        document.getElementById(elementId);
 
       if (!element) return;
 
@@ -410,12 +491,12 @@
 
       element.style.color = isError
         ? "#b91c1c"
-        : "#4e733b";
+        : "#287a3e";
     }
 
 
     // ==========================================
-    // 4. SHOW LOGIN
+    // 4. PAGE DISPLAY FUNCTIONS
     // ==========================================
 
     function showLogin() {
@@ -423,12 +504,9 @@
       loginPanel.style.display = "block";
       resetPanel.style.display = "none";
       dashboard.style.display = "none";
+
     }
 
-
-    // ==========================================
-    // 5. SHOW PASSWORD RESET
-    // ==========================================
 
     function showPasswordReset() {
 
@@ -436,29 +514,25 @@
       resetPanel.style.display = "block";
       dashboard.style.display = "none";
 
-      resetForm.reset();
-
       showMessage(
         "reset-message",
         "Enter your new password."
       );
+
     }
 
-
-    // ==========================================
-    // 6. SHOW DASHBOARD
-    // ==========================================
 
     function showDashboard() {
 
       loginPanel.style.display = "none";
       resetPanel.style.display = "none";
       dashboard.style.display = "block";
+
     }
 
 
     // ==========================================
-    // 7. CHECK ADMIN ACCESS
+    // 5. ADMIN ROLE VERIFICATION
     // ==========================================
 
     async function checkAdminAccess() {
@@ -468,12 +542,38 @@
         error: sessionError
       } = await client.auth.getSession();
 
-      if (sessionError || !session) {
+
+      // Check session
+
+      if (sessionError) {
 
         showLogin();
 
+        showMessage(
+          "login-message",
+          "Session error: " + sessionError.message,
+          true
+        );
+
         return false;
       }
+
+
+      if (!session) {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "No active session. Please sign in.",
+          true
+        );
+
+        return false;
+      }
+
+
+      // Check user role in Supabase
 
       const {
         data: roleRecord,
@@ -484,311 +584,430 @@
         .eq("user_id", session.user.id)
         .maybeSingle();
 
-      if (
-        roleError ||
-        !roleRecord ||
-        roleRecord.role !== "admin"
-      ) {
 
-        await client.auth.signOut();
+      // Display the actual database error
+
+      if (roleError) {
+
+        console.error(
+          "Role verification error:",
+          roleError
+        );
 
         showLogin();
 
         showMessage(
           "login-message",
-          "Access denied. An authorised EHF administrator account is required.",
+          "Role verification error: " +
+          roleError.message,
           true
         );
 
         return false;
       }
 
+
+      // Check whether the user has a role record
+
+      if (!roleRecord) {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "No role record found for user: " +
+          session.user.id,
+          true
+        );
+
+        return false;
+      }
+
+
+      // Check administrator permission
+
+      if (roleRecord.role !== "admin") {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "Incorrect role: " + roleRecord.role,
+          true
+        );
+
+        return false;
+      }
+
+
+      // Access granted
+
+      console.log(
+        "Administrator access granted:",
+        session.user.id
+      );
+
       showDashboard();
 
       return true;
+
     }
 
 
     // ==========================================
-    // 8. LOGIN
+    // 6. ADMIN LOGIN
     // ==========================================
 
-    loginForm.addEventListener("submit", async (event) => {
+    loginForm.addEventListener(
+      "submit",
+      async (event) => {
 
-      event.preventDefault();
-
-      const email =
-        document.getElementById("email").value.trim();
-
-      const password =
-        document.getElementById("password").value;
-
-      const button =
-        document.getElementById("login-button");
-
-      button.disabled = true;
-
-      showMessage(
-        "login-message",
-        "Signing in..."
-      );
-
-      try {
-
-        const { error } = await client.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-
-          showMessage(
-            "login-message",
-            error.message,
-            true
-          );
-
-          return;
-        }
-
-        await checkAdminAccess();
-
-      } catch (error) {
-
-        showMessage(
-          "login-message",
-          "Unable to connect. Please try again later.",
-          true
-        );
-
-      } finally {
-
-        button.disabled = false;
-      }
-
-    });
-
-
-    // ==========================================
-    // 9. FORGOT PASSWORD
-    // ==========================================
-
-    document
-      .getElementById("forgot-password")
-      .addEventListener("click", async () => {
+        event.preventDefault();
 
         const email =
           document.getElementById("email").value.trim();
 
-        if (!email) {
-
-          showMessage(
-            "login-message",
-            "Please enter your email address first.",
-            true
-          );
-
-          return;
-        }
+        const password =
+          document.getElementById("password").value;
 
         const button =
-          document.getElementById("forgot-password");
+          document.getElementById("login-button");
 
         button.disabled = true;
 
         showMessage(
           "login-message",
-          "Sending recovery email..."
+          "Signing in..."
         );
 
         try {
 
           const { error } =
-            await client.auth.resetPasswordForEmail(email, {
+            await client.auth.signInWithPassword({
 
-              redirectTo:
-                window.location.origin + "/admin.html"
+              email: email,
+              password: password
 
             });
 
+
           if (error) {
+
+            console.error(
+              "Login error:",
+              error
+            );
 
             showMessage(
               "login-message",
-              error.message,
+              "Sign-in failed: " + error.message,
               true
             );
 
-          } else {
-
-            showMessage(
-              "login-message",
-              "Recovery email sent. Please check your inbox and spam folder."
-            );
+            return;
           }
+
+
+          await checkAdminAccess();
 
         } catch (error) {
 
+          console.error(error);
+
           showMessage(
             "login-message",
-            "Unable to send recovery email. Please try again later.",
+            "Unexpected error: " + error.message,
             true
           );
 
         } finally {
 
           button.disabled = false;
+
         }
 
-      });
+      }
+    );
 
 
     // ==========================================
-    // 10. UPDATE PASSWORD
+    // 7. FORGOT PASSWORD
     // ==========================================
 
-    resetForm.addEventListener("submit", async (event) => {
+    document
+      .getElementById("forgot-password")
+      .addEventListener(
+        "click",
+        async () => {
 
-      event.preventDefault();
+          const email =
+            document.getElementById("email").value.trim();
 
-      const password =
-        document.getElementById("new-password").value;
 
-      const confirmPassword =
-        document.getElementById("confirm-password").value;
+          if (!email) {
 
-      const button =
-        document.getElementById("update-password-button");
+            showMessage(
+              "login-message",
+              "Please enter your email address first.",
+              true
+            );
 
-      if (password.length < 8) {
+            return;
+          }
 
-        showMessage(
-          "reset-message",
-          "Password must contain at least 8 characters.",
-          true
-        );
 
-        return;
-      }
+          const button =
+            document.getElementById("forgot-password");
 
-      if (password !== confirmPassword) {
+          button.disabled = true;
 
-        showMessage(
-          "reset-message",
-          "Passwords do not match.",
-          true
-        );
+          showMessage(
+            "login-message",
+            "Sending recovery email..."
+          );
 
-        return;
-      }
 
-      button.disabled = true;
+          try {
 
-      showMessage(
-        "reset-message",
-        "Updating your password..."
+            const { error } =
+              await client.auth.resetPasswordForEmail(
+                email,
+                {
+                  redirectTo:
+                    window.location.origin + "/admin.html"
+                }
+              );
+
+
+            if (error) {
+
+              console.error(
+                "Recovery email error:",
+                error
+              );
+
+              showMessage(
+                "login-message",
+                "Recovery error: " + error.message,
+                true
+              );
+
+            } else {
+
+              showMessage(
+                "login-message",
+                "Recovery email sent. Check your inbox and spam folder."
+              );
+
+            }
+
+          } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+              "login-message",
+              "Unable to send recovery email.",
+              true
+            );
+
+          } finally {
+
+            button.disabled = false;
+
+          }
+
+        }
       );
 
-      try {
 
-        const { error } = await client.auth.updateUser({
-          password: password
-        });
+    // ==========================================
+    // 8. UPDATE PASSWORD
+    // ==========================================
 
-        if (error) {
+    resetForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+        const password =
+          document.getElementById("new-password").value;
+
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
+
+        const button =
+          document.getElementById("update-password-button");
+
+
+        if (password.length < 8) {
 
           showMessage(
             "reset-message",
-            error.message,
+            "Password must contain at least 8 characters.",
             true
           );
 
           return;
         }
 
-        await client.auth.signOut();
 
-        resetForm.reset();
+        if (password !== confirmPassword) {
 
-        showLogin();
-
-        showMessage(
-          "login-message",
-          "Password updated successfully. You can now sign in."
-        );
-
-      } catch (error) {
-
-        showMessage(
-          "reset-message",
-          "Unable to update password. Please try again.",
-          true
-        );
-
-      } finally {
-
-        button.disabled = false;
-      }
-
-    });
-
-
-    // ==========================================
-    // 11. SIGN OUT
-    // ==========================================
-
-    document
-      .getElementById("sign-out")
-      .addEventListener("click", async () => {
-
-        const { error } = await client.auth.signOut();
-
-        if (error) {
-
-          alert("Unable to sign out. Please try again.");
+          showMessage(
+            "reset-message",
+            "Passwords do not match.",
+            true
+          );
 
           return;
         }
 
-        loginForm.reset();
 
-        showLogin();
+        button.disabled = true;
 
         showMessage(
-          "login-message",
-          "You have signed out successfully."
+          "reset-message",
+          "Updating password..."
         );
 
-      });
+
+        try {
+
+          const { error } =
+            await client.auth.updateUser({
+
+              password: password
+
+            });
 
 
-    // ==========================================
-    // 12. AUTHENTICATION STATE
-    // ==========================================
+          if (error) {
 
-    let recoveryMode = false;
+            console.error(
+              "Password update error:",
+              error
+            );
 
-    client.auth.onAuthStateChange((event) => {
+            showMessage(
+              "reset-message",
+              "Password update failed: " + error.message,
+              true
+            );
 
-      if (event === "PASSWORD_RECOVERY") {
+            return;
+          }
 
-        recoveryMode = true;
 
-        showPasswordReset();
+          await client.auth.signOut();
+
+          recoveryMode = false;
+
+          resetForm.reset();
+
+          showLogin();
+
+          showMessage(
+            "login-message",
+            "Password updated successfully. Please sign in."
+          );
+
+        } catch (error) {
+
+          console.error(error);
+
+          showMessage(
+            "reset-message",
+            "Unable to update password: " + error.message,
+            true
+          );
+
+        } finally {
+
+          button.disabled = false;
+
+        }
+
       }
-
-      if (event === "SIGNED_OUT") {
-
-        recoveryMode = false;
-
-        showLogin();
-      }
-
-    });
+    );
 
 
     // ==========================================
-    // 13. INITIALISE APPLICATION
+    // 9. SIGN OUT
+    // ==========================================
+
+    document
+      .getElementById("sign-out")
+      .addEventListener(
+        "click",
+        async () => {
+
+          const { error } =
+            await client.auth.signOut();
+
+
+          if (error) {
+
+            alert(
+              "Sign out failed: " + error.message
+            );
+
+            return;
+          }
+
+
+          recoveryMode = false;
+
+          loginForm.reset();
+
+          showLogin();
+
+          showMessage(
+            "login-message",
+            "You have signed out successfully."
+          );
+
+        }
+      );
+
+
+    // ==========================================
+    // 10. AUTHENTICATION STATE
+    // ==========================================
+
+    client.auth.onAuthStateChange(
+      (event, session) => {
+
+        console.log(
+          "Authentication event:",
+          event
+        );
+
+
+        if (event === "PASSWORD_RECOVERY") {
+
+          recoveryMode = true;
+
+          showPasswordReset();
+
+        }
+
+
+        if (event === "SIGNED_OUT") {
+
+          recoveryMode = false;
+
+          showLogin();
+
+        }
+
+      }
+    );
+
+
+    // ==========================================
+    // 11. APPLICATION INITIALISATION
     // ==========================================
 
     async function initialise() {
@@ -802,47 +1021,73 @@
 
         showMessage(
           "login-message",
-          "Please configure your Supabase Publishable key.",
+          "Supabase Publishable key is not configured.",
           true
         );
 
         return;
       }
 
-      const {
-        data: { session },
-        error
-      } = await client.auth.getSession();
 
-      if (error) {
+      try {
+
+        const {
+          data: { session },
+          error
+        } = await client.auth.getSession();
+
+
+        if (error) {
+
+          showLogin();
+
+          showMessage(
+            "login-message",
+            "Session error: " + error.message,
+            true
+          );
+
+          return;
+        }
+
+
+        if (recoveryMode) {
+
+          showPasswordReset();
+
+          return;
+        }
+
+
+        if (session) {
+
+          await checkAdminAccess();
+
+        } else {
+
+          showLogin();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Initialisation error:",
+          error
+        );
 
         showLogin();
 
         showMessage(
           "login-message",
-          "Unable to verify your session. Please sign in again.",
+          "Application error: " + error.message,
           true
         );
 
-        return;
       }
 
-      if (recoveryMode) {
-
-        showPasswordReset();
-
-        return;
-      }
-
-      if (session) {
-
-        await checkAdminAccess();
-
-      } else {
-
-        showLogin();
-      }
     }
+
 
     initialise();
 
