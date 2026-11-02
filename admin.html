@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EHF Volunteer Management Portal">
   <title>EHF | Volunteer Management</title>
+
   <style>
     :root {
       --green: #4e733b;
@@ -13,9 +15,13 @@
       --text: #1f2937;
       --muted: #64748b;
       --border: #e2e8f0;
+      --white: #ffffff;
+      --danger: #b91c1c;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -25,7 +31,7 @@
     }
 
     header {
-      background: #fff;
+      background: var(--white);
       padding: 18px 5%;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -58,25 +64,25 @@
     }
 
     .panel {
-      background: white;
+      background: var(--white);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 28px;
       box-shadow: 0 4px 16px #0f172a08;
     }
 
-    h2 { margin-top: 0; }
-
-    .notice {
-      padding: 13px;
-      background: #eff6ff;
-      color: var(--blue);
-      border-radius: 8px;
-      line-height: 1.6;
-      font-size: 14px;
+    #login-panel {
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .field { margin: 20px 0; }
+    h2 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin: 20px 0;
+    }
 
     label {
       display: block;
@@ -93,6 +99,11 @@
       font-size: 15px;
     }
 
+    input:focus {
+      outline: 2px solid #4e733b40;
+      border-color: var(--green);
+    }
+
     button {
       background: var(--green);
       color: white;
@@ -103,13 +114,37 @@
       cursor: pointer;
     }
 
-    button:hover { opacity: .92; }
+    button:hover {
+      opacity: .92;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
 
     .secondary {
       background: var(--blue);
     }
 
-    #dashboard { display: none; }
+    .text-button {
+      background: transparent;
+      color: var(--blue);
+      padding: 10px 0;
+      text-decoration: underline;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .message {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 20px;
+    }
 
     .stats {
       display: grid;
@@ -137,15 +172,37 @@
       font-size: 28px;
     }
 
-    .muted { color: var(--muted); }
+    #dashboard,
+    #reset-panel {
+      display: none;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
 
     @media (max-width: 650px) {
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .panel { padding: 20px; }
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      header {
+        padding: 15px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
+
   <header>
     <img src="./ehf-logo.png" alt="EHF logo">
     <div>
@@ -155,199 +212,641 @@
   </header>
 
   <main>
+
+    <!-- LOGIN PANEL -->
     <section class="panel" id="login-panel">
+
       <h2>Management Login</h2>
+
       <p class="muted">
         Sign in using your authorised EHF management account.
       </p>
 
-      <div class="notice">
-        This page is an initial interface. Secure Supabase authentication
-        and role verification must be connected before management data
-        can be accessed.
-      </div>
-
       <form id="login-form">
+
         <div class="field">
           <label for="email">Email address</label>
-          <input id="email" type="email" autocomplete="username" required>
+          <input
+            id="email"
+            type="email"
+            autocomplete="username"
+            required
+          >
         </div>
 
         <div class="field">
           <label for="password">Password</label>
-          <input id="password" type="password"
-                 autocomplete="current-password" required>
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
         </div>
 
-        <button type="submit">Sign in</button>
-        <p id="login-message" class="muted" role="status"></p>
+        <button type="submit" id="login-button">
+          Sign in
+        </button>
+
+        <button
+          type="button"
+          class="text-button"
+          id="forgot-password"
+        >
+          Forgot Password?
+        </button>
+
+        <p id="login-message" class="message" role="status"></p>
+
       </form>
     </section>
 
+
+    <!-- PASSWORD RESET PANEL -->
+    <section class="panel" id="reset-panel">
+
+      <h2>Set New Password</h2>
+
+      <p class="muted">
+        Enter your new password below.
+      </p>
+
+      <form id="reset-form">
+
+        <div class="field">
+          <label for="new-password">New password</label>
+          <input
+            id="new-password"
+            type="password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Confirm new password</label>
+          <input
+            id="confirm-password"
+            type="password"
+            minlength="8"
+            autocomplete="new-password"
+            required
+          >
+        </div>
+
+        <button type="submit" id="update-password-button">
+          Update Password
+        </button>
+
+        <p id="reset-message" class="message" role="status"></p>
+
+      </form>
+    </section>
+
+
+    <!-- MANAGEMENT DASHBOARD -->
     <section id="dashboard">
-      <h2>Management Dashboard</h2>
-      <p class="muted">Volunteer applications and programme overview</p>
 
-      <div class="stats">
-        <div class="stat">
-          <span>Total applications</span>
-          <strong id="total-count">—</strong>
+      <div class="dashboard-header">
+        <div>
+          <h2>Management Dashboard</h2>
+          <p class="muted">
+            Volunteer applications and programme overview
+          </p>
         </div>
-        <div class="stat">
-          <span>Pending</span>
-          <strong id="pending-count">—</strong>
-        </div>
-        <div class="stat">
-          <span>Approved</span>
-          <strong id="approved-count">—</strong>
-        </div>
-        <div class="stat">
-          <span>Rejected</span>
-          <strong id="rejected-count">—</strong>
-        </div>
-      </div>
 
-      <div class="panel">
-        <h2>Volunteer Management</h2>
-        <p class="muted">
-          Application review, approved hours, projects, performance reviews
-          and certificates will appear here after the secure database
-          connection is configured.
-        </p>
         <button id="sign-out" class="secondary" type="button">
           Sign out
         </button>
       </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <span>Total applications</span>
+          <strong id="total-count">—</strong>
+        </div>
+
+        <div class="stat">
+          <span>Pending</span>
+          <strong id="pending-count">—</strong>
+        </div>
+
+        <div class="stat">
+          <span>Approved</span>
+          <strong id="approved-count">—</strong>
+        </div>
+
+        <div class="stat">
+          <span>Rejected</span>
+          <strong id="rejected-count">—</strong>
+        </div>
+
+      </div>
+
+      <div class="panel">
+        <h2>Volunteer Management</h2>
+
+        <p class="muted">
+          Application review, approved hours, projects, performance
+          reviews and certificates will appear here as the management
+          modules are connected.
+        </p>
+      </div>
+
     </section>
+
   </main>
 
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-   
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL =
-    "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-  // Replace this placeholder with your Publishable key.
-  // Never use a Secret key or service_role key here.
-  const SUPABASE_PUBLISHABLE_KEY =
-    "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+    // ==========================================
+    // 1. SUPABASE CONFIGURATION
+    // ==========================================
 
-  const client = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+    const SUPABASE_URL =
+      "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-  const loginForm = document.getElementById("login-form");
-  const loginPanel = document.getElementById("login-panel");
-  const dashboard = document.getElementById("dashboard");
-  const loginMessage = document.getElementById("login-message");
+    // Replace with your existing Supabase Publishable key.
+    // Never use a Secret key or service_role key here.
 
-  function showMessage(text, isError = false) {
-    loginMessage.textContent = text;
-    loginMessage.style.color = isError ? "#b91c1c" : "#4e733b";
-  }
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC";
 
-  async function checkAdminAccess() {
-    const { data: { session }, error: sessionError } =
-      await client.auth.getSession();
-
-    if (sessionError || !session) {
-      loginPanel.style.display = "block";
-      dashboard.style.display = "none";
-      return;
-    }
-
-    const { data: roleRecord, error: roleError } = await client
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", session.user.id)
-      .maybeSingle();
-
-    if (roleError || !roleRecord ||
-        !["admin"].includes(roleRecord.role)) {
-      await client.auth.signOut();
-      loginPanel.style.display = "block";
-      dashboard.style.display = "none";
-      showMessage(
-        "Access denied. An authorised EHF administrator account is required.",
-        true
-      );
-      return;
-    }
-
-    loginPanel.style.display = "none";
-    dashboard.style.display = "block";
-    showMessage("");
-  }
-
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    if (SUPABASE_PUBLISHABLE_KEY ===
-        sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC") {
-      showMessage(
-        "Please add your Supabase Publishable key to admin.html.",
-        true
-      );
-      return;
-    }
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    const submitButton = loginForm.querySelector(
-      'button[type="submit"]'
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
     );
-    submitButton.disabled = true;
-    showMessage("Signing in...");
 
-    try {
-      const { error } = await client.auth.signInWithPassword({
-        email,
-        password
-      });
 
-      if (error) {
+    // ==========================================
+    // 2. ELEMENTS
+    // ==========================================
+
+    const loginPanel = document.getElementById("login-panel");
+    const resetPanel = document.getElementById("reset-panel");
+    const dashboard = document.getElementById("dashboard");
+
+    const loginForm = document.getElementById("login-form");
+    const resetForm = document.getElementById("reset-form");
+
+
+    // ==========================================
+    // 3. MESSAGE FUNCTION
+    // ==========================================
+
+    function showMessage(elementId, message, isError = false) {
+
+      const element = document.getElementById(elementId);
+
+      if (!element) return;
+
+      element.textContent = message;
+
+      element.style.color = isError
+        ? "#b91c1c"
+        : "#4e733b";
+    }
+
+
+    // ==========================================
+    // 4. SHOW LOGIN
+    // ==========================================
+
+    function showLogin() {
+
+      loginPanel.style.display = "block";
+      resetPanel.style.display = "none";
+      dashboard.style.display = "none";
+    }
+
+
+    // ==========================================
+    // 5. SHOW PASSWORD RESET
+    // ==========================================
+
+    function showPasswordReset() {
+
+      loginPanel.style.display = "none";
+      resetPanel.style.display = "block";
+      dashboard.style.display = "none";
+
+      resetForm.reset();
+
+      showMessage(
+        "reset-message",
+        "Enter your new password."
+      );
+    }
+
+
+    // ==========================================
+    // 6. SHOW DASHBOARD
+    // ==========================================
+
+    function showDashboard() {
+
+      loginPanel.style.display = "none";
+      resetPanel.style.display = "none";
+      dashboard.style.display = "block";
+    }
+
+
+    // ==========================================
+    // 7. CHECK ADMIN ACCESS
+    // ==========================================
+
+    async function checkAdminAccess() {
+
+      const {
+        data: { session },
+        error: sessionError
+      } = await client.auth.getSession();
+
+      if (sessionError || !session) {
+
+        showLogin();
+
+        return false;
+      }
+
+      const {
+        data: roleRecord,
+        error: roleError
+      } = await client
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+
+      if (
+        roleError ||
+        !roleRecord ||
+        roleRecord.role !== "admin"
+      ) {
+
+        await client.auth.signOut();
+
+        showLogin();
+
         showMessage(
-          "Sign-in failed. Check your email and password.",
+          "login-message",
+          "Access denied. An authorised EHF administrator account is required.",
           true
         );
+
+        return false;
+      }
+
+      showDashboard();
+
+      return true;
+    }
+
+
+    // ==========================================
+    // 8. LOGIN
+    // ==========================================
+
+    loginForm.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      const button =
+        document.getElementById("login-button");
+
+      button.disabled = true;
+
+      showMessage(
+        "login-message",
+        "Signing in..."
+      );
+
+      try {
+
+        const { error } = await client.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+
+          showMessage(
+            "login-message",
+            error.message,
+            true
+          );
+
+          return;
+        }
+
+        await checkAdminAccess();
+
+      } catch (error) {
+
+        showMessage(
+          "login-message",
+          "Unable to connect. Please try again later.",
+          true
+        );
+
+      } finally {
+
+        button.disabled = false;
+      }
+
+    });
+
+
+    // ==========================================
+    // 9. FORGOT PASSWORD
+    // ==========================================
+
+    document
+      .getElementById("forgot-password")
+      .addEventListener("click", async () => {
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        if (!email) {
+
+          showMessage(
+            "login-message",
+            "Please enter your email address first.",
+            true
+          );
+
+          return;
+        }
+
+        const button =
+          document.getElementById("forgot-password");
+
+        button.disabled = true;
+
+        showMessage(
+          "login-message",
+          "Sending recovery email..."
+        );
+
+        try {
+
+          const { error } =
+            await client.auth.resetPasswordForEmail(email, {
+
+              redirectTo:
+                window.location.origin + "/admin.html"
+
+            });
+
+          if (error) {
+
+            showMessage(
+              "login-message",
+              error.message,
+              true
+            );
+
+          } else {
+
+            showMessage(
+              "login-message",
+              "Recovery email sent. Please check your inbox and spam folder."
+            );
+          }
+
+        } catch (error) {
+
+          showMessage(
+            "login-message",
+            "Unable to send recovery email. Please try again later.",
+            true
+          );
+
+        } finally {
+
+          button.disabled = false;
+        }
+
+      });
+
+
+    // ==========================================
+    // 10. UPDATE PASSWORD
+    // ==========================================
+
+    resetForm.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const password =
+        document.getElementById("new-password").value;
+
+      const confirmPassword =
+        document.getElementById("confirm-password").value;
+
+      const button =
+        document.getElementById("update-password-button");
+
+      if (password.length < 8) {
+
+        showMessage(
+          "reset-message",
+          "Password must contain at least 8 characters.",
+          true
+        );
+
         return;
       }
 
-      await checkAdminAccess();
-    } catch (error) {
+      if (password !== confirmPassword) {
+
+        showMessage(
+          "reset-message",
+          "Passwords do not match.",
+          true
+        );
+
+        return;
+      }
+
+      button.disabled = true;
+
       showMessage(
-        "Unable to connect. Please try again later.",
-        true
+        "reset-message",
+        "Updating your password..."
       );
-    } finally {
-      submitButton.disabled = false;
-    }
-  });
 
-  document.getElementById("sign-out").addEventListener(
-    "click",
-    async () => {
-      await client.auth.signOut();
-      dashboard.style.display = "none";
-      loginPanel.style.display = "block";
-      loginForm.reset();
-      showMessage("You have signed out.");
-    }
-  );
+      try {
 
-  client.auth.onAuthStateChange((event, session) => {
-    if (event === "SIGNED_OUT") {
-      loginPanel.style.display = "block";
-      dashboard.style.display = "none";
-    }
-  });
+        const { error } = await client.auth.updateUser({
+          password: password
+        });
 
-  checkAdminAccess();
-</script>
+        if (error) {
+
+          showMessage(
+            "reset-message",
+            error.message,
+            true
+          );
+
+          return;
+        }
+
+        await client.auth.signOut();
+
+        resetForm.reset();
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "Password updated successfully. You can now sign in."
+        );
+
+      } catch (error) {
+
+        showMessage(
+          "reset-message",
+          "Unable to update password. Please try again.",
+          true
+        );
+
+      } finally {
+
+        button.disabled = false;
+      }
+
+    });
+
+
+    // ==========================================
+    // 11. SIGN OUT
+    // ==========================================
+
+    document
+      .getElementById("sign-out")
+      .addEventListener("click", async () => {
+
+        const { error } = await client.auth.signOut();
+
+        if (error) {
+
+          alert("Unable to sign out. Please try again.");
+
+          return;
+        }
+
+        loginForm.reset();
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "You have signed out successfully."
+        );
+
+      });
+
+
+    // ==========================================
+    // 12. AUTHENTICATION STATE
+    // ==========================================
+
+    let recoveryMode = false;
+
+    client.auth.onAuthStateChange((event) => {
+
+      if (event === "PASSWORD_RECOVERY") {
+
+        recoveryMode = true;
+
+        showPasswordReset();
+      }
+
+      if (event === "SIGNED_OUT") {
+
+        recoveryMode = false;
+
+        showLogin();
+      }
+
+    });
+
+
+    // ==========================================
+    // 13. INITIALISE APPLICATION
+    // ==========================================
+
+    async function initialise() {
+
+      if (
+        SUPABASE_PUBLISHABLE_KEY ===
+        "PASTE_YOUR_PUBLISHABLE_KEY_HERE"
+      ) {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "Please configure your Supabase Publishable key.",
+          true
+        );
+
+        return;
+      }
+
+      const {
+        data: { session },
+        error
+      } = await client.auth.getSession();
+
+      if (error) {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "Unable to verify your session. Please sign in again.",
+          true
+        );
+
+        return;
+      }
+
+      if (recoveryMode) {
+
+        showPasswordReset();
+
+        return;
+      }
+
+      if (session) {
+
+        await checkAdminAccess();
+
+      } else {
+
+        showLogin();
+      }
+    }
+
+    initialise();
 
   </script>
+
 </body>
 </html>
