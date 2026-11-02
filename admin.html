@@ -15,7 +15,6 @@
       --text: #1f2937;
       --muted: #64748b;
       --border: #e2e8f0;
-      --white: #fff;
       --danger: #b91c1c;
       --orange: #b45309;
     }
@@ -57,7 +56,7 @@
     }
 
     main {
-      max-width: 1250px;
+      max-width: 1300px;
       margin: 35px auto;
       padding: 0 20px;
     }
@@ -74,7 +73,6 @@
     #reset-panel {
       max-width: 600px;
       margin: 0 auto;
-      padding: 28px;
     }
 
     #dashboard,
@@ -109,22 +107,17 @@
       color: var(--text);
     }
 
-    input:focus, select:focus {
-      outline: 2px solid #4e733b40;
-      border-color: var(--green);
-    }
-
     button {
       background: var(--green);
       color: white;
       border: 0;
       border-radius: 8px;
-      padding: 11px 17px;
+      padding: 11px 16px;
       font-size: 14px;
       cursor: pointer;
     }
 
-    button:hover { opacity: .9; }
+    button:hover { opacity: .91; }
 
     button:disabled {
       opacity: .55;
@@ -160,8 +153,8 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
       margin: 22px 0;
     }
 
@@ -169,7 +162,7 @@
       background: white;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
     }
 
     .stat span {
@@ -181,7 +174,7 @@
     .stat strong {
       display: block;
       margin-top: 10px;
-      font-size: 28px;
+      font-size: 27px;
     }
 
     .toolbar {
@@ -199,7 +192,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 750px;
+      min-width: 800px;
     }
 
     th, td {
@@ -223,7 +216,7 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
-      text-transform: capitalize;
+      white-space: nowrap;
     }
 
     .status-pending {
@@ -231,7 +224,12 @@
       color: #92400e;
     }
 
-    .status-approved {
+    .status-under_review {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-accepted {
       background: #dcfce7;
       color: #166534;
     }
@@ -249,14 +247,15 @@
     .detail-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: 15px;
     }
 
     .detail-item {
-      padding: 12px;
+      padding: 13px;
       background: #f8fafc;
       border-radius: 8px;
       overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .detail-item span {
@@ -281,15 +280,18 @@
 
     .hidden { display: none !important; }
 
-    @media (max-width: 750px) {
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
       .stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
+      .toolbar,
       .detail-grid {
         grid-template-columns: 1fr;
       }
@@ -312,7 +314,6 @@
 <main>
 
   <!-- LOGIN -->
-
   <section class="panel" id="login-panel">
     <h2>Management Login</h2>
     <p class="muted">
@@ -322,7 +323,8 @@
     <form id="login-form">
       <div class="field">
         <label for="email">Email address</label>
-        <input id="email" type="email" autocomplete="username" required>
+        <input id="email" type="email"
+          autocomplete="username" required>
       </div>
 
       <div class="field">
@@ -331,10 +333,14 @@
           autocomplete="current-password" required>
       </div>
 
-      <button type="submit" id="login-button">Sign in</button>
+      <button type="submit" id="login-button">
+        Sign in
+      </button>
 
       <button type="button" class="text-button"
-        id="forgot-password">Forgot Password?</button>
+        id="forgot-password">
+        Forgot Password?
+      </button>
 
       <p id="login-message" class="message"
         role="status" aria-live="polite"></p>
@@ -343,7 +349,6 @@
 
 
   <!-- PASSWORD RESET -->
-
   <section class="panel" id="reset-panel">
     <h2>Set New Password</h2>
     <p class="muted">Enter and confirm your new password.</p>
@@ -372,13 +377,14 @@
 
 
   <!-- DASHBOARD -->
-
   <section id="dashboard">
 
     <div class="dashboard-header">
       <div>
         <h2>Management Dashboard</h2>
-        <p class="muted">Volunteer applications and programme overview</p>
+        <p class="muted">
+          Volunteer applications and programme overview
+        </p>
       </div>
 
       <button id="sign-out" class="secondary" type="button">
@@ -388,8 +394,8 @@
 
 
     <!-- STATISTICS -->
-
     <div class="stats">
+
       <div class="stat">
         <span>Total applications</span>
         <strong id="total-count">0</strong>
@@ -401,20 +407,26 @@
       </div>
 
       <div class="stat">
-        <span>Approved</span>
-        <strong id="approved-count">0</strong>
+        <span>Under review</span>
+        <strong id="review-count">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Accepted</span>
+        <strong id="accepted-count">0</strong>
       </div>
 
       <div class="stat">
         <span>Rejected</span>
         <strong id="rejected-count">0</strong>
       </div>
+
     </div>
 
 
     <!-- APPLICATIONS -->
-
     <section class="panel">
+
       <div class="dashboard-header">
         <div>
           <h2>Volunteer Applications</h2>
@@ -429,22 +441,26 @@
       </div>
 
       <div class="toolbar">
+
         <input
           id="search-input"
           type="search"
           placeholder="Search by name or email..."
+          aria-label="Search applications"
         >
 
         <select id="status-filter" aria-label="Filter by status">
           <option value="all">All applications</option>
           <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
+          <option value="under_review">Under review</option>
+          <option value="accepted">Accepted</option>
           <option value="rejected">Rejected</option>
         </select>
 
         <button id="clear-search" class="secondary" type="button">
           Clear
         </button>
+
       </div>
 
       <p id="applications-message" class="message"
@@ -471,14 +487,17 @@
           </tbody>
         </table>
       </div>
+
     </section>
 
 
     <!-- APPLICATION DETAILS -->
+    <section class="panel" id="details-panel"
+      style="margin-top:22px">
 
-    <section class="panel" id="details-panel" style="margin-top:22px">
       <div class="dashboard-header">
         <h2>Application Details</h2>
+
         <button id="close-details" class="secondary" type="button">
           Close
         </button>
@@ -487,8 +506,13 @@
       <div id="details-content" class="detail-grid"></div>
 
       <div class="actions">
+
         <button id="approve-button" type="button">
           Approve Application
+        </button>
+
+        <button id="review-button" class="secondary" type="button">
+          Mark Under Review
         </button>
 
         <button id="reject-button" class="danger" type="button">
@@ -498,10 +522,12 @@
         <button id="pending-button" class="warning" type="button">
           Set as Pending
         </button>
+
       </div>
 
       <p id="details-message" class="message"
         role="status" aria-live="polite"></p>
+
     </section>
 
   </section>
@@ -509,8 +535,7 @@
 </main>
 
 
-<!-- SUPABASE -->
-
+<!-- SUPABASE LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -522,7 +547,7 @@
   const SUPABASE_URL =
     "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
 
-  // Keep your existing Publishable key here.
+  // Keep your existing Supabase Publishable key.
   // Never use a Secret key or service_role key.
 
   const SUPABASE_PUBLISHABLE_KEY =
@@ -538,6 +563,13 @@
   // 2. APPLICATION STATE
   // ==========================================
 
+  const VALID_STATUSES = [
+    "pending",
+    "under_review",
+    "accepted",
+    "rejected"
+  ];
+
   let applications = [];
   let selectedApplication = null;
   let recoveryMode = false;
@@ -545,6 +577,7 @@
   const loginPanel = document.getElementById("login-panel");
   const resetPanel = document.getElementById("reset-panel");
   const dashboard = document.getElementById("dashboard");
+
   const loginForm = document.getElementById("login-form");
   const resetForm = document.getElementById("reset-form");
 
@@ -581,8 +614,6 @@
     resetPanel.style.display = "block";
     dashboard.style.display = "none";
 
-    resetForm.reset();
-
     showMessage(
       "reset-message",
       "Enter your new password."
@@ -601,23 +632,23 @@
   // ==========================================
 
   async function checkAdminAccess() {
+
     const {
       data: { session },
       error: sessionError
     } = await client.auth.getSession();
 
-    if (sessionError) {
+    if (sessionError || !session) {
       showLogin();
-      showMessage(
-        "login-message",
-        "Session error: " + sessionError.message,
-        true
-      );
-      return false;
-    }
 
-    if (!session) {
-      showLogin();
+      if (sessionError) {
+        showMessage(
+          "login-message",
+          "Session error: " + sessionError.message,
+          true
+        );
+      }
+
       return false;
     }
 
@@ -632,6 +663,7 @@
 
     if (roleError) {
       console.error("Role verification error:", roleError);
+
       showLogin();
 
       showMessage(
@@ -643,24 +675,14 @@
       return false;
     }
 
-    if (!roleRecord) {
+    if (!roleRecord || roleRecord.role !== "admin") {
+      await client.auth.signOut();
+
       showLogin();
 
       showMessage(
         "login-message",
-        "No role record found for user: " + session.user.id,
-        true
-      );
-
-      return false;
-    }
-
-    if (roleRecord.role !== "admin") {
-      showLogin();
-
-      showMessage(
-        "login-message",
-        "Incorrect role: " + roleRecord.role,
+        "Access denied. An authorised EHF administrator account is required.",
         true
       );
 
@@ -696,6 +718,7 @@
     showMessage("login-message", "Signing in...");
 
     try {
+
       const { error } = await client.auth.signInWithPassword({
         email,
         password
@@ -713,6 +736,7 @@
       await checkAdminAccess();
 
     } catch (error) {
+
       console.error(error);
 
       showMessage(
@@ -757,6 +781,7 @@
       );
 
       try {
+
         const { error } =
           await client.auth.resetPasswordForEmail(email, {
             redirectTo: window.location.origin + "/admin.html"
@@ -776,6 +801,7 @@
         }
 
       } catch (error) {
+
         showMessage(
           "login-message",
           error.message,
@@ -827,6 +853,7 @@
     showMessage("reset-message", "Updating password...");
 
     try {
+
       const { error } = await client.auth.updateUser({
         password
       });
@@ -854,6 +881,7 @@
       );
 
     } catch (error) {
+
       showMessage(
         "reset-message",
         error.message,
@@ -904,6 +932,7 @@
       .order("submitted_at", { ascending: false });
 
     if (error) {
+
       console.error("Applications loading error:", error);
 
       applicationsBody.innerHTML = `
@@ -929,7 +958,7 @@
     showMessage(
       "applications-message",
       applications.length === 0
-        ? "No volunteer applications have been submitted yet. You can test the registration form."
+        ? "No volunteer applications have been submitted yet."
         : applications.length + " application(s) loaded successfully."
     );
   }
@@ -941,29 +970,25 @@
 
   function updateStatistics() {
 
-    const total = applications.length;
+    document.getElementById("total-count").textContent =
+      applications.length;
 
-    const pending = applications.filter(
-      item => item.status === "pending"
-    ).length;
+    document.getElementById("pending-count").textContent =
+      applications.filter(item => item.status === "pending").length;
 
-    const approved = applications.filter(
-      item => item.status === "approved"
-    ).length;
+    document.getElementById("review-count").textContent =
+      applications.filter(item => item.status === "under_review").length;
 
-    const rejected = applications.filter(
-      item => item.status === "rejected"
-    ).length;
+    document.getElementById("accepted-count").textContent =
+      applications.filter(item => item.status === "accepted").length;
 
-    document.getElementById("total-count").textContent = total;
-    document.getElementById("pending-count").textContent = pending;
-    document.getElementById("approved-count").textContent = approved;
-    document.getElementById("rejected-count").textContent = rejected;
+    document.getElementById("rejected-count").textContent =
+      applications.filter(item => item.status === "rejected").length;
   }
 
 
   // ==========================================
-  // 11. SAFE TEXT DISPLAY
+  // 11. SAFE DISPLAY HELPERS
   // ==========================================
 
   function makeCell(value) {
@@ -973,17 +998,30 @@
   }
 
   function makeStatus(status) {
+
     const span = document.createElement("span");
 
-    span.className = "status status-" + status;
-    span.textContent = status || "unknown";
+    const safeStatus = VALID_STATUSES.includes(status)
+      ? status
+      : "pending";
+
+    span.className = "status status-" + safeStatus;
+
+    const labels = {
+      pending: "Pending",
+      under_review: "Under Review",
+      accepted: "Accepted",
+      rejected: "Rejected"
+    };
+
+    span.textContent = labels[safeStatus];
 
     return span;
   }
 
 
   // ==========================================
-  // 12. RENDER APPLICATIONS TABLE
+  // 12. RENDER APPLICATIONS
   // ==========================================
 
   function renderApplications() {
@@ -1010,10 +1048,12 @@
     applicationsBody.innerHTML = "";
 
     if (filtered.length === 0) {
+
       const row = document.createElement("tr");
       const cell = document.createElement("td");
 
       cell.colSpan = 7;
+
       cell.textContent = applications.length === 0
         ? "No applications available."
         : "No matching applications found.";
@@ -1132,18 +1172,11 @@
       content.appendChild(addDetail(label, value));
     });
 
-    const panel =
-      document.getElementById("details-panel");
-
-    panel.style.display = "block";
-
-    showMessage(
-      "details-message",
-      "Review the application before changing its status."
-    );
-
     document.getElementById("approve-button").disabled =
-      item.status === "approved";
+      item.status === "accepted";
+
+    document.getElementById("review-button").disabled =
+      item.status === "under_review";
 
     document.getElementById("reject-button").disabled =
       item.status === "rejected";
@@ -1151,7 +1184,14 @@
     document.getElementById("pending-button").disabled =
       item.status === "pending";
 
-    panel.scrollIntoView({
+    document.getElementById("details-panel").style.display = "block";
+
+    showMessage(
+      "details-message",
+      "Review the application before changing its status."
+    );
+
+    document.getElementById("details-panel").scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
@@ -1166,31 +1206,34 @@
 
     if (!selectedApplication) return;
 
-    const allowedStatuses = [
-  "pending",
-  "under_review",
-  "accepted",
-  "rejected"
-    ];
+    if (!VALID_STATUSES.includes(newStatus)) {
 
-    if (!allowedStatuses.includes(newStatus)) {
       showMessage(
         "details-message",
         "Invalid application status.",
         true
       );
+
       return;
     }
 
+    const statusLabels = {
+      pending: "Pending",
+      under_review: "Under Review",
+      accepted: "Accepted",
+      rejected: "Rejected"
+    };
+
     const confirmed = window.confirm(
-      "Are you sure you want to change this application to " +
-      newStatus + "?"
+      "Are you sure you want to change this application status to " +
+      statusLabels[newStatus] + "?"
     );
 
     if (!confirmed) return;
 
     const buttons = [
       document.getElementById("approve-button"),
+      document.getElementById("review-button"),
       document.getElementById("reject-button"),
       document.getElementById("pending-button")
     ];
@@ -1202,58 +1245,90 @@
       "Updating application status..."
     );
 
-    const {
-      data,
-      error
-    } = await client
-      .from("volunteer_intake")
-      .update({ status: newStatus })
-      .eq("id", selectedApplication.id)
-      .select("id, status")
-      .single();
+    try {
 
-    if (error) {
-      console.error("Status update error:", error);
+      const applicationId = selectedApplication.id;
+
+      const {
+        data,
+        error
+      } = await client
+        .from("volunteer_intake")
+        .update({ status: newStatus })
+        .eq("id", applicationId)
+        .select("id, status")
+        .single();
+
+      if (error) {
+
+        console.error("Status update error:", error);
+
+        showMessage(
+          "details-message",
+          "Update failed: " + error.message,
+          true
+        );
+
+        buttons.forEach(button => button.disabled = false);
+
+        return;
+      }
+
+      if (!data || data.status !== newStatus) {
+
+        showMessage(
+          "details-message",
+          "The database did not confirm the requested status change.",
+          true
+        );
+
+        buttons.forEach(button => button.disabled = false);
+
+        return;
+      }
 
       showMessage(
         "details-message",
-        "Update failed: " + error.message,
+        "Application status updated successfully."
+      );
+
+      await loadApplications();
+
+      openApplicationDetails(applicationId);
+
+      showMessage(
+        "details-message",
+        "Application status successfully changed to " +
+        statusLabels[newStatus] + "."
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "details-message",
+        "Unexpected error: " + error.message,
         true
       );
 
       buttons.forEach(button => button.disabled = false);
-
-      return;
     }
-
-    if (!data) {
-      showMessage(
-        "details-message",
-        "No updated record was returned. Check the database policy.",
-        true
-      );
-
-      buttons.forEach(button => button.disabled = false);
-
-      return;
-    }
-
-    showMessage(
-      "details-message",
-      "Application status updated successfully."
-    );
-
-    selectedApplication.status = data.status;
-
-    await loadApplications();
-
-    openApplicationDetails(selectedApplication.id);
   }
 
+
+  // ==========================================
+  // 15. STATUS BUTTONS
+  // ==========================================
 
   document.getElementById("approve-button")
     .addEventListener("click", () => {
       updateApplicationStatus("accepted");
+    });
+
+  document.getElementById("review-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("under_review");
     });
 
   document.getElementById("reject-button")
@@ -1268,7 +1343,7 @@
 
 
   // ==========================================
-  // 15. SEARCH AND FILTER
+  // 16. SEARCH AND FILTER
   // ==========================================
 
   document.getElementById("search-input")
@@ -1288,7 +1363,7 @@
 
 
   // ==========================================
-  // 16. REFRESH APPLICATIONS
+  // 17. REFRESH APPLICATIONS
   // ==========================================
 
   document.getElementById("refresh-button")
@@ -1308,7 +1383,7 @@
 
 
   // ==========================================
-  // 17. CLOSE DETAILS
+  // 18. CLOSE DETAILS
   // ==========================================
 
   document.getElementById("close-details")
@@ -1322,7 +1397,7 @@
 
 
   // ==========================================
-  // 18. SIGN OUT
+  // 19. SIGN OUT
   // ==========================================
 
   document.getElementById("sign-out")
@@ -1349,7 +1424,7 @@
 
 
   // ==========================================
-  // 19. AUTHENTICATION STATE
+  // 20. AUTHENTICATION EVENTS
   // ==========================================
 
   client.auth.onAuthStateChange((event) => {
@@ -1368,7 +1443,7 @@
 
 
   // ==========================================
-  // 20. INITIALISE
+  // 21. INITIALISE
   // ==========================================
 
   async function initialise() {
@@ -1397,6 +1472,7 @@
       } = await client.auth.getSession();
 
       if (error) {
+
         showLogin();
 
         showMessage(
