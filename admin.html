@@ -9,15 +9,36 @@
 
   <style>
     :root {
-      --green: #4e733b;
+      --green: #2c5282;
       --blue: #2c5282;
-      --bg: #f4f7f4;
+      --bg: #f3f7fc;
       --text: #1f2937;
       --muted: #64748b;
       --border: #e2e8f0;
       --danger: #b91c1c;
       --orange: #b45309;
     }
+
+
+    :root {
+      --green: #2c5282;
+      --blue: #2c5282;
+      --bg: #f3f7fc;
+      --accent-soft: #eff6ff;
+      --accent-border: #bfdbfe;
+    }
+    header h1 { color: var(--blue); }
+    button { background: var(--blue); }
+    button.secondary { background: var(--blue); }
+    .sidebar { background: var(--blue); }
+    .nav-label { color: #dbeafe; }
+    .nav-link { color: #f8fbff; }
+    .nav-link:hover, .nav-link.active { background: #ffffff2b; }
+    .module-placeholder { background: var(--accent-soft); border-color: var(--accent-border); }
+    .module-placeholder strong, .section-view h2, .section-view h3 { color: #1e3a5f; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #93c5fd; border-color: #2c5282; }
+    .profile-candidate { border-color: var(--accent-border); }
+    .profile-status { background: #dbeafe; color: #1e40af; }
 
     * { box-sizing: border-box; }
 
@@ -97,7 +118,7 @@
       margin-bottom: 8px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 12px;
       border: 1px solid #cbd5e1;
@@ -301,13 +322,13 @@
   
 /* EHF dashboard workspace */
 .workspace{display:grid;grid-template-columns:245px minmax(0,1fr);gap:20px;align-items:start}
-.sidebar{background:#18372c;color:#fff;border-radius:15px;padding:18px 13px;position:sticky;top:15px;min-height:calc(100vh - 130px)}
+.sidebar{background:#2c5282;color:#fff;border-radius:15px;padding:18px 13px;position:sticky;top:15px;min-height:calc(100vh - 130px)}
 .sidebar-brand{display:flex;align-items:center;gap:10px;padding:5px 7px 18px;border-bottom:1px solid #ffffff30;margin-bottom:12px}
 .sidebar-brand img{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
-.sidebar-brand strong{display:block;font-size:13px}.sidebar-brand small{display:block;color:#c9d9ce;font-size:11px;margin-top:4px}
-.nav-label{font-size:10px;letter-spacing:1px;color:#a9c0b0;padding:12px 9px 5px}
-.nav-link{display:block;width:100%;text-align:left;background:transparent;color:#edf4ef;padding:10px;border-radius:8px;font-size:12px;margin:2px 0}
-.nav-link:hover,.nav-link.active{background:#ffffff20;opacity:1}
+.sidebar-brand strong{display:block;font-size:13px}.sidebar-brand small{display:block;color:#dbeafe;font-size:11px;margin-top:4px}
+.nav-label{font-size:10px;letter-spacing:1px;color:#dbeafe;padding:12px 9px 5px}
+.nav-link{display:block;width:100%;text-align:left;background:transparent;color:#f8fbff;padding:10px;border-radius:8px;font-size:12px;margin:2px 0}
+.nav-link:hover,.nav-link.active{background:#ffffff2b;opacity:1}
 .workspace-main{min-width:0}.topbar{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
 .topbar small{display:block;color:var(--muted);margin-top:4px}
 .section-view{display:none}.section-view.active{display:block}
@@ -315,7 +336,7 @@
 .metric-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:17px}
 .metric-card span{font-size:12px;color:var(--muted)}.metric-card strong{display:block;font-size:27px;margin-top:12px}
 .module-panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:22px;margin:17px 0}
-.module-placeholder{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:9px;padding:20px;color:var(--muted);line-height:1.7}
+.module-placeholder{background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:20px;color:var(--muted);line-height:1.7}
 .module-placeholder strong{display:block;color:var(--text);margin-bottom:6px}
 
 .profile-candidate-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:14px}
@@ -585,15 +606,109 @@
             <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Expertise</th><th>Start date</th><th>End date</th><th>Status</th></tr></thead><tbody id="profiles-body"><tr><td colspan="6">Profiles will load when this section is opened.</td></tr></tbody></table></div>
           </section>
         </div>
-        <div class="section-view" id="hours-view"><div class="module-panel"><h2>Attendance &amp; Volunteer Hours</h2><div class="module-placeholder"><strong>Time log review</strong>Review pending submissions, approve or reject hours, and inspect reviewer comments.</div></div></div>
-        <div class="section-view" id="performance-view"><div class="module-panel"><h2>Performance Reviews</h2><div class="module-placeholder"><strong>Volunteer performance</strong>Record reliability, teamwork, communication and quality scores, achievements and improvement areas.</div></div></div>
-        <div class="section-view" id="certificates-view"><div class="module-panel"><h2>Certificates</h2><div class="module-placeholder"><strong>Certificate management</strong>Track eligibility, required hours, approval, issue and delivery status.</div></div></div>
-        <div class="section-view" id="projects-view"><div class="module-panel"><h2>Projects</h2><div class="module-placeholder"><strong>Project management</strong>Create and manage projects, descriptions, dates and project status.</div></div></div>
-        <div class="section-view" id="tasks-view"><div class="module-panel"><h2>Tasks &amp; Assignments</h2><div class="module-placeholder"><strong>Task allocation</strong>Create tasks, assign volunteers, set due dates and monitor task status.</div></div></div>
-        <div class="section-view" id="users-view"><div class="module-panel"><h2>Users &amp; Permissions</h2><div class="module-placeholder"><strong>Access management</strong>Role editing is not enabled because current RLS policies do not permit role changes.</div></div></div>
-        <div class="section-view" id="reports-view"><div class="module-panel"><h2>Reports &amp; Analytics</h2><div class="module-placeholder"><strong>Programme reporting</strong>Reports for volunteers, applications, projects, tasks, hours and certificates.</div></div></div>
-        <div class="section-view" id="settings-view"><div class="module-panel"><h2>System Settings</h2><div class="module-placeholder"><strong>Portal configuration</strong>System-wide settings will be added after the operational modules.</div></div></div>
-        <div class="section-view" id="audit-view"><div class="module-panel"><h2>Audit Logs</h2><div class="module-placeholder"><strong>Administrative activity history</strong>An audit log table is not in the current schema; this module is reserved until one is designed.</div></div></div>
+        <div class="section-view" id="hours-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Attendance &amp; Volunteer Hours</h2><p class="muted">Review submitted time logs and approve, reject or request revisions.</p></div><button class="secondary" id="refresh-hours" type="button">Refresh</button></div>
+            <p id="hours-message" class="message" role="status" aria-live="polite"></p>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer</th><th>Project</th><th>Activity</th><th>Duration</th><th>Submitted</th><th>Status</th><th>Review</th></tr></thead><tbody id="hours-body"><tr><td colspan="7">Open this section to load time logs.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="performance-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Performance Reviews</h2><p class="muted">Record volunteer performance across four areas, with achievements and improvement notes.</p></div><button class="secondary" id="refresh-reviews" type="button">Refresh</button></div>
+            <p id="reviews-message" class="message" role="status" aria-live="polite"></p>
+            <form id="review-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="review-volunteer">Volunteer</label><select id="review-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="review-date">Review date</label><input id="review-date" name="review_date" type="date" required></div>
+                <div class="field"><label for="review-reliability">Reliability (1–5)</label><select id="review-reliability" name="reliability_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-teamwork">Teamwork (1–5)</label><select id="review-teamwork" name="teamwork_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-communication">Communication (1–5)</label><select id="review-communication" name="communication_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-quality">Quality (1–5)</label><select id="review-quality" name="quality_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+              </div>
+              <div class="field"><label for="review-achievements">Achievements</label><textarea id="review-achievements" name="achievements" rows="2"></textarea></div>
+              <div class="field"><label for="review-improvements">Improvement areas</label><textarea id="review-improvements" name="improvement_areas" rows="2"></textarea></div>
+              <div class="field"><label for="review-notes">Additional notes</label><textarea id="review-notes" name="notes" rows="2"></textarea></div>
+              <button type="submit" id="create-review-button">Save Review</button>
+            </form>
+            <h3>Review history</h3><div class="table-wrap"><table><thead><tr><th>Volunteer</th><th>Date</th><th>Reliability</th><th>Teamwork</th><th>Communication</th><th>Quality</th><th>Notes</th></tr></thead><tbody id="reviews-body"><tr><td colspan="7">No reviews loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="certificates-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Certificates</h2><p class="muted">Track eligibility, required hours, approval, issue and delivery.</p></div><button class="secondary" id="refresh-certificates" type="button">Refresh</button></div>
+            <p id="certificates-message" class="message" role="status" aria-live="polite"></p>
+            <form id="certificate-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="certificate-volunteer">Volunteer</label><select id="certificate-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="certificate-hours">Required hours</label><input id="certificate-hours" name="required_hours" type="number" min="0" value="20" required></div>
+                <div class="field"><label for="certificate-status">Initial status</label><select id="certificate-status" name="certificate_status"><option value="not_eligible">Not eligible</option><option value="eligible">Eligible</option><option value="approved">Approved</option></select></div>
+                <div class="field"><label for="certificate-reference">Certificate reference</label><input id="certificate-reference" name="certificate_reference" maxlength="100"></div>
+              </div>
+              <div class="field"><label for="certificate-notes">Notes</label><textarea id="certificate-notes" name="notes" rows="2"></textarea></div>
+              <button type="submit" id="create-certificate-button">Create Certificate Record</button>
+            </form>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer ID</th><th>Reference</th><th>Required hours</th><th>Status</th><th>Issued</th><th>Delivered</th><th>Update</th></tr></thead><tbody id="certificates-body"><tr><td colspan="7">No certificate records loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="projects-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Projects</h2><p class="muted">Create projects and manage programme dates and status.</p></div><button class="secondary" id="refresh-projects" type="button">Refresh</button></div>
+            <p id="projects-message" class="message" role="status" aria-live="polite"></p>
+            <h3>Create a project</h3>
+            <form id="project-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="project-name">Project name</label><input id="project-name" name="name" maxlength="150" required placeholder="e.g. Digital Skills Support"></div>
+                <div class="field"><label for="project-status">Initial status</label><select id="project-status" name="project_status" required><option value="planned" selected>Planned</option><option value="active">Active</option></select></div>
+                <div class="field"><label for="project-start-date">Start date</label><input id="project-start-date" name="start_date" type="date"></div>
+                <div class="field"><label for="project-end-date">End date</label><input id="project-end-date" name="end_date" type="date"></div>
+              </div>
+              <div class="field"><label for="project-description">Description</label><textarea id="project-description" name="description" rows="3" maxlength="2000" placeholder="Project objectives and activities"></textarea></div>
+              <button id="create-project-button" type="submit">Create Project</button>
+            </form>
+          </section>
+          <section class="module-panel">
+            <h3>Registered projects</h3>
+            <div class="toolbar"><input id="project-search" type="search" placeholder="Search projects..." aria-label="Search projects"></div>
+            <div class="table-wrap"><table><thead><tr><th>Project</th><th>Description</th><th>Start date</th><th>End date</th><th>Status</th><th>Update</th></tr></thead><tbody id="projects-body"><tr><td colspan="6">Projects will load when this section is opened.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="tasks-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Tasks &amp; Assignments</h2><p class="muted">Create project tasks and optionally assign them to active volunteers.</p></div><button class="secondary" id="refresh-tasks" type="button">Refresh</button></div>
+            <p id="tasks-message" class="message" role="status" aria-live="polite"></p>
+            <form id="task-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="task-title">Task title</label><input id="task-title" name="title" maxlength="180" required></div>
+                <div class="field"><label for="task-project">Project</label><select id="task-project" name="project_id" required><option value="">Load projects first</option></select></div>
+                <div class="field"><label for="task-volunteer">Assign to volunteer (optional)</label><select id="task-volunteer" name="assigned_to"><option value="">Unassigned</option></select></div>
+                <div class="field"><label for="task-due-date">Due date</label><input id="task-due-date" name="due_date" type="date"></div>
+                <div class="field"><label for="task-status">Status</label><select id="task-status" name="task_status"><option value="pending">Pending</option><option value="in_progress">In progress</option></select></div>
+              </div>
+              <div class="field"><label for="task-description">Description</label><textarea id="task-description" name="description" rows="2"></textarea></div>
+              <button type="submit" id="create-task-button">Create Task</button>
+            </form>
+            <div class="table-wrap"><table><thead><tr><th>Task</th><th>Project</th><th>Assigned volunteer</th><th>Due date</th><th>Status</th><th>Update</th></tr></thead><tbody id="tasks-body"><tr><td colspan="6">No tasks loaded.</td></tr></tbody></table></div>
+          </section>
+          <section class="module-panel">
+            <h3>Project volunteer assignments</h3>
+            <p class="muted">Assign a volunteer to a project with a role description.</p>
+            <form id="assignment-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="assignment-volunteer">Volunteer</label><select id="assignment-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="assignment-project">Project</label><select id="assignment-project" name="project_id" required><option value="">Load projects first</option></select></div>
+                <div class="field"><label for="assignment-role">Role description</label><input id="assignment-role" name="role_description" maxlength="500" required></div>
+              </div>
+              <button type="submit">Assign Volunteer to Project</button>
+            </form>
+            <p id="assignments-message" class="message" role="status" aria-live="polite"></p>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer ID</th><th>Project</th><th>Role</th><th>Assigned</th><th>Status</th></tr></thead><tbody id="assignments-body"><tr><td colspan="5">No assignments loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="users-view"><section class="module-panel"><div class="dashboard-header"><div><h2>Users &amp; Permissions</h2><p class="muted">View registered management roles. Role changes are intentionally disabled until secure role-management policies are designed.</p></div><button class="secondary" id="refresh-users" type="button">Refresh</button></div><p id="users-message" class="message"></p><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Created</th></tr></thead><tbody id="users-body"><tr><td colspan="3">Open this section to load roles.</td></tr></tbody></table></div></section></div>
+        <div class="section-view" id="reports-view"><section class="module-panel"><div class="dashboard-header"><div><h2>Reports &amp; Analytics</h2><p class="muted">Live summary from the operational tables.</p></div><button class="secondary" id="refresh-reports" type="button">Refresh</button></div><p id="reports-message" class="message"></p><div class="metric-grid" id="reports-grid"><div class="metric-card"><span>Applications</span><strong>—</strong></div></div></section></div>
+        <div class="section-view" id="settings-view"><section class="module-panel"><h2>System Settings</h2><p class="muted">Core portal settings are currently managed in Supabase and Cloudflare Pages. This section is informational; no unsafe client-side configuration changes are exposed.</p><ul><li>Authentication and password recovery: Supabase Auth</li><li>Database security: Supabase Row Level Security</li><li>Website deployment: Cloudflare Pages connected to GitHub</li><li>Brand palette: EHF blue #2C5282 with pale blue accents</li></ul></section></div>
+        <div class="section-view" id="audit-view"><section class="module-panel"><h2>Audit Logs</h2><p class="muted">Audit history is not yet available because the current database schema does not contain an audit log table. We should add a dedicated, server-written audit log before displaying or recording administrative events.</p></section></div>
       </div>
     </div>
   </section>
@@ -661,7 +776,7 @@
     if (!element) return;
 
     element.textContent = message;
-    element.style.color = isError ? "#b91c1c" : "#287a3e";
+    element.style.color = isError ? "#b91c1c" : "#2c5282";
   }
 
 
@@ -1635,6 +1750,300 @@
     if (document.getElementById("profiles-view").classList.contains("active")) loadVolunteerProfiles();
   });
 
+  // ==========================================
+  // PROJECT MANAGEMENT
+  // ==========================================
+  const PROJECT_STATUSES = ["planned", "active", "completed", "cancelled"];
+
+  async function loadProjects() {
+    const body = document.getElementById("projects-body");
+    body.innerHTML = '<tr><td colspan="6">Loading projects...</td></tr>';
+    const { data, error } = await client.from("volunteer_projects")
+      .select("id, name, description, start_date, end_date, project_status, created_at")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("Projects load error:", error);
+      body.innerHTML = '<tr><td colspan="6">Unable to load projects.</td></tr>';
+      showMessage("projects-message", "Could not load projects: " + error.message, true);
+      return;
+    }
+    const search = (document.getElementById("project-search").value || "").trim().toLowerCase();
+    const rows = (data || []).filter(project =>
+      String(project.name || "").toLowerCase().includes(search) ||
+      String(project.description || "").toLowerCase().includes(search)
+    );
+    if (!rows.length) {
+      body.innerHTML = '<tr><td colspan="6">No projects found. Create your first project above.</td></tr>';
+    } else {
+      body.innerHTML = rows.map(project => `
+        <tr>
+          <td><strong>${escapeProfileText(project.name)}</strong></td>
+          <td>${escapeProfileText(project.description || "—")}</td>
+          <td>${escapeProfileText(project.start_date || "—")}</td>
+          <td>${escapeProfileText(project.end_date || "—")}</td>
+          <td>${escapeProfileText(project.project_status.replace(/_/g, " "))}</td>
+          <td><select class="project-status-select" data-project-id="${escapeProfileText(project.id)}" aria-label="Status for ${escapeProfileText(project.name)}">${PROJECT_STATUSES.map(status => `<option value="${status}" ${project.project_status === status ? "selected" : ""}>${status.replace(/_/g, " ")}</option>`).join("")}</select><button type="button" class="project-status-save secondary" data-project-id="${escapeProfileText(project.id)}" style="margin-top:6px">Save</button></td>
+        </tr>`).join("");
+    }
+    showMessage("projects-message", `${(data || []).length} project(s) loaded.`);
+  }
+
+  document.getElementById("project-create-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const values = Object.fromEntries(new FormData(form).entries());
+    if (values.start_date && values.end_date && values.end_date < values.start_date) {
+      showMessage("projects-message", "End date cannot be earlier than start date.", true);
+      return;
+    }
+    const button = document.getElementById("create-project-button");
+    button.disabled = true;
+    button.textContent = "Creating...";
+    const { data: { user } } = await client.auth.getUser();
+    const payload = {
+      name: values.name.trim(),
+      description: values.description.trim() || null,
+      start_date: values.start_date || null,
+      end_date: values.end_date || null,
+      project_status: values.project_status,
+      created_by: user?.id || null
+    };
+    const { error } = await client.from("volunteer_projects").insert(payload);
+    button.disabled = false;
+    button.textContent = "Create Project";
+    if (error) {
+      console.error("Create project error:", error);
+      showMessage("projects-message", "Could not create project: " + error.message, true);
+      return;
+    }
+    form.reset();
+    document.getElementById("project-status").value = "planned";
+    showMessage("projects-message", "Project created successfully.");
+    await loadProjects();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("projects-body").addEventListener("click", async event => {
+    const button = event.target.closest(".project-status-save");
+    if (!button) return;
+    const projectId = button.dataset.projectId;
+    const select = document.querySelector(`.project-status-select[data-project-id="${projectId}"]`);
+    const status = select?.value;
+    if (!PROJECT_STATUSES.includes(status)) return;
+    button.disabled = true;
+    const { error } = await client.from("volunteer_projects")
+      .update({ project_status: status }).eq("id", projectId);
+    button.disabled = false;
+    if (error) {
+      showMessage("projects-message", "Could not update project status: " + error.message, true);
+      return;
+    }
+    showMessage("projects-message", "Project status updated.");
+    await loadProjects();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("refresh-projects").addEventListener("click", loadProjects);
+  document.getElementById("project-search").addEventListener("input", () => {
+    if (document.getElementById("projects-view").classList.contains("active")) loadProjects();
+  });
+
+
+  // ==========================================
+  // OPERATIONAL MODULES: TASKS, HOURS, REVIEWS,
+  // CERTIFICATES, ASSIGNMENTS, USERS & REPORTS
+  // ==========================================
+  const TASK_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
+  const CERTIFICATE_STATUSES = ["not_eligible", "eligible", "approved", "issued", "delivered", "cancelled"];
+  let cachedVolunteers = [];
+  let cachedProjects = [];
+
+  async function loadReferenceData() {
+    const [profilesResult, projectsResult] = await Promise.all([
+      client.from("volunteer_profiles").select("id,intake_id,volunteer_status").order("created_at", {ascending:false}),
+      client.from("volunteer_projects").select("id,name,project_status").order("created_at", {ascending:false})
+    ]);
+    if (!profilesResult.error) cachedVolunteers = profilesResult.data || [];
+    if (!projectsResult.error) cachedProjects = projectsResult.data || [];
+    const profileIds = cachedVolunteers.map(p => p.id);
+    let intakeMap = {};
+    if (profileIds.length) {
+      const ids = cachedVolunteers.map(p => p.intake_id).filter(Boolean);
+      if (ids.length) {
+        const {data} = await client.from("volunteer_intake").select("id,full_name,email").in("id", ids);
+        (data || []).forEach(a => intakeMap[a.id] = a);
+      }
+    }
+    const volunteerOptions = cachedVolunteers.map(p => {
+      const a = intakeMap[p.intake_id] || {};
+      return `<option value="${escapeProfileText(p.id)}">${escapeProfileText(a.full_name || p.id)}${a.email ? " — " + escapeProfileText(a.email) : ""}</option>`;
+    }).join("");
+    ["review-volunteer","certificate-volunteer","task-volunteer","assignment-volunteer"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const optional = id === "task-volunteer";
+      el.innerHTML = (optional ? '<option value="">Unassigned</option>' : '<option value="">Select volunteer</option>') + volunteerOptions;
+    });
+    const projectOptions = cachedProjects.map(p => `<option value="${escapeProfileText(p.id)}">${escapeProfileText(p.name)}</option>`).join("");
+    ["task-project","assignment-project"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<option value="">Select project</option>' + projectOptions;
+    });
+  }
+
+  async function loadTasks() {
+    const body = document.getElementById("tasks-body");
+    body.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+    const {data,error} = await client.from("volunteer_tasks")
+      .select("id,project_id,title,description,assigned_to,task_status,due_date,created_at")
+      .order("created_at",{ascending:false});
+    if (error) { body.innerHTML='<tr><td colspan="6">Unable to load tasks.</td></tr>'; showMessage("tasks-message",error.message,true); return; }
+    const projectMap = Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    body.innerHTML = (data||[]).length ? data.map(t=>`<tr>
+      <td><strong>${escapeProfileText(t.title)}</strong><br><small>${escapeProfileText(t.description||"")}</small></td>
+      <td>${escapeProfileText(projectMap[t.project_id]||t.project_id)}</td>
+      <td>${escapeProfileText(t.assigned_to||"Unassigned")}</td>
+      <td>${escapeProfileText(t.due_date||"—")}</td>
+      <td>${escapeProfileText((t.task_status||"").replace(/_/g," "))}</td>
+      <td><select class="task-status-select" data-id="${escapeProfileText(t.id)}">${TASK_STATUSES.map(s=>`<option value="${s}" ${t.task_status===s?"selected":""}>${s.replace(/_/g," ")}</option>`).join("")}</select><button type="button" class="task-status-save secondary" data-id="${escapeProfileText(t.id)}">Save</button></td>
+    </tr>`).join("") : '<tr><td colspan="6">No tasks found.</td></tr>';
+    showMessage("tasks-message",`${(data||[]).length} task(s) loaded.`);
+  }
+
+  document.getElementById("task-create-form").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {error}=await client.from("volunteer_tasks").insert({
+      title:v.title.trim(), description:v.description.trim()||null,
+      project_id:v.project_id, assigned_to:v.assigned_to||null,
+      due_date:v.due_date||null, task_status:v.task_status
+    });
+    if(error){showMessage("tasks-message","Could not create task: "+error.message,true);return;}
+    e.currentTarget.reset(); await loadTasks(); await loadDashboardMetrics();
+    showMessage("tasks-message","Task created successfully.");
+  });
+  document.getElementById("tasks-body").addEventListener("click",async e=>{
+    const b=e.target.closest(".task-status-save"); if(!b)return;
+    const s=document.querySelector(`.task-status-select[data-id="${b.dataset.id}"]`)?.value;
+    if(!TASK_STATUSES.includes(s))return;
+    const {error}=await client.from("volunteer_tasks").update({task_status:s}).eq("id",b.dataset.id);
+    if(error){showMessage("tasks-message",error.message,true);return;}
+    await loadTasks(); await loadDashboardMetrics();
+  });
+  document.getElementById("refresh-tasks").addEventListener("click",async()=>{await loadReferenceData();await loadTasks();});
+
+  async function loadAssignments(){
+    const body=document.getElementById("assignments-body");
+    const {data,error}=await client.from("volunteer_project_assignments")
+      .select("id,volunteer_id,project_id,role_description,assigned_at,assignment_status")
+      .order("assigned_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="5">${escapeProfileText(error.message)}</td></tr>`;return;}
+    const pm=Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    body.innerHTML=(data||[]).length?data.map(a=>`<tr><td>${escapeProfileText(a.volunteer_id)}</td><td>${escapeProfileText(pm[a.project_id]||a.project_id)}</td><td>${escapeProfileText(a.role_description||"")}</td><td>${escapeProfileText(a.assigned_at||"")}</td><td>${escapeProfileText(a.assignment_status||"")}</td></tr>`).join(""):'<tr><td colspan="5">No assignments found.</td></tr>';
+  }
+  document.getElementById("assignment-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {error}=await client.from("volunteer_project_assignments").insert({
+      volunteer_id:v.volunteer_id,project_id:v.project_id,role_description:v.role_description.trim(),assignment_status:"active"
+    });
+    if(error){showMessage("assignments-message","Could not assign volunteer: "+error.message,true);return;}
+    e.currentTarget.reset();await loadAssignments();showMessage("assignments-message","Volunteer assigned to project.");
+  });
+
+  async function loadHours(){
+    const body=document.getElementById("hours-body");
+    const {data,error}=await client.from("volunteer_time_logs")
+      .select("id,volunteer_id,project_id,activity_description,duration_minutes,submitted_at,approval_status,reviewer_comment")
+      .order("submitted_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="7">${escapeProfileText(error.message)}</td></tr>`;showMessage("hours-message",error.message,true);return;}
+    const pm=Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    body.innerHTML=(data||[]).length?data.map(x=>`<tr><td>${escapeProfileText(x.volunteer_id)}</td><td>${escapeProfileText(pm[x.project_id]||x.project_id||"—")}</td><td>${escapeProfileText(x.activity_description||"")}</td><td>${Number(x.duration_minutes||0)} min</td><td>${escapeProfileText(x.submitted_at||"")}</td><td>${escapeProfileText(x.approval_status||"")}</td><td><select class="hours-status" data-id="${escapeProfileText(x.id)}"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="revision_requested">Revision requested</option></select><input class="hours-comment" data-id="${escapeProfileText(x.id)}" placeholder="Reviewer comment"><button class="hours-save secondary" data-id="${escapeProfileText(x.id)}" type="button">Save</button></td></tr>`).join(""):'<tr><td colspan="7">No time logs found.</td></tr>';
+    (data||[]).forEach(x=>{const s=body.querySelector(`.hours-status[data-id="${x.id}"]`);if(s)s.value=x.approval_status||"pending";});
+    showMessage("hours-message",`${(data||[]).length} time log(s) loaded.`);
+  }
+  document.getElementById("hours-body").addEventListener("click",async e=>{
+    const b=e.target.closest(".hours-save");if(!b)return;
+    const id=b.dataset.id, status=document.querySelector(`.hours-status[data-id="${id}"]`).value;
+    const comment=document.querySelector(`.hours-comment[data-id="${id}"]`).value.trim();
+    const {data:{user}}=await client.auth.getUser();
+    const {error}=await client.from("volunteer_time_logs").update({
+      approval_status:status,reviewer_comment:comment||null,reviewed_by:user?.id||null,reviewed_at:new Date().toISOString()
+    }).eq("id",id);
+    if(error){showMessage("hours-message","Could not review time log: "+error.message,true);return;}
+    await loadHours();await loadDashboardMetrics();showMessage("hours-message","Time log review saved.");
+  });
+  document.getElementById("refresh-hours").addEventListener("click",loadHours);
+
+  async function loadReviews(){
+    const body=document.getElementById("reviews-body");
+    const {data,error}=await client.from("volunteer_performance_reviews")
+      .select("id,volunteer_id,review_date,reliability_score,teamwork_score,communication_score,quality_score,achievements,improvement_areas,notes")
+      .order("review_date",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="7">${escapeProfileText(error.message)}</td></tr>`;showMessage("reviews-message",error.message,true);return;}
+    body.innerHTML=(data||[]).length?data.map(r=>`<tr><td>${escapeProfileText(r.volunteer_id)}</td><td>${escapeProfileText(r.review_date||"")}</td><td>${r.reliability_score??"—"}</td><td>${r.teamwork_score??"—"}</td><td>${r.communication_score??"—"}</td><td>${r.quality_score??"—"}</td><td>${escapeProfileText(r.notes||r.achievements||"")}</td></tr>`).join(""):'<tr><td colspan="7">No reviews found.</td></tr>';
+  }
+  document.getElementById("review-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {data:{user}}=await client.auth.getUser();
+    const payload={volunteer_id:v.volunteer_id,reviewer_id:user?.id||null,review_date:v.review_date,
+      reliability_score:Number(v.reliability_score),teamwork_score:Number(v.teamwork_score),
+      communication_score:Number(v.communication_score),quality_score:Number(v.quality_score),
+      achievements:v.achievements||null,improvement_areas:v.improvement_areas||null,notes:v.notes||null};
+    const {error}=await client.from("volunteer_performance_reviews").insert(payload);
+    if(error){showMessage("reviews-message","Could not save review: "+error.message,true);return;}
+    e.currentTarget.reset();await loadReviews();showMessage("reviews-message","Performance review saved.");
+  });
+  document.getElementById("refresh-reviews").addEventListener("click",loadReviews);
+
+  async function loadCertificates(){
+    const body=document.getElementById("certificates-body");
+    const {data,error}=await client.from("volunteer_certificates")
+      .select("id,volunteer_id,certificate_status,required_hours,issued_at,delivered_at,certificate_reference,notes")
+      .order("created_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="7">${escapeProfileText(error.message)}</td></tr>`;showMessage("certificates-message",error.message,true);return;}
+    body.innerHTML=(data||[]).length?data.map(c=>`<tr><td>${escapeProfileText(c.volunteer_id)}</td><td>${escapeProfileText(c.certificate_reference||"—")}</td><td>${c.required_hours??0}</td><td>${escapeProfileText(c.certificate_status||"")}</td><td>${escapeProfileText(c.issued_at||"—")}</td><td>${escapeProfileText(c.delivered_at||"—")}</td><td><select class="certificate-status" data-id="${escapeProfileText(c.id)}">${CERTIFICATE_STATUSES.map(s=>`<option value="${s}" ${c.certificate_status===s?"selected":""}>${s.replace(/_/g," ")}</option>`).join("")}</select><button class="certificate-save secondary" data-id="${escapeProfileText(c.id)}" type="button">Save</button></td></tr>`).join(""):'<tr><td colspan="7">No certificate records found.</td></tr>';
+  }
+  document.getElementById("certificate-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {error}=await client.from("volunteer_certificates").insert({
+      volunteer_id:v.volunteer_id,required_hours:Number(v.required_hours),certificate_status:v.certificate_status,
+      certificate_reference:v.certificate_reference.trim()||null,notes:v.notes.trim()||null
+    });
+    if(error){showMessage("certificates-message","Could not create certificate record: "+error.message,true);return;}
+    e.currentTarget.reset();await loadCertificates();showMessage("certificates-message","Certificate record created.");
+  });
+  document.getElementById("certificates-body").addEventListener("click",async e=>{
+    const b=e.target.closest(".certificate-save");if(!b)return;
+    const id=b.dataset.id,status=document.querySelector(`.certificate-status[data-id="${id}"]`).value;
+    const patch={certificate_status:status};
+    if(status==="issued")patch.issued_at=new Date().toISOString();
+    if(status==="delivered"){patch.delivered_at=new Date().toISOString();patch.issued_at=new Date().toISOString();}
+    const {error}=await client.from("volunteer_certificates").update(patch).eq("id",id);
+    if(error){showMessage("certificates-message",error.message,true);return;}
+    await loadCertificates();showMessage("certificates-message","Certificate status updated.");
+  });
+  document.getElementById("refresh-certificates").addEventListener("click",loadCertificates);
+
+  async function loadUsers(){
+    const body=document.getElementById("users-body");
+    const {data,error}=await client.from("user_roles").select("user_id,role,created_at").order("created_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="3">${escapeProfileText(error.message)}</td></tr>`;showMessage("users-message",error.message,true);return;}
+    body.innerHTML=(data||[]).map(u=>`<tr><td>${escapeProfileText(u.user_id)}</td><td>${escapeProfileText(u.role)}</td><td>${escapeProfileText(u.created_at||"")}</td></tr>`).join("")||'<tr><td colspan="3">No roles found.</td></tr>';
+    showMessage("users-message","Role list loaded. Role editing is disabled by current security policies.");
+  }
+  document.getElementById("refresh-users").addEventListener("click",loadUsers);
+
+  async function loadReports(){
+    const tables=["volunteer_intake","volunteer_profiles","volunteer_projects","volunteer_tasks","volunteer_time_logs","volunteer_certificates"];
+    const results=await Promise.all(tables.map(t=>client.from(t).select("id",{count:"exact",head:true})));
+    const labels=["Applications","Volunteer profiles","Projects","Tasks","Time logs","Certificates"];
+    const grid=document.getElementById("reports-grid");
+    grid.innerHTML=results.map((r,i)=>`<div class="metric-card"><span>${labels[i]}</span><strong>${r.error?"Unavailable":(r.count??0)}</strong></div>`).join("");
+    const failures=results.map((r,i)=>r.error?`${tables[i]}: ${r.error.message}`:null).filter(Boolean);
+    showMessage("reports-message",failures.length?"Some report counts are unavailable: "+failures.join(" | "):"Report counts loaded successfully.",failures.length>0);
+  }
+  document.getElementById("refresh-reports").addEventListener("click",loadReports);
+
   // Dashboard section navigation
   function showSection(viewId) {
     document.querySelectorAll(".section-view").forEach(view => {
@@ -1652,6 +2061,17 @@
     if (viewId === "profiles-view") {
       loadVolunteerProfiles();
     }
+    if (viewId === "projects-view") loadProjects();
+    if (["tasks-view","hours-view","performance-view","certificates-view"].includes(viewId)) {
+      loadReferenceData().then(async()=>{
+        if(viewId==="tasks-view"){await loadTasks();await loadAssignments();}
+        if(viewId==="hours-view")await loadHours();
+        if(viewId==="performance-view")await loadReviews();
+        if(viewId==="certificates-view")await loadCertificates();
+      });
+    }
+    if (viewId === "users-view") loadUsers();
+    if (viewId === "reports-view") loadReports();
   }
   document.querySelectorAll(".nav-link").forEach(button => {
     button.addEventListener("click", () => showSection(button.dataset.view));
