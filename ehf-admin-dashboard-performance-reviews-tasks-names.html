@@ -1,0 +1,2443 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EHF Volunteer Management Portal">
+  <title>EHF | Volunteer Management</title>
+
+  <style>
+    :root {
+      --green: #2c5282;
+      --blue: #2c5282;
+      --bg: #f3f7fc;
+      --text: #1f2937;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #b91c1c;
+      --orange: #b45309;
+    }
+
+
+    :root {
+      --green: #2c5282;
+      --blue: #2c5282;
+      --bg: #f3f7fc;
+      --accent-soft: #eff6ff;
+      --accent-border: #bfdbfe;
+    }
+    header h1 { color: var(--blue); }
+    button { background: var(--blue); }
+    button.secondary { background: var(--blue); }
+    .sidebar { background: var(--blue); }
+    .nav-label { color: #dbeafe; }
+    .nav-link { color: #f8fbff; }
+    .nav-link:hover, .nav-link.active { background: #ffffff2b; }
+    .module-placeholder { background: var(--accent-soft); border-color: var(--accent-border); }
+    .module-placeholder strong, .section-view h2, .section-view h3 { color: #1e3a5f; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #93c5fd; border-color: #2c5282; }
+    .profile-candidate { border-color: var(--accent-border); }
+    .profile-status { background: #dbeafe; color: #1e40af; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: white;
+      padding: 18px 5%;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    header img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    header h1 {
+      margin: 0;
+      color: var(--green);
+      font-size: 20px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      max-width: 1300px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 16px #0f172a08;
+    }
+
+    #login-panel,
+    #reset-panel {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #dashboard,
+    #reset-panel,
+    #details-panel {
+      display: none;
+    }
+
+    h2 { margin-top: 0; }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .field { margin: 18px 0; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      background: var(--green);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover { opacity: .91; }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .secondary { background: var(--blue); }
+    .danger { background: var(--danger); }
+    .warning { background: var(--orange); }
+
+    .text-button {
+      background: transparent;
+      color: var(--blue);
+      text-decoration: underline;
+      padding: 10px 0;
+    }
+
+    .message {
+      min-height: 20px;
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 27px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th, td {
+      padding: 13px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    tr:hover td { background: #f8fafc; }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-under_review {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-accepted {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .view-button {
+      background: var(--blue);
+      padding: 8px 12px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .detail-item {
+      padding: 13px;
+      background: #f8fafc;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .detail-item strong {
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .toolbar,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel { padding: 18px; }
+    }
+  
+/* EHF dashboard workspace */
+.workspace{display:grid;grid-template-columns:245px minmax(0,1fr);gap:20px;align-items:start}
+.sidebar{background:#2c5282;color:#fff;border-radius:15px;padding:18px 13px;position:sticky;top:15px;min-height:calc(100vh - 130px)}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:5px 7px 18px;border-bottom:1px solid #ffffff30;margin-bottom:12px}
+.sidebar-brand img{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
+.sidebar-brand strong{display:block;font-size:13px}.sidebar-brand small{display:block;color:#dbeafe;font-size:11px;margin-top:4px}
+.nav-label{font-size:10px;letter-spacing:1px;color:#dbeafe;padding:12px 9px 5px}
+.nav-link{display:block;width:100%;text-align:left;background:transparent;color:#f8fbff;padding:10px;border-radius:8px;font-size:12px;margin:2px 0}
+.nav-link:hover,.nav-link.active{background:#ffffff2b;opacity:1}
+.workspace-main{min-width:0}.topbar{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.topbar small{display:block;color:var(--muted);margin-top:4px}
+.section-view{display:none}.section-view.active{display:block}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:20px 0}
+.metric-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:17px}
+.metric-card span{font-size:12px;color:var(--muted)}.metric-card strong{display:block;font-size:27px;margin-top:12px}
+.module-panel{background:#fff;border:1px solid var(--border);border-radius:13px;padding:22px;margin:17px 0}
+.module-placeholder{background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;padding:20px;color:var(--muted);line-height:1.7}
+.module-placeholder strong{display:block;color:var(--text);margin-bottom:6px}
+
+.profile-candidate-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:14px}
+.profile-candidate{border:1px solid var(--border);border-radius:10px;padding:16px;background:#fff;min-width:0}
+.profile-candidate h4{margin:0 0 8px;color:var(--text)}
+.profile-candidate p{margin:5px 0;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.profile-create-form{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end;margin-top:13px}
+.profile-create-form label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.profile-create-form input,.profile-create-form select{width:100%;padding:9px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--text)}
+.profile-status{display:inline-block;padding:4px 9px;border-radius:20px;background:#e8eef7;color:#2c5282;font-size:12px;text-transform:capitalize}
+@media(max-width:800px){.profile-candidate-list{grid-template-columns:1fr}.profile-create-form{grid-template-columns:1fr}}
+
+@media(max-width:1050px){.workspace{grid-template-columns:205px minmax(0,1fr)}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.workspace{grid-template-columns:1fr}.sidebar{position:static;min-height:0}.sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.nav-label{grid-column:1/-1}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:0 12px}}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="./ehf-logo.png" alt="EHF logo">
+  <div>
+    <h1>EHF Volunteer Management</h1>
+    <p>Volunteer recruitment, performance and project tracking</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- LOGIN -->
+  <section class="panel" id="login-panel">
+    <h2>Management Login</h2>
+    <p class="muted">
+      Sign in using your authorised EHF management account.
+    </p>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" type="email"
+          autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password"
+          autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" id="login-button">
+        Sign in
+      </button>
+
+      <button type="button" class="text-button"
+        id="forgot-password">
+        Forgot Password?
+      </button>
+
+      <p id="login-message" class="message"
+        role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+
+  <!-- PASSWORD RESET -->
+  <section class="panel" id="reset-panel">
+    <h2>Set New Password</h2>
+    <p class="muted">Enter and confirm your new password.</p>
+
+    <form id="reset-form">
+      <div class="field">
+        <label for="new-password">New password</label>
+        <input id="new-password" type="password"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <div class="field">
+        <label for="confirm-password">Confirm new password</label>
+        <input id="confirm-password" type="password"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" id="update-password-button">
+        Update Password
+      </button>
+
+      <p id="reset-message" class="message"
+        role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+
+
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-brand"><img src="./ehf-logo.png" alt="EHF logo"><div><strong>EHF Management</strong><small>Administrator Workspace</small></div></div>
+        <nav aria-label="Management navigation">
+          <div class="nav-label">MAIN DASHBOARD</div>
+          <button class="nav-link active" data-view="overview-view">▦ Dashboard Overview</button>
+          <div class="nav-label">VOLUNTEERS</div>
+          <button class="nav-link" data-view="applications-view">✉ Volunteer Applications</button>
+          <button class="nav-link" data-view="profiles-view">♙ Volunteer Profiles</button>
+          <button class="nav-link" data-view="hours-view">◷ Attendance &amp; Hours</button>
+          <button class="nav-link" data-view="performance-view">★ Performance Reviews</button>
+          <button class="nav-link" data-view="certificates-view">▤ Certificates</button>
+          <div class="nav-label">OPERATIONS</div>
+          <button class="nav-link" data-view="projects-view">▣ Projects</button>
+          <button class="nav-link" data-view="tasks-view">☑ Tasks &amp; Assignments</button>
+          <div class="nav-label">ADMINISTRATION</div>
+          <button class="nav-link" data-view="users-view">♧ Users &amp; Permissions</button>
+          <button class="nav-link" data-view="reports-view">▥ Reports &amp; Analytics</button>
+          <button class="nav-link" data-view="settings-view">⚙ System Settings</button>
+          <button class="nav-link" data-view="audit-view">☷ Audit Logs</button>
+        </nav>
+      </aside>
+      <div class="workspace-main">
+        <div class="topbar"><div><strong>Volunteer Management System</strong><small id="current-section-label">Dashboard Overview</small></div><button id="sign-out" class="secondary" type="button">Sign out</button></div>
+        <div class="section-view active" id="overview-view">
+          <h2>Dashboard Overview</h2>
+          <p class="muted">Live overview of volunteer applications and programme activity.</p>
+          <div class="metric-grid">
+            <div class="metric-card"><span>Total Applications</span><strong id="metric-applications">—</strong></div>
+            <div class="metric-card"><span>Active Volunteers</span><strong id="metric-volunteers">—</strong></div>
+            <div class="metric-card"><span>Active Projects</span><strong id="metric-projects">—</strong></div>
+            <div class="metric-card"><span>Tasks In Progress</span><strong id="metric-tasks">—</strong></div>
+            <div class="metric-card"><span>Pending Hours</span><strong id="metric-pending-hours">—</strong></div>
+            <div class="metric-card"><span>Approved Volunteer Hours</span><strong id="metric-approved-hours">—</strong></div>
+            <div class="metric-card"><span>Certificates Issued</span><strong id="metric-certificates">—</strong></div>
+            <div class="metric-card"><span>Pending Applications</span><strong id="metric-pending-apps">—</strong></div>
+          </div>
+          <div class="module-panel"><h2>Application Overview</h2><div class="stats">
+            <div class="stat"><span>Pending</span><strong id="pending-count">0</strong></div>
+            <div class="stat"><span>Under Review</span><strong id="review-count">0</strong></div>
+            <div class="stat"><span>Accepted</span><strong id="accepted-count">0</strong></div>
+            <div class="stat"><span>Rejected</span><strong id="rejected-count">0</strong></div>
+            <div class="stat"><span>Total Applications</span><strong id="total-count">0</strong></div>
+          </div></div>
+          <div class="module-panel"><h2>Programme Management</h2><p class="muted">Use the navigation to manage applications and access the modules planned for the next implementation stages.</p><p id="dashboard-data-message" class="message" role="status" aria-live="polite"></p></div>
+        </div>
+        <div class="section-view" id="applications-view">
+    <!-- APPLICATIONS -->
+    <section class="panel">
+
+      <div class="dashboard-header">
+        <div>
+          <h2>Volunteer Applications</h2>
+          <p class="muted">
+            Review and manage volunteer registration requests.
+          </p>
+        </div>
+
+        <button id="refresh-button" class="secondary" type="button">
+          Refresh
+        </button>
+      </div>
+
+      <div class="toolbar">
+
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Search by name or email..."
+          aria-label="Search applications"
+        >
+
+        <select id="status-filter" aria-label="Filter by status">
+          <option value="all">All applications</option>
+          <option value="pending">Pending</option>
+          <option value="under_review">Under review</option>
+          <option value="accepted">Accepted</option>
+          <option value="rejected">Rejected</option>
+        </select>
+
+        <button id="clear-search" class="secondary" type="button">
+          Clear
+        </button>
+
+      </div>
+
+      <p id="applications-message" class="message"
+        role="status" aria-live="polite"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Expertise</th>
+              <th>Availability</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="applications-body">
+            <tr>
+              <td colspan="7">Loading applications...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+
+        </div>
+
+    <!-- APPLICATION DETAILS -->
+    <section class="panel" id="details-panel"
+      style="margin-top:22px">
+
+      <div class="dashboard-header">
+        <h2>Application Details</h2>
+
+        <button id="close-details" class="secondary" type="button">
+          Close
+        </button>
+      </div>
+
+      <div id="details-content" class="detail-grid"></div>
+
+      <div class="actions">
+
+        <button id="approve-button" type="button">
+          Approve Application
+        </button>
+
+        <button id="review-button" class="secondary" type="button">
+          Mark Under Review
+        </button>
+
+        <button id="reject-button" class="danger" type="button">
+          Reject Application
+        </button>
+
+        <button id="pending-button" class="warning" type="button">
+          Set as Pending
+        </button>
+
+      </div>
+
+      <p id="details-message" class="message"
+        role="status" aria-live="polite"></p>
+
+    </section>
+
+
+        <div class="section-view" id="profiles-view">
+          <section class="module-panel">
+            <div class="dashboard-header">
+              <div><h2>Volunteer Profiles</h2><p class="muted">Create official volunteer records from accepted applications and manage their status.</p></div>
+              <button class="secondary" id="refresh-profiles" type="button">Refresh</button>
+            </div>
+            <p id="profiles-message" class="message" role="status" aria-live="polite"></p>
+            <h3>Accepted applicants awaiting a profile</h3>
+            <p class="muted">Only accepted applications that do not already have a volunteer profile are listed here.</p>
+            <div id="eligible-applicants" class="profile-candidate-list"><p class="muted">Open this section to load accepted applicants.</p></div>
+          </section>
+          <section class="module-panel">
+            <h3>Registered volunteer profiles</h3>
+            <div class="toolbar"><input id="profile-search" type="search" placeholder="Search by name or email..." aria-label="Search volunteer profiles"></div>
+            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Expertise</th><th>Start date</th><th>End date</th><th>Status</th></tr></thead><tbody id="profiles-body"><tr><td colspan="6">Profiles will load when this section is opened.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="hours-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Attendance &amp; Volunteer Hours</h2><p class="muted">Review submitted time logs and approve, reject or request revisions.</p></div><button class="secondary" id="refresh-hours" type="button">Refresh</button></div>
+            <p id="hours-message" class="message" role="status" aria-live="polite"></p>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer</th><th>Project</th><th>Activity</th><th>Duration</th><th>Submitted</th><th>Status</th><th>Review</th></tr></thead><tbody id="hours-body"><tr><td colspan="7">Open this section to load time logs.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="performance-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Performance Reviews</h2><p class="muted">Record volunteer performance across four areas, with achievements and improvement notes.</p></div><button class="secondary" id="refresh-reviews" type="button">Refresh</button></div>
+            <p id="reviews-message" class="message" role="status" aria-live="polite"></p>
+            <form id="review-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="review-volunteer">Volunteer</label><select id="review-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="review-date">Review date</label><input id="review-date" name="review_date" type="date" required></div>
+                <div class="field"><label for="review-reliability">Reliability (1–5)</label><select id="review-reliability" name="reliability_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-teamwork">Teamwork (1–5)</label><select id="review-teamwork" name="teamwork_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-communication">Communication (1–5)</label><select id="review-communication" name="communication_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label for="review-quality">Quality (1–5)</label><select id="review-quality" name="quality_score" required><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+              </div>
+              <div class="field"><label for="review-achievements">Achievements</label><textarea id="review-achievements" name="achievements" rows="2"></textarea></div>
+              <div class="field"><label for="review-improvements">Improvement areas</label><textarea id="review-improvements" name="improvement_areas" rows="2"></textarea></div>
+              <div class="field"><label for="review-notes">Additional notes</label><textarea id="review-notes" name="notes" rows="2"></textarea></div>
+              <div class="form-actions" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" id="create-review-button">Save Review</button><button type="button" id="cancel-review-edit" class="secondary" style="display:none">Cancel Edit</button></div>
+            </form>
+            <h3>Review history</h3><div class="table-wrap"><table><thead><tr><th>Volunteer</th><th>Date</th><th>Reliability</th><th>Teamwork</th><th>Communication</th><th>Quality</th><th>Review notes</th><th>Actions</th></tr></thead><tbody id="reviews-body"><tr><td colspan="8">No reviews loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="certificates-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Certificates</h2><p class="muted">Track eligibility, required hours, approval, issue and delivery.</p></div><button class="secondary" id="refresh-certificates" type="button">Refresh</button></div>
+            <p id="certificates-message" class="message" role="status" aria-live="polite"></p>
+            <form id="certificate-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="certificate-volunteer">Volunteer</label><select id="certificate-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="certificate-hours">Required hours</label><input id="certificate-hours" name="required_hours" type="number" min="0" value="20" required></div>
+                <div class="field"><label for="certificate-status">Initial status</label><select id="certificate-status" name="certificate_status"><option value="not_eligible">Not eligible</option><option value="eligible">Eligible</option><option value="approved">Approved</option></select></div>
+                <div class="field"><label for="certificate-reference">Certificate reference</label><input id="certificate-reference" name="certificate_reference" maxlength="100"></div>
+              </div>
+              <div class="field"><label for="certificate-notes">Notes</label><textarea id="certificate-notes" name="notes" rows="2"></textarea></div>
+              <button type="submit" id="create-certificate-button">Create Certificate Record</button>
+            </form>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer ID</th><th>Reference</th><th>Required hours</th><th>Status</th><th>Issued</th><th>Delivered</th><th>Update</th></tr></thead><tbody id="certificates-body"><tr><td colspan="7">No certificate records loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="projects-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Projects</h2><p class="muted">Create projects and manage programme dates and status.</p></div><button class="secondary" id="refresh-projects" type="button">Refresh</button></div>
+            <p id="projects-message" class="message" role="status" aria-live="polite"></p>
+            <h3>Create a project</h3>
+            <form id="project-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="project-name">Project name</label><input id="project-name" name="name" maxlength="150" required placeholder="e.g. Digital Skills Support"></div>
+                <div class="field"><label for="project-status">Initial status</label><select id="project-status" name="project_status" required><option value="planned" selected>Planned</option><option value="active">Active</option></select></div>
+                <div class="field"><label for="project-start-date">Start date</label><input id="project-start-date" name="start_date" type="date"></div>
+                <div class="field"><label for="project-end-date">End date</label><input id="project-end-date" name="end_date" type="date"></div>
+              </div>
+              <div class="field"><label for="project-description">Description</label><textarea id="project-description" name="description" rows="3" maxlength="2000" placeholder="Project objectives and activities"></textarea></div>
+              <button id="create-project-button" type="submit">Create Project</button>
+            </form>
+          </section>
+          <section class="module-panel">
+            <h3>Registered projects</h3>
+            <div class="toolbar"><input id="project-search" type="search" placeholder="Search projects..." aria-label="Search projects"></div>
+            <div class="table-wrap"><table><thead><tr><th>Project</th><th>Description</th><th>Start date</th><th>End date</th><th>Status</th><th>Update</th></tr></thead><tbody id="projects-body"><tr><td colspan="6">Projects will load when this section is opened.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="tasks-view">
+          <section class="module-panel">
+            <div class="dashboard-header"><div><h2>Tasks &amp; Assignments</h2><p class="muted">Create project tasks and optionally assign them to active volunteers.</p></div><button class="secondary" id="refresh-tasks" type="button">Refresh</button></div>
+            <p id="tasks-message" class="message" role="status" aria-live="polite"></p>
+            <form id="task-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="task-title">Task title</label><input id="task-title" name="title" maxlength="180" required></div>
+                <div class="field"><label for="task-project">Project</label><select id="task-project" name="project_id" required><option value="">Load projects first</option></select></div>
+                <div class="field"><label for="task-volunteer">Assign to volunteer (optional)</label><select id="task-volunteer" name="assigned_to"><option value="">Unassigned</option></select></div>
+                <div class="field"><label for="task-due-date">Due date</label><input id="task-due-date" name="due_date" type="date"></div>
+                <div class="field"><label for="task-status">Status</label><select id="task-status" name="task_status"><option value="pending">Pending</option><option value="in_progress">In progress</option></select></div>
+              </div>
+              <div class="field"><label for="task-description">Description</label><textarea id="task-description" name="description" rows="2"></textarea></div>
+              <div class="form-actions" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button type="submit" id="create-task-button">Create Task</button>
+                <button type="button" id="cancel-task-edit" class="secondary" style="display:none">Cancel Edit</button>
+              </div>
+            </form>
+            <div class="table-wrap"><table><thead><tr><th>Task</th><th>Project</th><th>Assigned volunteer</th><th>Due date</th><th>Status</th><th>Update status</th><th>Actions</th></tr></thead><tbody id="tasks-body"><tr><td colspan="7">No tasks loaded.</td></tr></tbody></table></div>
+          </section>
+          <section class="module-panel">
+            <h3>Project volunteer assignments</h3>
+            <p class="muted">Assign a volunteer to a project with a role description.</p>
+            <form id="assignment-create-form">
+              <div class="detail-grid">
+                <div class="field"><label for="assignment-volunteer">Volunteer</label><select id="assignment-volunteer" name="volunteer_id" required><option value="">Load volunteers first</option></select></div>
+                <div class="field"><label for="assignment-project">Project</label><select id="assignment-project" name="project_id" required><option value="">Load projects first</option></select></div>
+                <div class="field"><label for="assignment-role">Role description</label><input id="assignment-role" name="role_description" maxlength="500" required></div>
+              </div>
+              <button type="submit">Assign Volunteer to Project</button>
+            </form>
+            <p id="assignments-message" class="message" role="status" aria-live="polite"></p>
+            <div class="table-wrap"><table><thead><tr><th>Volunteer ID</th><th>Project</th><th>Role</th><th>Assigned</th><th>Status</th></tr></thead><tbody id="assignments-body"><tr><td colspan="5">No assignments loaded.</td></tr></tbody></table></div>
+          </section>
+        </div>
+        <div class="section-view" id="users-view"><section class="module-panel"><div class="dashboard-header"><div><h2>Users &amp; Permissions</h2><p class="muted">View registered management roles. Role changes are intentionally disabled until secure role-management policies are designed.</p></div><button class="secondary" id="refresh-users" type="button">Refresh</button></div><p id="users-message" class="message"></p><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Created</th></tr></thead><tbody id="users-body"><tr><td colspan="3">Open this section to load roles.</td></tr></tbody></table></div></section></div>
+        <div class="section-view" id="reports-view"><section class="module-panel"><div class="dashboard-header"><div><h2>Reports &amp; Analytics</h2><p class="muted">Live summary from the operational tables.</p></div><button class="secondary" id="refresh-reports" type="button">Refresh</button></div><p id="reports-message" class="message"></p><div class="metric-grid" id="reports-grid"><div class="metric-card"><span>Applications</span><strong>—</strong></div></div></section></div>
+        <div class="section-view" id="settings-view"><section class="module-panel"><h2>System Settings</h2><p class="muted">Core portal settings are currently managed in Supabase and Cloudflare Pages. This section is informational; no unsafe client-side configuration changes are exposed.</p><ul><li>Authentication and password recovery: Supabase Auth</li><li>Database security: Supabase Row Level Security</li><li>Website deployment: Cloudflare Pages connected to GitHub</li><li>Brand palette: EHF blue #2C5282 with pale blue accents</li></ul></section></div>
+        <div class="section-view" id="audit-view"><section class="module-panel"><h2>Audit Logs</h2><p class="muted">Audit history is not yet available because the current database schema does not contain an audit log table. We should add a dedicated, server-written audit log before displaying or recording administrative events.</p></section></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+  // ==========================================
+  // 1. SUPABASE CONFIGURATION
+  // ==========================================
+
+  const SUPABASE_URL =
+    "https://ybbxfgxrxeonbfwhpdjf.supabase.co";
+
+  // Keep your existing Supabase Publishable key.
+  // Never use a Secret key or service_role key.
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_cVzzLTvc64LsG7Etl0Dbww_TYaQ-QoC";
+
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+  // ==========================================
+  // 2. APPLICATION STATE
+  // ==========================================
+
+  const VALID_STATUSES = [
+    "pending",
+    "under_review",
+    "accepted",
+    "rejected"
+  ];
+
+  let applications = [];
+  let selectedApplication = null;
+  let recoveryMode = false;
+
+  const loginPanel = document.getElementById("login-panel");
+  const resetPanel = document.getElementById("reset-panel");
+  const dashboard = document.getElementById("dashboard");
+
+  const loginForm = document.getElementById("login-form");
+  const resetForm = document.getElementById("reset-form");
+
+  const applicationsBody =
+    document.getElementById("applications-body");
+
+
+  // ==========================================
+  // 3. MESSAGE FUNCTION
+  // ==========================================
+
+  function showMessage(id, message, isError = false) {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent = message;
+    element.style.color = isError ? "#b91c1c" : "#2c5282";
+  }
+
+
+  // ==========================================
+  // 4. PAGE DISPLAY
+  // ==========================================
+
+  function showLogin() {
+    loginPanel.style.display = "block";
+    resetPanel.style.display = "none";
+    dashboard.style.display = "none";
+  }
+
+  function showPasswordReset() {
+    loginPanel.style.display = "none";
+    resetPanel.style.display = "block";
+    dashboard.style.display = "none";
+
+    showMessage(
+      "reset-message",
+      "Enter your new password."
+    );
+  }
+
+  function showDashboard() {
+    loginPanel.style.display = "none";
+    resetPanel.style.display = "none";
+    dashboard.style.display = "block";
+  }
+
+
+  // ==========================================
+  // 5. VERIFY ADMIN ROLE
+  // ==========================================
+
+  async function checkAdminAccess() {
+
+    const {
+      data: { session },
+      error: sessionError
+    } = await client.auth.getSession();
+
+    if (sessionError || !session) {
+      showLogin();
+
+      if (sessionError) {
+        showMessage(
+          "login-message",
+          "Session error: " + sessionError.message,
+          true
+        );
+      }
+
+      return false;
+    }
+
+    const {
+      data: roleRecord,
+      error: roleError
+    } = await client
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+
+    if (roleError) {
+      console.error("Role verification error:", roleError);
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Role verification error: " + roleError.message,
+        true
+      );
+
+      return false;
+    }
+
+    if (!roleRecord || roleRecord.role !== "admin") {
+      await client.auth.signOut();
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Access denied. An authorised EHF administrator account is required.",
+        true
+      );
+
+      return false;
+    }
+
+    showDashboard();
+    showSection("overview-view");
+
+    await loadApplications();
+
+    return true;
+  }
+
+
+  // ==========================================
+  // 6. LOGIN
+  // ==========================================
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+    const button =
+      document.getElementById("login-button");
+
+    button.disabled = true;
+
+    showMessage("login-message", "Signing in...");
+
+    try {
+
+      const { error } = await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        showMessage(
+          "login-message",
+          "Sign-in failed: " + error.message,
+          true
+        );
+        return;
+      }
+
+      await checkAdminAccess();
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "login-message",
+        "Unexpected error: " + error.message,
+        true
+      );
+
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+
+  // ==========================================
+  // 7. FORGOT PASSWORD
+  // ==========================================
+
+  document.getElementById("forgot-password")
+    .addEventListener("click", async () => {
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      if (!email) {
+        showMessage(
+          "login-message",
+          "Enter your email address first.",
+          true
+        );
+        return;
+      }
+
+      const button =
+        document.getElementById("forgot-password");
+
+      button.disabled = true;
+
+      showMessage(
+        "login-message",
+        "Sending recovery email..."
+      );
+
+      try {
+
+        const { error } =
+          await client.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/admin.html"
+          });
+
+        if (error) {
+          showMessage(
+            "login-message",
+            "Recovery error: " + error.message,
+            true
+          );
+        } else {
+          showMessage(
+            "login-message",
+            "Recovery email sent. Check your inbox and spam folder."
+          );
+        }
+
+      } catch (error) {
+
+        showMessage(
+          "login-message",
+          error.message,
+          true
+        );
+
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+
+  // ==========================================
+  // 8. UPDATE PASSWORD
+  // ==========================================
+
+  resetForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const password =
+      document.getElementById("new-password").value;
+
+    const confirm =
+      document.getElementById("confirm-password").value;
+
+    const button =
+      document.getElementById("update-password-button");
+
+    if (password.length < 8) {
+      showMessage(
+        "reset-message",
+        "Password must contain at least 8 characters.",
+        true
+      );
+      return;
+    }
+
+    if (password !== confirm) {
+      showMessage(
+        "reset-message",
+        "Passwords do not match.",
+        true
+      );
+      return;
+    }
+
+    button.disabled = true;
+
+    showMessage("reset-message", "Updating password...");
+
+    try {
+
+      const { error } = await client.auth.updateUser({
+        password
+      });
+
+      if (error) {
+        showMessage(
+          "reset-message",
+          "Password update failed: " + error.message,
+          true
+        );
+        return;
+      }
+
+      await client.auth.signOut();
+
+      recoveryMode = false;
+      resetForm.reset();
+      loginForm.reset();
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Password updated. You can now sign in."
+      );
+
+    } catch (error) {
+
+      showMessage(
+        "reset-message",
+        error.message,
+        true
+      );
+
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+
+  // ==========================================
+  // 9. LOAD VOLUNTEER APPLICATIONS
+  // ==========================================
+
+  async function loadApplications() {
+
+    applicationsBody.innerHTML = `
+      <tr><td colspan="7">Loading applications...</td></tr>
+    `;
+
+    showMessage(
+      "applications-message",
+      "Loading applications..."
+    );
+
+    const {
+      data,
+      error
+    } = await client
+      .from("volunteer_intake")
+      .select(`
+        id,
+        full_name,
+        email,
+        phone,
+        postcode,
+        expertise,
+        availability,
+        available_days,
+        motivation,
+        referral_source,
+        privacy_consent,
+        status,
+        submitted_at
+      `)
+      .order("submitted_at", { ascending: false });
+
+    if (error) {
+
+      console.error("Applications loading error:", error);
+
+      applicationsBody.innerHTML = `
+        <tr>
+          <td colspan="7">Unable to load applications.</td>
+        </tr>
+      `;
+
+      showMessage(
+        "applications-message",
+        "Database error: " + error.message,
+        true
+      );
+
+      return;
+    }
+
+    applications = data || [];
+
+    updateStatistics();
+    renderApplications();
+    await loadDashboardMetrics();
+
+    showMessage(
+      "applications-message",
+      applications.length === 0
+        ? "No volunteer applications have been submitted yet."
+        : applications.length + " application(s) loaded successfully."
+    );
+  }
+
+
+
+  // ==========================================
+  // 9A. LOAD DASHBOARD METRICS
+  // ==========================================
+  async function loadDashboardMetrics() {
+    const setMetric = (id, value) => {
+      document.getElementById(id).textContent = value;
+    };
+    const countRows = async (table, column, value) => {
+      const result = await client.from(table).select("id", { count: "exact", head: true }).eq(column, value);
+      if (result.error) throw new Error(table + ": " + result.error.message);
+      return result.count || 0;
+    };
+    try {
+      const results = await Promise.all([
+        countRows("volunteer_profiles", "volunteer_status", "active"),
+        countRows("volunteer_projects", "project_status", "active"),
+        countRows("volunteer_tasks", "task_status", "in_progress"),
+        countRows("volunteer_time_logs", "approval_status", "pending"),
+        client.from("volunteer_time_logs").select("duration_minutes").eq("approval_status", "approved"),
+        countRows("volunteer_certificates", "certificate_status", "issued")
+      ]);
+      if (results[4].error) throw new Error("Approved hours: " + results[4].error.message);
+      const minutes = (results[4].data || []).reduce((sum, row) => sum + (Number(row.duration_minutes) || 0), 0);
+      setMetric("metric-applications", applications.length);
+      setMetric("metric-volunteers", results[0]);
+      setMetric("metric-projects", results[1]);
+      setMetric("metric-tasks", results[2]);
+      setMetric("metric-pending-hours", results[3]);
+      setMetric("metric-approved-hours", (minutes / 60).toFixed(1));
+      setMetric("metric-certificates", results[5]);
+      setMetric("metric-pending-apps", applications.filter(row => row.status === "pending").length);
+      showMessage("dashboard-data-message", "Dashboard metrics loaded from Supabase.");
+    } catch (error) {
+      console.error("Dashboard metrics:", error);
+      showMessage("dashboard-data-message", "Some metrics could not be loaded: " + error.message, true);
+    }
+  }
+
+  // ==========================================
+  // 10. UPDATE STATISTICS
+  // ==========================================
+
+  function updateStatistics() {
+
+    document.getElementById("total-count").textContent =
+      applications.length;
+
+    document.getElementById("pending-count").textContent =
+      applications.filter(item => item.status === "pending").length;
+
+    document.getElementById("review-count").textContent =
+      applications.filter(item => item.status === "under_review").length;
+
+    document.getElementById("accepted-count").textContent =
+      applications.filter(item => item.status === "accepted").length;
+
+    document.getElementById("rejected-count").textContent =
+      applications.filter(item => item.status === "rejected").length;
+  }
+
+
+  // ==========================================
+  // 11. SAFE DISPLAY HELPERS
+  // ==========================================
+
+  function makeCell(value) {
+    const cell = document.createElement("td");
+    cell.textContent = value ?? "—";
+    return cell;
+  }
+
+  function makeStatus(status) {
+
+    const span = document.createElement("span");
+
+    const safeStatus = VALID_STATUSES.includes(status)
+      ? status
+      : "pending";
+
+    span.className = "status status-" + safeStatus;
+
+    const labels = {
+      pending: "Pending",
+      under_review: "Under Review",
+      accepted: "Accepted",
+      rejected: "Rejected"
+    };
+
+    span.textContent = labels[safeStatus];
+
+    return span;
+  }
+
+
+  // ==========================================
+  // 12. RENDER APPLICATIONS
+  // ==========================================
+
+  function renderApplications() {
+
+    const search =
+      document.getElementById("search-input")
+        .value.trim().toLowerCase();
+
+    const filter =
+      document.getElementById("status-filter").value;
+
+    const filtered = applications.filter(item => {
+
+      const matchesSearch =
+        (item.full_name || "").toLowerCase().includes(search) ||
+        (item.email || "").toLowerCase().includes(search);
+
+      const matchesStatus =
+        filter === "all" || item.status === filter;
+
+      return matchesSearch && matchesStatus;
+    });
+
+    applicationsBody.innerHTML = "";
+
+    if (filtered.length === 0) {
+
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 7;
+
+      cell.textContent = applications.length === 0
+        ? "No applications available."
+        : "No matching applications found.";
+
+      row.appendChild(cell);
+      applicationsBody.appendChild(row);
+
+      return;
+    }
+
+    filtered.forEach(item => {
+
+      const row = document.createElement("tr");
+
+      row.appendChild(makeCell(item.full_name));
+      row.appendChild(makeCell(item.email));
+      row.appendChild(makeCell(item.expertise));
+      row.appendChild(makeCell(item.availability));
+
+      const date = item.submitted_at
+        ? new Date(item.submitted_at).toLocaleDateString()
+        : "—";
+
+      row.appendChild(makeCell(date));
+
+      const statusCell = document.createElement("td");
+      statusCell.appendChild(makeStatus(item.status));
+      row.appendChild(statusCell);
+
+      const actionCell = document.createElement("td");
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.className = "view-button";
+      button.textContent = "View details";
+
+      button.addEventListener("click", () => {
+        openApplicationDetails(item.id);
+      });
+
+      actionCell.appendChild(button);
+      row.appendChild(actionCell);
+
+      applicationsBody.appendChild(row);
+    });
+  }
+
+
+  // ==========================================
+  // 13. APPLICATION DETAILS
+  // ==========================================
+
+  function addDetail(label, value) {
+
+    const item = document.createElement("div");
+    item.className = "detail-item";
+
+    const title = document.createElement("span");
+    title.textContent = label;
+
+    const content = document.createElement("strong");
+    content.textContent = value ?? "Not provided";
+
+    item.appendChild(title);
+    item.appendChild(content);
+
+    return item;
+  }
+
+
+  function openApplicationDetails(id) {
+
+    const item = applications.find(
+      application => application.id === id
+    );
+
+    if (!item) return;
+
+    selectedApplication = item;
+
+    const content =
+      document.getElementById("details-content");
+
+    content.innerHTML = "";
+
+    const details = [
+      ["Full name", item.full_name],
+      ["Email", item.email],
+      ["Phone", item.phone],
+      ["Postcode", item.postcode],
+      ["Expertise", item.expertise],
+      ["Availability", item.availability],
+      [
+        "Available days",
+        Array.isArray(item.available_days)
+          ? item.available_days.join(", ")
+          : "Not provided"
+      ],
+      ["Motivation", item.motivation],
+      ["Referral source", item.referral_source],
+      [
+        "Privacy consent",
+        item.privacy_consent ? "Accepted" : "Not accepted"
+      ],
+      ["Status", item.status],
+      [
+        "Submitted at",
+        item.submitted_at
+          ? new Date(item.submitted_at).toLocaleString()
+          : "Not available"
+      ],
+      ["Application ID", item.id]
+    ];
+
+    details.forEach(([label, value]) => {
+      content.appendChild(addDetail(label, value));
+    });
+
+    document.getElementById("approve-button").disabled =
+      item.status === "accepted";
+
+    document.getElementById("review-button").disabled =
+      item.status === "under_review";
+
+    document.getElementById("reject-button").disabled =
+      item.status === "rejected";
+
+    document.getElementById("pending-button").disabled =
+      item.status === "pending";
+
+    document.getElementById("details-panel").style.display = "block";
+
+    showMessage(
+      "details-message",
+      "Review the application before changing its status."
+    );
+
+    document.getElementById("details-panel").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+
+  // ==========================================
+  // 14. UPDATE APPLICATION STATUS
+  // ==========================================
+
+  async function updateApplicationStatus(newStatus) {
+
+    if (!selectedApplication) return;
+
+    if (!VALID_STATUSES.includes(newStatus)) {
+
+      showMessage(
+        "details-message",
+        "Invalid application status.",
+        true
+      );
+
+      return;
+    }
+
+    const statusLabels = {
+      pending: "Pending",
+      under_review: "Under Review",
+      accepted: "Accepted",
+      rejected: "Rejected"
+    };
+
+    const confirmed = window.confirm(
+      "Are you sure you want to change this application status to " +
+      statusLabels[newStatus] + "?"
+    );
+
+    if (!confirmed) return;
+
+    const buttons = [
+      document.getElementById("approve-button"),
+      document.getElementById("review-button"),
+      document.getElementById("reject-button"),
+      document.getElementById("pending-button")
+    ];
+
+    buttons.forEach(button => button.disabled = true);
+
+    showMessage(
+      "details-message",
+      "Updating application status..."
+    );
+
+    try {
+
+      const applicationId = selectedApplication.id;
+
+      const {
+        data,
+        error
+      } = await client
+        .from("volunteer_intake")
+        .update({ status: newStatus })
+        .eq("id", applicationId)
+        .select("id, status")
+        .single();
+
+      if (error) {
+
+        console.error("Status update error:", error);
+
+        showMessage(
+          "details-message",
+          "Update failed: " + error.message,
+          true
+        );
+
+        buttons.forEach(button => button.disabled = false);
+
+        return;
+      }
+
+      if (!data || data.status !== newStatus) {
+
+        showMessage(
+          "details-message",
+          "The database did not confirm the requested status change.",
+          true
+        );
+
+        buttons.forEach(button => button.disabled = false);
+
+        return;
+      }
+
+      showMessage(
+        "details-message",
+        "Application status updated successfully."
+      );
+
+      await loadApplications();
+
+      openApplicationDetails(applicationId);
+
+      showMessage(
+        "details-message",
+        "Application status successfully changed to " +
+        statusLabels[newStatus] + "."
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "details-message",
+        "Unexpected error: " + error.message,
+        true
+      );
+
+      buttons.forEach(button => button.disabled = false);
+    }
+  }
+
+
+  // ==========================================
+  // 15. STATUS BUTTONS
+  // ==========================================
+
+  document.getElementById("approve-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("accepted");
+    });
+
+  document.getElementById("review-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("under_review");
+    });
+
+  document.getElementById("reject-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("rejected");
+    });
+
+  document.getElementById("pending-button")
+    .addEventListener("click", () => {
+      updateApplicationStatus("pending");
+    });
+
+
+  // ==========================================
+  // 16. SEARCH AND FILTER
+  // ==========================================
+
+  document.getElementById("search-input")
+    .addEventListener("input", renderApplications);
+
+  document.getElementById("status-filter")
+    .addEventListener("change", renderApplications);
+
+  document.getElementById("clear-search")
+    .addEventListener("click", () => {
+
+      document.getElementById("search-input").value = "";
+      document.getElementById("status-filter").value = "all";
+
+      renderApplications();
+    });
+
+
+  // ==========================================
+  // 17. REFRESH APPLICATIONS
+  // ==========================================
+
+  document.getElementById("refresh-button")
+    .addEventListener("click", async () => {
+
+      const button =
+        document.getElementById("refresh-button");
+
+      button.disabled = true;
+      button.textContent = "Refreshing...";
+
+      await loadApplications();
+
+      button.disabled = false;
+      button.textContent = "Refresh";
+    });
+
+
+  // ==========================================
+  // 18. CLOSE DETAILS
+  // ==========================================
+
+  document.getElementById("close-details")
+    .addEventListener("click", () => {
+
+      document.getElementById("details-panel")
+        .style.display = "none";
+
+      selectedApplication = null;
+    });
+
+
+
+  // ==========================================
+  // VOLUNTEER PROFILE MANAGEMENT
+  // ==========================================
+  function escapeProfileText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[character]);
+  }
+
+  async function loadVolunteerProfiles() {
+    const candidateBox = document.getElementById("eligible-applicants");
+    const profileBody = document.getElementById("profiles-body");
+    showMessage("profiles-message", "Loading volunteer profiles...");
+    candidateBox.innerHTML = '<p class="muted">Loading accepted applicants...</p>';
+    profileBody.innerHTML = '<tr><td colspan="6">Loading profiles...</td></tr>';
+
+    const { data: profileRows, error: profileError } = await client
+      .from("volunteer_profiles")
+      .select("id, intake_id, start_date, end_date, volunteer_status, created_at")
+      .order("created_at", { ascending: false });
+    if (profileError) {
+      console.error("Volunteer profiles load error:", profileError);
+      candidateBox.textContent = "Unable to load volunteer profiles.";
+      profileBody.innerHTML = '<tr><td colspan="6">Unable to load profiles.</td></tr>';
+      showMessage("profiles-message", "Database error: " + profileError.message, true);
+      return;
+    }
+
+    const profiles = profileRows || [];
+    const profileIntakeIds = new Set(profiles.map(row => String(row.intake_id)));
+    const profileIds = profiles.map(row => String(row.intake_id)).filter(Boolean);
+    let linkedApplications = [];
+    if (profileIds.length) {
+      const { data, error } = await client.from("volunteer_intake")
+        .select("id, full_name, email, expertise")
+        .in("id", profileIds);
+      if (error) {
+        console.error("Linked application lookup error:", error);
+      } else {
+        linkedApplications = data || [];
+      }
+    }
+    const applicationById = new Map(linkedApplications.map(row => [String(row.id), row]));
+
+    const acceptedWithoutProfile = applications.filter(row =>
+      row.status === "accepted" && !profileIntakeIds.has(String(row.id))
+    );
+    if (!acceptedWithoutProfile.length) {
+      candidateBox.innerHTML = '<div class="module-placeholder">There are no accepted applicants awaiting a profile.</div>';
+    } else {
+      candidateBox.innerHTML = acceptedWithoutProfile.map(row => `
+        <article class="profile-candidate">
+          <h4>${escapeProfileText(row.full_name)}</h4>
+          <p>${escapeProfileText(row.email)}</p>
+          <p>Expertise: ${escapeProfileText(row.expertise || "Not specified")}</p>
+          <form class="profile-create-form" data-intake-id="${escapeProfileText(row.id)}">
+            <div><label>Start date</label><input name="start_date" type="date" required></div>
+            <div><label>Initial status</label><select name="volunteer_status" required><option value="approved" selected>Approved</option><option value="active">Active</option></select></div>
+            <button type="submit">Create Profile</button>
+          </form>
+        </article>`).join("");
+    }
+
+    const search = (document.getElementById("profile-search").value || "").trim().toLowerCase();
+    const visibleProfiles = profiles.map(profile => ({
+      ...profile,
+      application: applicationById.get(String(profile.intake_id)) || null
+    })).filter(profile => {
+      const name = profile.application?.full_name || "";
+      const email = profile.application?.email || "";
+      return name.toLowerCase().includes(search) || email.toLowerCase().includes(search);
+    });
+
+    if (!visibleProfiles.length) {
+      profileBody.innerHTML = '<tr><td colspan="6">No volunteer profiles found.</td></tr>';
+    } else {
+      profileBody.innerHTML = visibleProfiles.map(profile => `
+        <tr>
+          <td>${escapeProfileText(profile.application?.full_name || "Application not found")}</td>
+          <td>${escapeProfileText(profile.application?.email || "—")}</td>
+          <td>${escapeProfileText(profile.application?.expertise || "—")}</td>
+          <td>${escapeProfileText(profile.start_date || "—")}</td>
+          <td>${escapeProfileText(profile.end_date || "—")}</td>
+          <td><span class="profile-status">${escapeProfileText(profile.volunteer_status || "unknown").replace(/_/g," ")}</span></td>
+        </tr>`).join("");
+    }
+    showMessage("profiles-message", `${profiles.length} volunteer profile(s) loaded. ${acceptedWithoutProfile.length} accepted applicant(s) awaiting a profile.`);
+  }
+
+  document.getElementById("eligible-applicants").addEventListener("submit", async event => {
+    const form = event.target.closest("form.profile-create-form");
+    if (!form) return;
+    event.preventDefault();
+    const intakeId = form.dataset.intakeId;
+    const formData = new FormData(form);
+    const startDate = formData.get("start_date");
+    const volunteerStatus = formData.get("volunteer_status");
+    const application = applications.find(row => String(row.id) === String(intakeId));
+    if (!application || application.status !== "accepted") {
+      showMessage("profiles-message", "Only accepted applications can be converted into volunteer profiles.", true);
+      return;
+    }
+    if (!startDate || !["approved", "active"].includes(volunteerStatus)) {
+      showMessage("profiles-message", "Please select a valid start date and status.", true);
+      return;
+    }
+    const submitButton = form.querySelector("button[type='submit']");
+    submitButton.disabled = true;
+    submitButton.textContent = "Creating...";
+    const { error } = await client.from("volunteer_profiles").insert({
+      intake_id: String(intakeId),
+      start_date: startDate,
+      volunteer_status: volunteerStatus
+    });
+    if (error) {
+      console.error("Create volunteer profile error:", error);
+      showMessage("profiles-message", "Could not create profile: " + error.message, true);
+      submitButton.disabled = false;
+      submitButton.textContent = "Create Profile";
+      return;
+    }
+    showMessage("profiles-message", `Volunteer profile created for ${application.full_name}.`);
+    await loadVolunteerProfiles();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("refresh-profiles").addEventListener("click", loadVolunteerProfiles);
+  document.getElementById("profile-search").addEventListener("input", () => {
+    if (document.getElementById("profiles-view").classList.contains("active")) loadVolunteerProfiles();
+  });
+
+  // ==========================================
+  // PROJECT MANAGEMENT
+  // ==========================================
+  const PROJECT_STATUSES = ["planned", "active", "completed", "cancelled"];
+
+  async function loadProjects() {
+    const body = document.getElementById("projects-body");
+    body.innerHTML = '<tr><td colspan="6">Loading projects...</td></tr>';
+    const { data, error } = await client.from("volunteer_projects")
+      .select("id, name, description, start_date, end_date, project_status, created_at")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("Projects load error:", error);
+      body.innerHTML = '<tr><td colspan="6">Unable to load projects.</td></tr>';
+      showMessage("projects-message", "Could not load projects: " + error.message, true);
+      return;
+    }
+    const search = (document.getElementById("project-search").value || "").trim().toLowerCase();
+    const rows = (data || []).filter(project =>
+      String(project.name || "").toLowerCase().includes(search) ||
+      String(project.description || "").toLowerCase().includes(search)
+    );
+    if (!rows.length) {
+      body.innerHTML = '<tr><td colspan="6">No projects found. Create your first project above.</td></tr>';
+    } else {
+      body.innerHTML = rows.map(project => `
+        <tr>
+          <td><strong>${escapeProfileText(project.name)}</strong></td>
+          <td>${escapeProfileText(project.description || "—")}</td>
+          <td>${escapeProfileText(project.start_date || "—")}</td>
+          <td>${escapeProfileText(project.end_date || "—")}</td>
+          <td>${escapeProfileText(project.project_status.replace(/_/g, " "))}</td>
+          <td><select class="project-status-select" data-project-id="${escapeProfileText(project.id)}" aria-label="Status for ${escapeProfileText(project.name)}">${PROJECT_STATUSES.map(status => `<option value="${status}" ${project.project_status === status ? "selected" : ""}>${status.replace(/_/g, " ")}</option>`).join("")}</select><button type="button" class="project-status-save secondary" data-project-id="${escapeProfileText(project.id)}" style="margin-top:6px">Save</button></td>
+        </tr>`).join("");
+    }
+    showMessage("projects-message", `${(data || []).length} project(s) loaded.`);
+  }
+
+  document.getElementById("project-create-form").addEventListener("submit", async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const values = Object.fromEntries(new FormData(form).entries());
+    if (values.start_date && values.end_date && values.end_date < values.start_date) {
+      showMessage("projects-message", "End date cannot be earlier than start date.", true);
+      return;
+    }
+    const button = document.getElementById("create-project-button");
+    button.disabled = true;
+    button.textContent = "Creating...";
+    const { data: { user } } = await client.auth.getUser();
+    const payload = {
+      name: values.name.trim(),
+      description: values.description.trim() || null,
+      start_date: values.start_date || null,
+      end_date: values.end_date || null,
+      project_status: values.project_status,
+      created_by: user?.id || null
+    };
+    const { error } = await client.from("volunteer_projects").insert(payload);
+    button.disabled = false;
+    button.textContent = "Create Project";
+    if (error) {
+      console.error("Create project error:", error);
+      showMessage("projects-message", "Could not create project: " + error.message, true);
+      return;
+    }
+    form.reset();
+    document.getElementById("project-status").value = "planned";
+    showMessage("projects-message", "Project created successfully.");
+    await loadProjects();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("projects-body").addEventListener("click", async event => {
+    const button = event.target.closest(".project-status-save");
+    if (!button) return;
+    const projectId = button.dataset.projectId;
+    const select = document.querySelector(`.project-status-select[data-project-id="${projectId}"]`);
+    const status = select?.value;
+    if (!PROJECT_STATUSES.includes(status)) return;
+    button.disabled = true;
+    const { error } = await client.from("volunteer_projects")
+      .update({ project_status: status }).eq("id", projectId);
+    button.disabled = false;
+    if (error) {
+      showMessage("projects-message", "Could not update project status: " + error.message, true);
+      return;
+    }
+    showMessage("projects-message", "Project status updated.");
+    await loadProjects();
+    await loadDashboardMetrics();
+  });
+
+  document.getElementById("refresh-projects").addEventListener("click", loadProjects);
+  document.getElementById("project-search").addEventListener("input", () => {
+    if (document.getElementById("projects-view").classList.contains("active")) loadProjects();
+  });
+
+
+  // ==========================================
+  // OPERATIONAL MODULES: TASKS, HOURS, REVIEWS,
+  // CERTIFICATES, ASSIGNMENTS, USERS & REPORTS
+  // ==========================================
+  const TASK_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
+  const CERTIFICATE_STATUSES = ["not_eligible", "eligible", "approved", "issued", "delivered", "cancelled"];
+  let cachedVolunteers = [];
+  let cachedProjects = [];
+
+  async function loadReferenceData() {
+    const [profilesResult, projectsResult] = await Promise.all([
+      client.from("volunteer_profiles").select("id,user_id,intake_id,volunteer_status").order("created_at", {ascending:false}),
+      client.from("volunteer_projects").select("id,name,project_status").order("created_at", {ascending:false})
+    ]);
+    if (!profilesResult.error) cachedVolunteers = profilesResult.data || [];
+    if (!projectsResult.error) cachedProjects = projectsResult.data || [];
+    const profileIds = cachedVolunteers.map(p => p.id);
+    let intakeMap = {};
+    if (profileIds.length) {
+      const ids = cachedVolunteers.map(p => p.intake_id).filter(Boolean);
+      if (ids.length) {
+        const {data} = await client.from("volunteer_intake").select("id,full_name,email").in("id", ids);
+        (data || []).forEach(a => intakeMap[a.id] = a);
+      }
+    }
+    const volunteerOptions = cachedVolunteers.map(p => {
+      const a = intakeMap[p.intake_id] || {};
+      return `<option value="${escapeProfileText(p.id)}">${escapeProfileText(a.full_name || p.id)}${a.email ? " — " + escapeProfileText(a.email) : ""}</option>`;
+    }).join("");
+    ["review-volunteer","certificate-volunteer","task-volunteer","assignment-volunteer"].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const optional = id === "task-volunteer";
+      el.innerHTML = (optional ? '<option value="">Unassigned</option>' : '<option value="">Select volunteer</option>') + volunteerOptions;
+    });
+    const projectOptions = cachedProjects.map(p => `<option value="${escapeProfileText(p.id)}">${escapeProfileText(p.name)}</option>`).join("");
+    ["task-project","assignment-project"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<option value="">Select project</option>' + projectOptions;
+    });
+  }
+
+  let editingTaskId = null;
+
+  function resetTaskForm() {
+    const form = document.getElementById("task-create-form");
+    form.reset();
+    editingTaskId = null;
+    document.getElementById("create-task-button").textContent = "Create Task";
+    document.getElementById("cancel-task-edit").style.display = "none";
+  }
+
+  async function loadTasks() {
+    const body = document.getElementById("tasks-body");
+    body.innerHTML = '<tr><td colspan="7">Loading...</td></tr>';
+    const {data,error} = await client.from("volunteer_tasks")
+      .select("id,project_id,title,description,assigned_to,task_status,due_date,created_at")
+      .order("created_at",{ascending:false});
+    if (error) {
+      body.innerHTML='<tr><td colspan="7">Unable to load tasks.</td></tr>';
+      showMessage("tasks-message",error.message,true);
+      return;
+    }
+    const projectMap = Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    const volunteerMap = {};
+    // Map volunteer IDs to names using the intake records already loaded for the selectors.
+    const intakeIds = cachedVolunteers.map(p=>p.intake_id).filter(Boolean);
+    if (intakeIds.length) {
+      const {data: applicants} = await client.from("volunteer_intake")
+        .select("id,full_name,email").in("id",intakeIds);
+      (applicants||[]).forEach(a => {
+        const profile = cachedVolunteers.find(p=>p.intake_id===a.id);
+        if(profile) {
+          const displayName = a.full_name || a.email || profile.id;
+          volunteerMap[profile.id] = displayName;
+          if (profile.user_id) volunteerMap[profile.user_id] = displayName;
+        }
+      });
+    }
+    body.innerHTML = (data||[]).length ? data.map(t=>`<tr>
+      <td><strong>${escapeProfileText(t.title)}</strong><br><small>${escapeProfileText(t.description||"")}</small></td>
+      <td>${escapeProfileText(projectMap[t.project_id]||t.project_id)}</td>
+      <td>${escapeProfileText(t.assigned_to ? (volunteerMap[t.assigned_to]||"Volunteer record not found") : "Unassigned")}</td>
+      <td>${escapeProfileText(t.due_date||"—")}</td>
+      <td>${escapeProfileText((t.task_status||"").replace(/_/g," "))}</td>
+      <td>
+        <select class="task-status-select" data-id="${escapeProfileText(t.id)}">${TASK_STATUSES.map(s=>`<option value="${s}" ${t.task_status===s?"selected":""}>${s.replace(/_/g," ")}</option>`).join("")}</select>
+        <button type="button" class="task-status-save secondary" data-id="${escapeProfileText(t.id)}">Save status</button>
+      </td>
+      <td>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="task-edit secondary" data-id="${escapeProfileText(t.id)}">Edit</button>
+          <button type="button" class="task-delete" data-id="${escapeProfileText(t.id)}" style="background:#b91c1c">Delete</button>
+        </div>
+      </td>
+    </tr>`).join("") : '<tr><td colspan="7">No tasks found. Create your first task above.</td></tr>';
+    showMessage("tasks-message",`${(data||[]).length} task(s) loaded.`);
+  }
+
+  document.getElementById("task-create-form").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const form = e.currentTarget;
+    const submitButton = document.getElementById("create-task-button");
+    if (submitButton.disabled) return;
+    const v=Object.fromEntries(new FormData(form).entries());
+    const payload = {
+      title:v.title.trim(), description:v.description.trim()||null,
+      project_id:v.project_id, assigned_to:v.assigned_to||null,
+      due_date:v.due_date||null, task_status:v.task_status
+    };
+    submitButton.disabled = true;
+    try {
+      let result;
+      if (editingTaskId) {
+        result = await client.from("volunteer_tasks").update(payload).eq("id",editingTaskId);
+      } else {
+        result = await client.from("volunteer_tasks").insert(payload);
+      }
+      if(result.error){
+        showMessage("tasks-message",(editingTaskId?"Could not update task: ":"Could not create task: ")+result.error.message,true);
+        return;
+      }
+      const wasEditing = Boolean(editingTaskId);
+      resetTaskForm();
+      await loadTasks();
+      await loadDashboardMetrics();
+      showMessage("tasks-message",wasEditing?"Task updated successfully.":"Task created successfully.");
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+
+  document.getElementById("cancel-task-edit").addEventListener("click",resetTaskForm);
+
+  document.getElementById("tasks-body").addEventListener("click",async e=>{
+    const editButton = e.target.closest(".task-edit");
+    if (editButton) {
+      const {data,error} = await client.from("volunteer_tasks")
+        .select("id,project_id,title,description,assigned_to,task_status,due_date")
+        .eq("id",editButton.dataset.id).single();
+      if(error){showMessage("tasks-message","Could not load task for editing: "+error.message,true);return;}
+      const form=document.getElementById("task-create-form");
+      form.elements.title.value=data.title||"";
+      form.elements.project_id.value=data.project_id||"";
+      form.elements.assigned_to.value=data.assigned_to||"";
+      form.elements.due_date.value=data.due_date||"";
+      form.elements.task_status.value=data.task_status||"pending";
+      form.elements.description.value=data.description||"";
+      editingTaskId=data.id;
+      document.getElementById("create-task-button").textContent="Update Task";
+      document.getElementById("cancel-task-edit").style.display="inline-block";
+      showMessage("tasks-message","Editing task. Update the fields above and select Update Task.");
+      form.scrollIntoView({behavior:"smooth",block:"start"});
+      return;
+    }
+
+    const deleteButton = e.target.closest(".task-delete");
+    if (deleteButton) {
+      const taskId=deleteButton.dataset.id;
+      if(!confirm("Delete this task permanently? This action cannot be undone."))return;
+      deleteButton.disabled=true;
+      const {error}=await client.from("volunteer_tasks").delete().eq("id",taskId);
+      if(error){
+        deleteButton.disabled=false;
+        showMessage("tasks-message","Could not delete task: "+error.message,true);
+        return;
+      }
+      if(editingTaskId===taskId)resetTaskForm();
+      await loadTasks();
+      await loadDashboardMetrics();
+      showMessage("tasks-message","Task deleted successfully.");
+      return;
+    }
+
+    const statusButton=e.target.closest(".task-status-save");
+    if(statusButton){
+      const s=document.querySelector(`.task-status-select[data-id="${statusButton.dataset.id}"]`)?.value;
+      if(!TASK_STATUSES.includes(s))return;
+      const {error}=await client.from("volunteer_tasks").update({task_status:s}).eq("id",statusButton.dataset.id);
+      if(error){showMessage("tasks-message",error.message,true);return;}
+      await loadTasks();
+      await loadDashboardMetrics();
+      showMessage("tasks-message","Task status updated.");
+    }
+  });
+  document.getElementById("refresh-tasks").addEventListener("click",async()=>{await loadReferenceData();await loadTasks();});
+
+  async function loadAssignments(){
+    const body=document.getElementById("assignments-body");
+    const {data,error}=await client.from("volunteer_project_assignments")
+      .select("id,volunteer_id,project_id,role_description,assigned_at,assignment_status")
+      .order("assigned_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="5">${escapeProfileText(error.message)}</td></tr>`;return;}
+    const pm=Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    body.innerHTML=(data||[]).length?data.map(a=>`<tr><td>${escapeProfileText(a.volunteer_id)}</td><td>${escapeProfileText(pm[a.project_id]||a.project_id)}</td><td>${escapeProfileText(a.role_description||"")}</td><td>${escapeProfileText(a.assigned_at||"")}</td><td>${escapeProfileText(a.assignment_status||"")}</td></tr>`).join(""):'<tr><td colspan="5">No assignments found.</td></tr>';
+  }
+  document.getElementById("assignment-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {error}=await client.from("volunteer_project_assignments").insert({
+      volunteer_id:v.volunteer_id,project_id:v.project_id,role_description:v.role_description.trim(),assignment_status:"active"
+    });
+    if(error){showMessage("assignments-message","Could not assign volunteer: "+error.message,true);return;}
+    e.currentTarget.reset();await loadAssignments();showMessage("assignments-message","Volunteer assigned to project.");
+  });
+
+  async function loadHours(){
+    const body=document.getElementById("hours-body");
+    const {data,error}=await client.from("volunteer_time_logs")
+      .select("id,volunteer_id,project_id,activity_description,duration_minutes,submitted_at,approval_status,reviewer_comment")
+      .order("submitted_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="7">${escapeProfileText(error.message)}</td></tr>`;showMessage("hours-message",error.message,true);return;}
+    const pm=Object.fromEntries(cachedProjects.map(p=>[p.id,p.name]));
+    body.innerHTML=(data||[]).length?data.map(x=>`<tr><td>${escapeProfileText(x.volunteer_id)}</td><td>${escapeProfileText(pm[x.project_id]||x.project_id||"—")}</td><td>${escapeProfileText(x.activity_description||"")}</td><td>${Number(x.duration_minutes||0)} min</td><td>${escapeProfileText(x.submitted_at||"")}</td><td>${escapeProfileText(x.approval_status||"")}</td><td><select class="hours-status" data-id="${escapeProfileText(x.id)}"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="revision_requested">Revision requested</option></select><input class="hours-comment" data-id="${escapeProfileText(x.id)}" placeholder="Reviewer comment"><button class="hours-save secondary" data-id="${escapeProfileText(x.id)}" type="button">Save</button></td></tr>`).join(""):'<tr><td colspan="7">No time logs found.</td></tr>';
+    (data||[]).forEach(x=>{const s=body.querySelector(`.hours-status[data-id="${x.id}"]`);if(s)s.value=x.approval_status||"pending";});
+    showMessage("hours-message",`${(data||[]).length} time log(s) loaded.`);
+  }
+  document.getElementById("hours-body").addEventListener("click",async e=>{
+    const b=e.target.closest(".hours-save");if(!b)return;
+    const id=b.dataset.id, status=document.querySelector(`.hours-status[data-id="${id}"]`).value;
+    const comment=document.querySelector(`.hours-comment[data-id="${id}"]`).value.trim();
+    const {data:{user}}=await client.auth.getUser();
+    const {error}=await client.from("volunteer_time_logs").update({
+      approval_status:status,reviewer_comment:comment||null,reviewed_by:user?.id||null,reviewed_at:new Date().toISOString()
+    }).eq("id",id);
+    if(error){showMessage("hours-message","Could not review time log: "+error.message,true);return;}
+    await loadHours();await loadDashboardMetrics();showMessage("hours-message","Time log review saved.");
+  });
+  document.getElementById("refresh-hours").addEventListener("click",loadHours);
+
+  let editingReviewId = null;
+  let reviewSaveInProgress = false;
+
+  function resetReviewForm(){
+    const form=document.getElementById("review-create-form");
+    form.reset();
+    editingReviewId=null;
+    document.getElementById("create-review-button").textContent="Save Review";
+    document.getElementById("cancel-review-edit").style.display="none";
+  }
+
+  async function loadReviews(){
+    const body=document.getElementById("reviews-body");
+    body.innerHTML='<tr><td colspan="8">Loading reviews...</td></tr>';
+    const {data,error}=await client.from("volunteer_performance_reviews")
+      .select("id,volunteer_id,review_date,reliability_score,teamwork_score,communication_score,quality_score,achievements,improvement_areas,notes")
+      .order("review_date",{ascending:false});
+    if(error){
+      body.innerHTML=`<tr><td colspan="8">${escapeProfileText(error.message)}</td></tr>`;
+      showMessage("reviews-message",error.message,true);
+      return;
+    }
+
+    const intakeIds=[...new Set((cachedVolunteers||[]).map(p=>p.intake_id).filter(Boolean))];
+    const volunteerNames={};
+    if(intakeIds.length){
+      const {data:applicants,error:applicantError}=await client.from("volunteer_intake")
+        .select("id,full_name,email").in("id",intakeIds);
+      if(applicantError){
+        console.error("Could not load volunteer names for reviews:",applicantError);
+      }else{
+        const applicationMap=new Map((applicants||[]).map(a=>[String(a.id),a]));
+        (cachedVolunteers||[]).forEach(p=>{
+          const a=applicationMap.get(String(p.intake_id));
+          if(a) volunteerNames[p.id]={
+            name:a.full_name||a.email||p.id,
+            email:a.email||""
+          };
+        });
+      }
+    }
+
+    body.innerHTML=(data||[]).length?data.map(r=>{
+      const volunteer=volunteerNames[r.volunteer_id]||{name:"Volunteer record unavailable",email:""};
+      const notes=[r.notes,r.achievements?`Achievements: ${r.achievements}`:"",r.improvement_areas?`Improvement areas: ${r.improvement_areas}`:""].filter(Boolean).join(" | ");
+      return `<tr>
+        <td><strong>${escapeProfileText(volunteer.name)}</strong>${volunteer.email?`<br><small>${escapeProfileText(volunteer.email)}</small>`:""}</td>
+        <td>${escapeProfileText(r.review_date||"")}</td>
+        <td>${r.reliability_score??"—"}</td>
+        <td>${r.teamwork_score??"—"}</td>
+        <td>${r.communication_score??"—"}</td>
+        <td>${r.quality_score??"—"}</td>
+        <td>${escapeProfileText(notes||"—")}</td>
+        <td><div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="review-edit secondary" data-id="${escapeProfileText(r.id)}">Edit</button>
+          <button type="button" class="review-delete danger" data-id="${escapeProfileText(r.id)}">Delete</button>
+        </div></td>
+      </tr>`;
+    }).join(""):'<tr><td colspan="8">No reviews found.</td></tr>';
+    showMessage("reviews-message",`${(data||[]).length} performance review(s) loaded.`);
+  }
+
+  document.getElementById("review-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();
+    if(reviewSaveInProgress)return;
+    const form=e.currentTarget;
+    if(!form.reportValidity())return;
+    const v=Object.fromEntries(new FormData(form).entries());
+    const button=document.getElementById("create-review-button");
+    reviewSaveInProgress=true;
+    button.disabled=true;
+    const originalText=button.textContent;
+    button.textContent=editingReviewId?"Updating...":"Saving...";
+    try{
+      const {data:{user},error:userError}=await client.auth.getUser();
+      if(userError)throw userError;
+      const payload={
+        volunteer_id:v.volunteer_id,
+        reviewer_id:user?.id||null,
+        review_date:v.review_date,
+        reliability_score:Number(v.reliability_score),
+        teamwork_score:Number(v.teamwork_score),
+        communication_score:Number(v.communication_score),
+        quality_score:Number(v.quality_score),
+        achievements:v.achievements||null,
+        improvement_areas:v.improvement_areas||null,
+        notes:v.notes||null
+      };
+      const wasEditing=Boolean(editingReviewId);
+      const reviewIdBeingEdited=editingReviewId;
+      const result=wasEditing
+        ? await client.from("volunteer_performance_reviews").update(payload).eq("id",reviewIdBeingEdited).select("id").single()
+        : await client.from("volunteer_performance_reviews").insert(payload).select("id").single();
+      if(result.error)throw result.error;
+      resetReviewForm();
+      await loadReviews();
+      showMessage("reviews-message",wasEditing?"Review updated successfully.":"Performance review saved successfully.");
+    }catch(error){
+      console.error("Performance review save error:",error);
+      showMessage("reviews-message","Could not save review: "+error.message,true);
+    }finally{
+      reviewSaveInProgress=false;
+      button.disabled=false;
+      if(!editingReviewId)button.textContent="Save Review";
+      else button.textContent=originalText;
+    }
+  });
+
+  document.getElementById("cancel-review-edit").addEventListener("click",()=>{
+    resetReviewForm();
+    showMessage("reviews-message","Review edit cancelled.");
+  });
+
+  document.getElementById("reviews-body").addEventListener("click",async e=>{
+    const editButton=e.target.closest(".review-edit");
+    if(editButton){
+      const {data,error}=await client.from("volunteer_performance_reviews")
+        .select("id,volunteer_id,review_date,reliability_score,teamwork_score,communication_score,quality_score,achievements,improvement_areas,notes")
+        .eq("id",editButton.dataset.id).single();
+      if(error){showMessage("reviews-message","Could not load review: "+error.message,true);return;}
+      const form=document.getElementById("review-create-form");
+      form.elements.volunteer_id.value=data.volunteer_id;
+      form.elements.review_date.value=data.review_date||"";
+      form.elements.reliability_score.value=String(data.reliability_score??"");
+      form.elements.teamwork_score.value=String(data.teamwork_score??"");
+      form.elements.communication_score.value=String(data.communication_score??"");
+      form.elements.quality_score.value=String(data.quality_score??"");
+      form.elements.achievements.value=data.achievements||"";
+      form.elements.improvement_areas.value=data.improvement_areas||"";
+      form.elements.notes.value=data.notes||"";
+      editingReviewId=data.id;
+      document.getElementById("create-review-button").textContent="Update Review";
+      document.getElementById("cancel-review-edit").style.display="inline-block";
+      showMessage("reviews-message","Editing review. Update the fields above and select Update Review.");
+      form.scrollIntoView({behavior:"smooth",block:"start"});
+      return;
+    }
+    const deleteButton=e.target.closest(".review-delete");
+    if(deleteButton){
+      const reviewId=deleteButton.dataset.id;
+      if(!window.confirm("Delete this performance review permanently? This action cannot be undone."))return;
+      deleteButton.disabled=true;
+      const {error}=await client.from("volunteer_performance_reviews").delete().eq("id",reviewId);
+      if(error){
+        deleteButton.disabled=false;
+        showMessage("reviews-message","Could not delete review: "+error.message,true);
+        return;
+      }
+      if(editingReviewId===reviewId)resetReviewForm();
+      await loadReviews();
+      showMessage("reviews-message","Performance review deleted.");
+    }
+  });
+
+  document.getElementById("refresh-reviews").addEventListener("click",async()=>{
+    await loadReferenceData();
+    await loadReviews();
+  });
+
+  async function loadCertificates(){
+    const body=document.getElementById("certificates-body");
+    const {data,error}=await client.from("volunteer_certificates")
+      .select("id,volunteer_id,certificate_status,required_hours,issued_at,delivered_at,certificate_reference,notes")
+      .order("created_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="7">${escapeProfileText(error.message)}</td></tr>`;showMessage("certificates-message",error.message,true);return;}
+    body.innerHTML=(data||[]).length?data.map(c=>`<tr><td>${escapeProfileText(c.volunteer_id)}</td><td>${escapeProfileText(c.certificate_reference||"—")}</td><td>${c.required_hours??0}</td><td>${escapeProfileText(c.certificate_status||"")}</td><td>${escapeProfileText(c.issued_at||"—")}</td><td>${escapeProfileText(c.delivered_at||"—")}</td><td><select class="certificate-status" data-id="${escapeProfileText(c.id)}">${CERTIFICATE_STATUSES.map(s=>`<option value="${s}" ${c.certificate_status===s?"selected":""}>${s.replace(/_/g," ")}</option>`).join("")}</select><button class="certificate-save secondary" data-id="${escapeProfileText(c.id)}" type="button">Save</button></td></tr>`).join(""):'<tr><td colspan="7">No certificate records found.</td></tr>';
+  }
+  document.getElementById("certificate-create-form").addEventListener("submit",async e=>{
+    e.preventDefault();const v=Object.fromEntries(new FormData(e.currentTarget).entries());
+    const {error}=await client.from("volunteer_certificates").insert({
+      volunteer_id:v.volunteer_id,required_hours:Number(v.required_hours),certificate_status:v.certificate_status,
+      certificate_reference:v.certificate_reference.trim()||null,notes:v.notes.trim()||null
+    });
+    if(error){showMessage("certificates-message","Could not create certificate record: "+error.message,true);return;}
+    e.currentTarget.reset();await loadCertificates();showMessage("certificates-message","Certificate record created.");
+  });
+  document.getElementById("certificates-body").addEventListener("click",async e=>{
+    const b=e.target.closest(".certificate-save");if(!b)return;
+    const id=b.dataset.id,status=document.querySelector(`.certificate-status[data-id="${id}"]`).value;
+    const patch={certificate_status:status};
+    if(status==="issued")patch.issued_at=new Date().toISOString();
+    if(status==="delivered"){patch.delivered_at=new Date().toISOString();patch.issued_at=new Date().toISOString();}
+    const {error}=await client.from("volunteer_certificates").update(patch).eq("id",id);
+    if(error){showMessage("certificates-message",error.message,true);return;}
+    await loadCertificates();showMessage("certificates-message","Certificate status updated.");
+  });
+  document.getElementById("refresh-certificates").addEventListener("click",loadCertificates);
+
+  async function loadUsers(){
+    const body=document.getElementById("users-body");
+    const {data,error}=await client.from("user_roles").select("user_id,role,created_at").order("created_at",{ascending:false});
+    if(error){body.innerHTML=`<tr><td colspan="3">${escapeProfileText(error.message)}</td></tr>`;showMessage("users-message",error.message,true);return;}
+    body.innerHTML=(data||[]).map(u=>`<tr><td>${escapeProfileText(u.user_id)}</td><td>${escapeProfileText(u.role)}</td><td>${escapeProfileText(u.created_at||"")}</td></tr>`).join("")||'<tr><td colspan="3">No roles found.</td></tr>';
+    showMessage("users-message","Role list loaded. Role editing is disabled by current security policies.");
+  }
+  document.getElementById("refresh-users").addEventListener("click",loadUsers);
+
+  async function loadReports(){
+    const tables=["volunteer_intake","volunteer_profiles","volunteer_projects","volunteer_tasks","volunteer_time_logs","volunteer_certificates"];
+    const results=await Promise.all(tables.map(t=>client.from(t).select("id",{count:"exact",head:true})));
+    const labels=["Applications","Volunteer profiles","Projects","Tasks","Time logs","Certificates"];
+    const grid=document.getElementById("reports-grid");
+    grid.innerHTML=results.map((r,i)=>`<div class="metric-card"><span>${labels[i]}</span><strong>${r.error?"Unavailable":(r.count??0)}</strong></div>`).join("");
+    const failures=results.map((r,i)=>r.error?`${tables[i]}: ${r.error.message}`:null).filter(Boolean);
+    showMessage("reports-message",failures.length?"Some report counts are unavailable: "+failures.join(" | "):"Report counts loaded successfully.",failures.length>0);
+  }
+  document.getElementById("refresh-reports").addEventListener("click",loadReports);
+
+  // Dashboard section navigation
+  function showSection(viewId) {
+    document.querySelectorAll(".section-view").forEach(view => {
+      view.classList.toggle("active", view.id === viewId);
+    });
+    document.querySelectorAll(".nav-link").forEach(button => {
+      button.classList.toggle("active", button.dataset.view === viewId);
+    });
+    const active = document.querySelector('.nav-link[data-view="' + viewId + '"]');
+    document.getElementById("current-section-label").textContent =
+      active ? active.textContent.trim() : "Dashboard Overview";
+    if (viewId !== "applications-view") {
+      document.getElementById("details-panel").style.display = "none";
+    }
+    if (viewId === "profiles-view") {
+      loadVolunteerProfiles();
+    }
+    if (viewId === "projects-view") loadProjects();
+    if (["tasks-view","hours-view","performance-view","certificates-view"].includes(viewId)) {
+      loadReferenceData().then(async()=>{
+        if(viewId==="tasks-view"){await loadTasks();await loadAssignments();}
+        if(viewId==="hours-view")await loadHours();
+        if(viewId==="performance-view")await loadReviews();
+        if(viewId==="certificates-view")await loadCertificates();
+      });
+    }
+    if (viewId === "users-view") loadUsers();
+    if (viewId === "reports-view") loadReports();
+  }
+  document.querySelectorAll(".nav-link").forEach(button => {
+    button.addEventListener("click", () => showSection(button.dataset.view));
+  });
+
+  // ==========================================
+  // 19. SIGN OUT
+  // ==========================================
+
+  document.getElementById("sign-out")
+    .addEventListener("click", async () => {
+
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        alert("Sign out failed: " + error.message);
+        return;
+      }
+
+      applications = [];
+      selectedApplication = null;
+      loginForm.reset();
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "You have signed out successfully."
+      );
+    });
+
+
+  // ==========================================
+  // 20. AUTHENTICATION EVENTS
+  // ==========================================
+
+  client.auth.onAuthStateChange((event) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryMode = true;
+      showPasswordReset();
+    }
+
+    if (event === "SIGNED_OUT") {
+      recoveryMode = false;
+      showLogin();
+    }
+
+  });
+
+
+  // ==========================================
+  // 21. INITIALISE
+  // ==========================================
+
+  async function initialise() {
+
+    if (
+      SUPABASE_PUBLISHABLE_KEY ===
+      "PASTE_YOUR_PUBLISHABLE_KEY_HERE"
+    ) {
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Please configure your Supabase Publishable key.",
+        true
+      );
+
+      return;
+    }
+
+    try {
+
+      const {
+        data: { session },
+        error
+      } = await client.auth.getSession();
+
+      if (error) {
+
+        showLogin();
+
+        showMessage(
+          "login-message",
+          "Session error: " + error.message,
+          true
+        );
+
+        return;
+      }
+
+      if (recoveryMode) {
+        showPasswordReset();
+        return;
+      }
+
+      if (session) {
+        await checkAdminAccess();
+      } else {
+        showLogin();
+      }
+
+    } catch (error) {
+
+      console.error("Initialisation error:", error);
+
+      showLogin();
+
+      showMessage(
+        "login-message",
+        "Application error: " + error.message,
+        true
+      );
+    }
+  }
+
+  initialise();
+
+</script>
+
+</body>
+</html>
