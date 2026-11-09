@@ -6,3 +6,4 @@ storage/audit-fallback/*
 storage/exports/*
 !storage/**/.gitkeep
 tests/output/
+storage/backups/*

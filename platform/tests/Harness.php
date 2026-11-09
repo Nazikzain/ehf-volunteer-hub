@@ -84,6 +84,7 @@ final class T
         Env::set('DB_NAME', $name);
         Env::set('APP_URL', 'http://test.local');
         Env::set('MAIL_TRANSPORT', 'disabled');
+        Env::set('EXPORT_DIR', sys_get_temp_dir() . '/ehf-test-exports');
         $root = Database::connect((string) env('DB_HOST'), (int) env('DB_PORT', '3306'), 'information_schema', (string) env('DB_USER'), (string) env('DB_PASS'), env('DB_SOCKET'));
         $root->pdo->exec("DROP DATABASE IF EXISTS `{$name}`");
         $root->pdo->exec("CREATE DATABASE `{$name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");

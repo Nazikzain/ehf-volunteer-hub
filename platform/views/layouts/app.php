@@ -2,17 +2,20 @@
 use App\Core\Csrf; use App\Core\Session; use App\Security\Auth; use App\Security\Gate;
 $path = $request->path ?? '/';
 $nav = [];
-$add = function (string $group, string $label, string $href, string $perm) use (&$nav) { if (Gate::allows($perm)) { $nav[$group][] = [$label, $href]; } };
+$isVol = Auth::volunteerId() !== null;
+$add = function (string $group, string $label, string $href, string $perm, bool $volunteerOnly = false) use (&$nav, $isVol) {
+    if (Gate::allows($perm) && (!$volunteerOnly || $isVol)) { $nav[$group][] = [$label, $href]; }
+};
 $add('Overview', 'Dashboard', '/dashboard', 'notifications.view');
 $add('Overview', 'Notifications', '/notifications', 'notifications.view');
 $add('Recruitment', 'Applications', '/admin/applications', 'applications.view');
 $add('People', 'Volunteers', '/volunteers', 'volunteers.view');
-$add('People', 'My profile', '/me', 'volunteers.self');
-$add('People', 'My reviews', '/my/reviews', 'volunteers.self');
+$add('People', 'My profile', '/me', 'volunteers.self', true);
+$add('People', 'My reviews', '/my/reviews', 'volunteers.self', true);
 $add('Programme', 'Projects', '/projects', 'projects.view');
 $add('Programme', 'Activities', '/activities', 'activities.view');
 $add('Programme', 'Tasks', '/tasks', 'tasks.view');
-$add('Hours', 'My hours', '/my/hours', 'timelogs.submit');
+$add('Hours', 'My hours', '/my/hours', 'timelogs.submit', true);
 $add('Hours', 'Hours approval', '/hours/review', 'timelogs.review');
 $add('Development', 'Training types', '/admin/training-types', 'training_types.manage');
 $add('Development', 'Certificates', '/certificates', 'certificates.view');
@@ -36,11 +39,11 @@ $unread = Auth::check() ? (int) App\Core\Database::get()->value('SELECT COUNT(*)
 <a class="skip" href="#main">Skip to content</a>
 <?php if (env('APP_ENV') !== 'production'): ?><div class="demo">Test environment: <?= e(env('APP_ENV')) ?>. Use synthetic data only.</div><?php endif; ?>
 <header class="topbar">
-  <img src="<?= e(url('/assets/img/ehf-logo.png')) ?>" alt="Ethnic Health Forum">
+  <img src="<?= e(url('/assets/img/ehf-logo-white.png')) ?>" alt="Ethnic Health Forum">
   <span class="brand">Volunteer Hub</span>
   <span class="spacer"></span>
   <a href="<?= e(url('/notifications')) ?>">Notifications<?= $unread ? ' (' . $unread . ')' : '' ?></a>
-  <span><?= e(Auth::user()['email'] ?? '') ?> · <?= e(label(Auth::effectiveRole() ?? '')) ?></span>
+  <span class="who"><?= e(Auth::user()['email'] ?? '') ?> · <?= e(label(Auth::effectiveRole() ?? '')) ?></span>
   <form method="post" action="<?= e(url('/logout')) ?>" class="inline"><?= Csrf::field() ?><button class="btn small secondary" type="submit">Sign out</button></form>
 </header>
 <div class="layout">

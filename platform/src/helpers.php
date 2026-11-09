@@ -56,3 +56,14 @@ function label(string $code): string
 {
     return ucfirst(str_replace('_', ' ', $code));
 }
+
+/** Directory for anchors, the erasure register and other off-database evidence (configurable; outside the web root). */
+function export_dir(): string
+{
+    $d = (string) env('EXPORT_DIR', '');
+    $d = $d !== '' ? $d : APP_ROOT . '/storage/exports';
+    if (!is_dir($d)) {
+        mkdir($d, 0700, true);
+    }
+    return rtrim($d, '/');
+}

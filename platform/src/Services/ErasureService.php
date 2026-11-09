@@ -76,8 +76,28 @@ final class ErasureService
         if ((int) $req['prepared_by'] === Auth::id()) {
             throw new ValidationException(['The person who prepared the request cannot also approve it (two-person rule).']);
         }
-        $confirmedUnlinked = array_map('intval', $confirmedUnlinked);
-        return Database::get()->transaction(function (Database $db) use ($vid, $confirmedUnlinked) {
+        $counts = Database::get()->transaction(fn(Database $db) => self::execute($db, $vid, array_map('intval', $confirmedUnlinked), false));
+        BackupService::registerErasure($vid); // W7: ids-only register outside the database, re-applied after any restore
+        return $counts;
+    }
+
+    /**
+     * W7: after a database restore, re-apply an erasure that was approved after the backup was taken.
+     * Only linked applications are deleted automatically; same-email unlinked ones are reported for manual review.
+     */
+    public static function reapplyAfterRestore(int $vid): ?array
+    {
+        return Database::get()->transaction(function (Database $db) use ($vid) {
+            $v = $db->one('SELECT anonymised_at FROM volunteers WHERE id = ?', [$vid]);
+            if (!$v || $v['anonymised_at'] !== null) {
+                return null; // already erased in the restored data
+            }
+            return self::execute($db, $vid, [], true);
+        });
+    }
+
+    private static function execute(Database $db, int $vid, array $confirmedUnlinked, bool $reapplied): array
+    {
             $v = $db->one('SELECT * FROM volunteers WHERE id = ? FOR UPDATE', [$vid]);
             if (!$v || $v['anonymised_at'] !== null) { throw new ValidationException(['This volunteer cannot be erased.']); }
             $counts = [];
@@ -111,8 +131,10 @@ final class ErasureService
                 }
             }
             $db->run('DELETE FROM settings WHERE `key` = ?', [self::key($vid)]);
+            if ($reapplied) {
+                $counts['reapplied_after_restore'] = 'true';
+            }
             AuditLogger::record('volunteer.erased', 'success', 'volunteer', $vid, $counts);
             return $counts;
-        });
     }
 }

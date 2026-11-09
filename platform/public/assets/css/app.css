@@ -83,3 +83,14 @@ details{margin-top:14px}summary{cursor:pointer;font-weight:600}
 .chart .col span.h8{height:82px}
 .chart .col span.h9{height:92px}
 .chart .col span.h10{height:102px}
+/* Responsive fixes found by the UI test (no horizontal page scrolling) */
+.layout>main{min-width:0}
+.card{overflow-x:auto}
+.topbar{flex-wrap:wrap;row-gap:6px}
+.topbar .who{overflow-wrap:anywhere}
+code{white-space:pre-wrap;word-break:break-all}
+td,th{overflow-wrap:anywhere}
+@media (max-width:860px){.topbar .who{flex-basis:100%;order:5;font-size:.82rem}.topbar .spacer{display:none}.filters>div{min-width:0;flex:1 1 140px}
+  table{font-size:.86rem} .layout{grid-template-columns:minmax(0,1fr)}}
+.grid{margin-bottom:16px}
+.topbar img{height:52px}

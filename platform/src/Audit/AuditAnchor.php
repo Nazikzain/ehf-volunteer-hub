@@ -34,7 +34,7 @@ final class AuditAnchor
         $anchor = ['date' => gmdate('Y-m-d'), 'created_at' => now_utc(), 'seq' => (int) $head['last_seq'],
             'hash' => bin2hex($head['last_hash'])];
         $json = json_encode($anchor, JSON_PRETTY_PRINT);
-        $dir = APP_ROOT . '/storage/exports';
+        $dir = export_dir();
         if (!is_dir($dir)) {
             mkdir($dir, 0700, true);
         }
