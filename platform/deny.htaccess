@@ -1,0 +1,3 @@
+# Copy to the application root as .htaccess ONLY if the host forces the whole app inside the web root
+# (e.g. InfinityFree). Blocks every request except those under public/.
+Require all denied

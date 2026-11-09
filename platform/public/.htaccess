@@ -1,0 +1,13 @@
+Options -Indexes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Force HTTPS in production (set at the host if preferred)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
+<FilesMatch "\.(env|sql|md|log|jsonl|ini|sh)$">
+  Require all denied
+</FilesMatch>

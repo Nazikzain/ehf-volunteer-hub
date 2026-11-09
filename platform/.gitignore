@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+storage/logs/*
+storage/audit-fallback/*
+storage/exports/*
+!storage/**/.gitkeep
+tests/output/

@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Core;
+
+final class SecurityHeaders
+{
+    public static function all(): array
+    {
+        $h = [
+            'X-Content-Type-Options' => 'nosniff',
+            'X-Frame-Options' => 'DENY',
+            'Referrer-Policy' => 'strict-origin-when-cross-origin',
+            'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
+            'Content-Security-Policy' => "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; "
+                . "font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+            'Cache-Control' => 'no-store',
+        ];
+        if (env('APP_ENV') === 'production') {
+            $h['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+        }
+        return $h;
+    }
+}
