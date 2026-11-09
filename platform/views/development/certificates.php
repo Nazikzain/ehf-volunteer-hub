@@ -1,0 +1,10 @@
+<?php use App\Core\Csrf; use App\Security\Gate; $flow = App\Services\CertificateService::FLOW; ?>
+<h1>Certificates</h1>
+<?php if (Gate::allows('certificates.manage')): ?><div class="card"><h2 class="section-title">New certificate record</h2><form method="post" action="<?= e(url('/certificates')) ?>" class="filters"><?= Csrf::field() ?>
+<div><label for="cv">Volunteer</label><select id="cv" name="volunteer_id"><?php foreach ($volunteers as $v): ?><option value="<?= (int) $v['id'] ?>"><?= e($v['full_name']) ?></option><?php endforeach; ?></select></div>
+<div><label for="rh">Required hours</label><input id="rh" name="required_hours" type="number" min="0" max="10000" value="20"></div><div class="grow"><label for="cn">Notes</label><input id="cn" name="notes" maxlength="500"></div><div><button class="btn">Create</button></div></form></div><?php endif; ?>
+<div class="card table-wrap"><?php if (!$rows): ?><p class="empty">No certificates.</p><?php else: ?><table><thead><tr><th>Volunteer</th><th>Reference</th><th>Required</th><th>Approved hours now</th><th>Hours at issue</th><th>Status</th><th></th></tr></thead><tbody>
+<?php foreach ($rows as $c): ?><tr><td><?= e($c['full_name']) ?></td><td><?= e($c['reference'] ?? '—') ?></td><td><?= $c['required_hours'] === null ? '—' : (int) $c['required_hours'] . 'h' ?></td><td><?= e(minutes_to_hours($c['current_minutes'])) ?></td>
+<td><?= $c['approved_minutes_at_issue'] === null ? '—' : e(minutes_to_hours($c['approved_minutes_at_issue'])) ?></td><td><?= e(label($c['status'])) ?></td><td>
+<?php if (in_array($c['status'], ['issued','delivered'], true)): ?><a href="<?= e(url('/certificates/' . $c['id'])) ?>">View / print</a><?php endif; ?>
+<?php if (Gate::allows('certificates.manage')): foreach ($flow[$c['status']] as $next): ?><form method="post" action="<?= e(url('/certificates/' . $c['id'])) ?>" class="inline"><?= Csrf::field() ?><button class="btn small <?= $next === 'cancelled' ? 'secondary' : '' ?>" name="status" value="<?= $next ?>"><?= e(label($next)) ?></button></form><?php endforeach; endif; ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>

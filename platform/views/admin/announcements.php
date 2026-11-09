@@ -1,0 +1,11 @@
+<?php use App\Core\Csrf; use App\Security\Auth; ?>
+<h1>Announcements</h1>
+<?php if ($manage): ?><div class="card"><h2 class="section-title">Publish an announcement</h2><form method="post" action="<?= e(url('/announcements')) ?>"><?= Csrf::field() ?>
+<label for="at">Title</label><input id="at" name="title" maxlength="200" required><label for="ab">Text</label><textarea id="ab" name="body" maxlength="5000" required></textarea>
+<div class="grid grid-3"><div><label for="aa">Audience</label><select id="aa" name="audience"><?php if (Auth::isAdmin()): ?><option value="all">Everyone</option><option value="volunteers">Volunteers</option><option value="supervisors">Supervisors</option><option value="admins">Admins</option><?php endif; ?><option value="project">One project</option></select></div>
+<div><label for="ap">Project</label><select id="ap" name="project_id"><option value="">—</option><?php foreach ($projects as $p): ?><option value="<?= (int) $p['id'] ?>"><?= e($p['name']) ?></option><?php endforeach; ?></select></div>
+<div><label for="ae">Expires on</label><input id="ae" type="date" name="expires_on"></div></div><div class="actions"><button class="btn">Publish</button></div></form></div>
+<div class="card table-wrap"><h2 class="section-title">Announcements I can manage</h2><?php if (!$mine): ?><p class="empty">None.</p><?php else: ?><table><thead><tr><th>Title</th><th>Audience</th><th>Published</th><th>Expires</th><th></th></tr></thead><tbody>
+<?php foreach ($mine as $a): ?><tr><td><?= e($a['title']) ?></td><td><?= e(label($a['audience'])) ?><?= $a['project_name'] ? ': ' . e($a['project_name']) : '' ?></td><td><?= e(local_dt($a['published_at'])) ?></td><td><?= e(local_dt($a['expires_at'])) ?></td>
+<td><form method="post" action="<?= e(url('/announcements/' . $a['id'] . '/delete')) ?>" data-confirm="Remove this announcement?"><?= Csrf::field() ?><button class="btn small secondary">Remove</button></form></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div><?php endif; ?>
+<div class="card"><h2 class="section-title">Current announcements</h2><?php if (!$visible): ?><p class="empty">No announcements.</p><?php else: foreach ($visible as $a): ?><article><h3><?= e($a['title']) ?></h3><p><?= nl2br(e($a['body'])) ?></p><p class="muted"><?= e(local_dt($a['published_at'])) ?></p></article><?php endforeach; endif; ?></div>

@@ -41,8 +41,8 @@ $r->post('/admin/ownership', [C\UserController::class, 'transfer'], ['perm' => '
 
 // Volunteers
 $r->get('/volunteers', [C\VolunteerController::class, 'index'], ['perm' => 'volunteers.view']);
-$r->get('/volunteers/{id}', [C\VolunteerController::class, 'show'], ['perm' => 'volunteers.view']);
-$r->post('/volunteers/{id}', [C\VolunteerController::class, 'update'], ['perm' => 'volunteers.edit']);
+$r->get('/volunteers/{id}', [C\VolunteerController::class, 'show']); // scope in controller (ST-04)
+$r->post('/volunteers/{id}', [C\VolunteerController::class, 'update']); // scope in controller (ST-05/06)
 $r->post('/volunteers/{id}/notes', [C\VolunteerController::class, 'addNote'], ['perm' => 'notes.write']);
 $r->post('/notes/{id}/delete', [C\VolunteerController::class, 'deleteNote'], ['perm' => 'notes.write']);
 $r->post('/volunteers/{id}/erasure', [C\VolunteerController::class, 'erasure'], ['perm' => 'erasure.prepare']);
@@ -56,5 +56,54 @@ $r->get('/projects/{id}', [C\ProjectController::class, 'show'], ['perm' => 'proj
 $r->post('/projects/{id}', [C\ProjectController::class, 'update'], ['perm' => 'projects.manage']);
 $r->post('/projects/{id}/supervisors', [C\ProjectController::class, 'supervisors'], ['perm' => 'supervisors.manage']);
 $r->post('/projects/{id}/periods', [C\ProjectController::class, 'periods'], ['perm' => 'periods.manage']);
+
+// Activities, rosters, attendance
+$r->get('/activities', [C\ActivityController::class, 'index'], ['perm' => 'activities.view']);
+$r->post('/activities', [C\ActivityController::class, 'create'], ['perm' => 'activities.manage']);
+$r->get('/activities/{id}', [C\ActivityController::class, 'show'], ['perm' => 'activities.view']);
+$r->post('/activities/{id}', [C\ActivityController::class, 'update'], ['perm' => 'activities.manage']);
+
+// Tasks
+$r->get('/tasks', [C\TaskController::class, 'index'], ['perm' => 'tasks.view']);
+$r->post('/tasks', [C\TaskController::class, 'save'], ['perm' => 'tasks.manage']);
+
+// Hours
+$r->get('/my/hours', [C\HoursController::class, 'mine'], ['perm' => 'timelogs.submit']);
+$r->post('/my/hours', [C\HoursController::class, 'submit'], ['perm' => 'timelogs.submit']);
+$r->post('/my/hours/{id}', [C\HoursController::class, 'edit'], ['perm' => 'timelogs.submit']);
+$r->get('/hours/review', [C\HoursController::class, 'queue'], ['perm' => 'timelogs.review']);
+$r->post('/hours/{id}/review', [C\HoursController::class, 'review'], ['perm' => 'timelogs.review']);
+
+// Reviews, training, certificates
+$r->get('/volunteers/{id}/reviews', [C\DevelopmentController::class, 'reviews']); // scope in controller (ST-22)
+$r->post('/volunteers/{id}/reviews', [C\DevelopmentController::class, 'addReview'], ['perm' => 'reviews.write']);
+$r->post('/reviews/{id}/delete', [C\DevelopmentController::class, 'deleteReview'], ['perm' => 'reviews.write']);
+$r->get('/my/reviews', [C\DevelopmentController::class, 'myReviews'], ['perm' => 'volunteers.self']);
+$r->get('/admin/training-types', [C\DevelopmentController::class, 'types'], ['perm' => 'training_types.manage']);
+$r->post('/admin/training-types', [C\DevelopmentController::class, 'saveType'], ['perm' => 'training_types.manage']);
+$r->post('/volunteers/{id}/training', [C\DevelopmentController::class, 'recordTraining'], ['perm' => 'training.manage']);
+$r->get('/certificates', [C\DevelopmentController::class, 'certificates'], ['perm' => 'certificates.view']);
+$r->post('/certificates', [C\DevelopmentController::class, 'createCertificate'], ['perm' => 'certificates.manage']);
+$r->post('/certificates/{id}', [C\DevelopmentController::class, 'advanceCertificate'], ['perm' => 'certificates.manage']);
+$r->get('/certificates/{id}', [C\DevelopmentController::class, 'printCertificate'], ['perm' => 'certificates.view']);
+
+// Communication
+$r->get('/announcements', [C\AdminController::class, 'announcements'], ['perm' => 'announcements.view']);
+$r->post('/announcements', [C\AdminController::class, 'createAnnouncement'], ['perm' => 'announcements.manage']);
+$r->post('/announcements/{id}/delete', [C\AdminController::class, 'deleteAnnouncement'], ['perm' => 'announcements.manage']);
+
+// Reports
+$r->get('/reports', [C\AdminController::class, 'reports'], ['perm' => 'reports.view']);
+$r->get('/reports/export', [C\AdminController::class, 'export'], ['perm' => 'reports.export']);
+
+// Administration
+$r->get('/admin/audit', [C\AdminController::class, 'audit'], ['perm' => 'audit.view']);
+$r->post('/admin/audit/verify', [C\AdminController::class, 'auditVerify'], ['perm' => 'audit.view']);
+$r->post('/admin/audit/reconcile', [C\AdminController::class, 'auditReconcile'], ['perm' => 'audit.reconcile']);
+$r->get('/admin/integrity', [C\AdminController::class, 'integrity'], ['perm' => 'audit.view']);
+$r->get('/admin/outbox', [C\AdminController::class, 'outbox'], ['perm' => 'settings.manage']);
+$r->post('/admin/outbox', [C\AdminController::class, 'processOutbox'], ['perm' => 'settings.manage']);
+$r->get('/admin/settings', [C\AdminController::class, 'settings'], ['perm' => 'settings.manage']);
+$r->post('/admin/settings', [C\AdminController::class, 'saveSettings'], ['perm' => 'settings.manage']);
 
 return $r;

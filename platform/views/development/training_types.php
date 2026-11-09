@@ -1,0 +1,13 @@
+<?php use App\Core\Csrf; $cls = ['ok' => 'ok', 'expiring' => 'warn', 'expired' => 'err', 'missing' => 'err', 'incomplete' => 'warn', 'waived' => '']; ?>
+<h1>Training types</h1>
+<div class="flash info">EHF has not yet supplied its list of required training (decision D-10). Add the types here once agreed.</div>
+<div class="card"><h2 class="section-title">Add a training type</h2><form method="post" action="<?= e(url('/admin/training-types')) ?>" class="filters"><?= Csrf::field() ?>
+<div class="grow"><label for="tn">Name</label><input id="tn" name="name" maxlength="120" required></div><div><label for="vm">Valid for (months)</label><input id="vm" name="validity_months" type="number" min="1" max="240" placeholder="No expiry"></div>
+<div><label class="checks"><input type="checkbox" name="is_mandatory" value="1"> Mandatory</label></div><div><button class="btn">Add</button></div></form></div>
+<div class="card table-wrap"><?php if (!$types): ?><p class="empty">No training types yet.</p><?php else: ?><table><thead><tr><th>Name</th><th>Validity</th><th>Mandatory</th><th>Active</th><th></th></tr></thead><tbody>
+<?php foreach ($types as $t): ?><tr><td><?= e($t['name']) ?></td><td><?= $t['validity_months'] ? (int) $t['validity_months'] . ' months' : 'No expiry' ?></td><td><?= $t['is_mandatory'] ? 'Yes' : 'No' ?></td><td><?= $t['is_active'] ? 'Yes' : 'No' ?></td>
+<td><form method="post" action="<?= e(url('/admin/training-types')) ?>"><?= Csrf::field() ?><input type="hidden" name="id" value="<?= (int) $t['id'] ?>"><input type="hidden" name="name" value="<?= e($t['name']) ?>"><input type="hidden" name="validity_months" value="<?= e($t['validity_months']) ?>"><input type="hidden" name="is_mandatory" value="<?= (int) $t['is_mandatory'] ?>">
+<input type="hidden" name="is_active" value="<?= $t['is_active'] ? '0' : '1' ?>"><button class="btn small secondary"><?= $t['is_active'] ? 'Deactivate' : 'Activate' ?></button></form></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>
+<div class="card table-wrap"><h2 class="section-title">Mandatory training compliance (active volunteers)</h2><?php if (!$compliance): ?><p class="empty">No mandatory training types or no active volunteers.</p><?php else: ?>
+<table><thead><tr><th>Volunteer</th><th>Training</th><th>State</th><th>Completed</th><th>Expires</th></tr></thead><tbody><?php foreach ($compliance as $c): ?><tr><td><a href="<?= e(url('/volunteers/' . $c['volunteer_id'])) ?>"><?= e($c['full_name']) ?></a></td><td><?= e($c['type_name']) ?></td>
+<td><span class="badge <?= $cls[$c['state']] ?>"><?= e(label($c['state'])) ?></span></td><td><?= e(fmt_date($c['completed_on'])) ?></td><td><?= e(fmt_date($c['expires_on'])) ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>

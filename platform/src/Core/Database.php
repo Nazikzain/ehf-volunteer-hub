@@ -48,8 +48,33 @@ final class Database
         return new Database($pdo);
     }
 
+    /**
+     * Native prepared statements (EMULATE_PREPARES=false) reject a named placeholder used twice.
+     * Repeated :name occurrences are renamed (:name__2, ...) and their values duplicated.
+     */
+    public static function expandRepeatedPlaceholders(string $sql, array $params): array
+    {
+        if ($params === [] || array_is_list($params)) {
+            return [$sql, $params];
+        }
+        $seen = [];
+        $sql = (string) preg_replace_callback('/(?<![:\w]):([A-Za-z_][A-Za-z0-9_]*)/', function (array $m) use (&$seen, &$params) {
+            $name = $m[1];
+            $seen[$name] = ($seen[$name] ?? 0) + 1;
+            if ($seen[$name] === 1) {
+                return $m[0];
+            }
+            $alias = $name . '__' . $seen[$name];
+            $key = array_key_exists($name, $params) ? $name : ':' . $name;
+            $params[$alias] = $params[$key] ?? null;
+            return ':' . $alias;
+        }, $sql);
+        return [$sql, $params];
+    }
+
     public function run(string $sql, array $params = []): PDOStatement
     {
+        [$sql, $params] = self::expandRepeatedPlaceholders($sql, $params);
         $st = $this->pdo->prepare($sql);
         foreach ($params as $k => $v) {
             $name = is_int($k) ? $k + 1 : (str_starts_with($k, ':') ? $k : ':' . $k);

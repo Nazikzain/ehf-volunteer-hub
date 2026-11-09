@@ -24,9 +24,24 @@ final class VolunteerController extends Controller
             'projects' => ProjectService::list([])] + $res);
     }
 
+    /** Volunteers hold only own-scope access: their own record redirects to /me, any other id is 404 (ST-04..06). */
+    private function volunteerScope(int $id): ?Response
+    {
+        if (Gate::allows('volunteers.view')) {
+            return null;
+        }
+        if (Auth::volunteerId() === $id) {
+            return $this->redirect('/me');
+        }
+        Gate::notFound('volunteer');
+    }
+
     public function show(Request $r): Response
     {
         $id = $r->param('id');
+        if ($res = $this->volunteerScope($id)) {
+            return $res;
+        }
         $v = VolunteerService::get($id);
         $data = ['title' => $v['full_name'], 'v' => $v,
             'skills' => Database::get()->all('SELECT id, name FROM skills WHERE is_active = 1 ORDER BY name'),
@@ -40,6 +55,17 @@ final class VolunteerController extends Controller
     public function update(Request $r): Response
     {
         $id = $r->param('id');
+        if (!Gate::allows('volunteers.edit')) {
+            if (Auth::volunteerId() === $id) {
+                if ($r->input('action') !== 'availability') {
+                    Gate::deny(403, ['reason' => 'volunteer_cannot_edit_protected_fields']); // ST-06: name/email need an admin
+                }
+            } elseif (!Gate::allows('volunteers.view')) {
+                Gate::notFound('volunteer');                                        // volunteer acting on another record: 404
+            } else {
+                Gate::deny(403, ['permission' => 'volunteers.edit']);              // staff without edit permission: 403
+            }
+        }
         return $this->attempt(function () use ($r, $id) {
             match ((string) $r->input('action')) {
                 'details' => VolunteerService::update($id, $r->post),

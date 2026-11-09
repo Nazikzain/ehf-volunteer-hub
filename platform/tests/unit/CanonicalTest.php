@@ -60,3 +60,10 @@ T::test('unit', 'CSV export neutralises spreadsheet formula injection', function
     T::assert(str_contains($r->body, "'=HYPERLINK"), 'leading = escaped');
     T::assert(str_contains($r->body, "'+1") && str_contains($r->body, "'@x"), 'leading + and @ escaped');
 });
+
+T::test('unit', 'database: repeated named placeholders are expanded for native prepares', function () {
+    [$sql, $p] = App\Core\Database::expandRepeatedPlaceholders("SELECT * FROM t WHERE a LIKE :q OR b LIKE :q OR c = :x AND d = '10:00:00'", ['q' => '%a%', 'x' => 1]);
+    T::eq("SELECT * FROM t WHERE a LIKE :q OR b LIKE :q__2 OR c = :x AND d = '10:00:00'", $sql);
+    T::eq('%a%', $p['q__2']);
+    T::eq(1, (int) T::db()->value('SELECT COUNT(*) FROM roles WHERE code = :c OR name = :c', ['c' => 'volunteer']));
+});

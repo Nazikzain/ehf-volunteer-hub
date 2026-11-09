@@ -137,7 +137,7 @@ final class UserService
     {
         Database::get()->transaction(function (Database $db) use ($id) {
             if ($id === Auth::id()) {
-                throw new ValidationException(['You cannot deactivate your own account.']);
+                Gate::deny(403, ['reason' => 'self_deactivation']); // ST-31
             }
             self::guard($db, $id, 'deactivate');
             $isOa = (bool) $db->value('SELECT 1 FROM user_roles WHERE user_id = ? AND role_id = 1', [$id]);
@@ -195,7 +195,7 @@ final class UserService
     {
         Database::get()->transaction(function (Database $db) use ($id) {
             if ($id === Auth::id()) {
-                throw new ValidationException(['You cannot anonymise your own account.']);
+                Gate::deny(403, ['reason' => 'self_anonymisation']); // ST-31
             }
             self::guard($db, $id, 'anonymise');
             $u = $db->one('SELECT email, anonymised_at FROM users WHERE id = ? FOR UPDATE', [$id]);

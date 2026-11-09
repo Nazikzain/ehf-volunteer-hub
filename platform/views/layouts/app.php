@@ -8,6 +8,7 @@ $add('Overview', 'Notifications', '/notifications', 'notifications.view');
 $add('Recruitment', 'Applications', '/admin/applications', 'applications.view');
 $add('People', 'Volunteers', '/volunteers', 'volunteers.view');
 $add('People', 'My profile', '/me', 'volunteers.self');
+$add('People', 'My reviews', '/my/reviews', 'volunteers.self');
 $add('Programme', 'Projects', '/projects', 'projects.view');
 $add('Programme', 'Activities', '/activities', 'activities.view');
 $add('Programme', 'Tasks', '/tasks', 'tasks.view');

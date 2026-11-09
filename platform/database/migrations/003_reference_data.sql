@@ -28,4 +28,5 @@ INSERT INTO settings (`key`, value, updated_by, updated_at) VALUES
   ('retention.notifications_months', '12', NULL, UTC_TIMESTAMP()),
   ('retention.fallback_files_days', '90', NULL, UTC_TIMESTAMP()),
   ('timelogs.late_submission_days', '30', NULL, UTC_TIMESTAMP()),
-  ('timelogs.general_duplicate_policy', 'warn', NULL, UTC_TIMESTAMP());
+  ('timelogs.general_duplicate_policy', 'warn', NULL, UTC_TIMESTAMP()),
+  ('retention.auto_purge_enabled', 'false', NULL, UTC_TIMESTAMP());

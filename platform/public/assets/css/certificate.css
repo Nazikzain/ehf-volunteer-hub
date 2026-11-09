@@ -1,0 +1,3 @@
+.cert-body{background:#fff}.cert{max-width:800px;margin:40px auto;padding:48px;border:6px double var(--primary);text-align:center}
+.cert-logo{height:120px}.cert-kicker{font-family:var(--font-head);color:var(--accent-dark);letter-spacing:.12em;text-transform:uppercase}
+.cert h1{font-size:2.2rem;margin:16px 0}

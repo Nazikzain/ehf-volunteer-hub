@@ -43,6 +43,13 @@ $edit = Gate::allows('volunteers.edit') && $v['anonymised_at'] === null; $post =
 <?php if ($edit): ?><form method="post" action="<?= e($post) ?>"><?= Csrf::field() ?><input type="hidden" name="action" value="availability"><?= View::partial('volunteers/_availability', ['availability' => $v['availability']]) ?><div class="actions"><button class="btn">Save availability</button></div></form>
 <?php else: ?><?= View::partial('volunteers/_availability', ['availability' => $v['availability'], 'readonly' => true]) ?><?php endif; ?></div>
 </div>
+<div class="card"><h2 class="section-title">Training</h2>
+<?php if (!$v['training']): ?><p class="empty">No training recorded.</p><?php else: ?><table><thead><tr><th>Training</th><th>Status</th><th>Completed</th><th>Expires</th></tr></thead><tbody><?php foreach ($v['training'] as $t): ?><tr><td><?= e($t['type_name']) ?></td><td><?= e(label($t['status'])) ?></td><td><?= e(fmt_date($t['completed_on'])) ?></td><td><?= e(fmt_date($t['expires_on'])) ?><?= $t['expires_on'] && $t['expires_on'] < today_local() ? ' <span class="badge err">Expired</span>' : '' ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?>
+<?php if (Gate::allows('training.manage') && $v['anonymised_at'] === null): $types = App\Services\TrainingService::types(true); ?><?php if ($types): ?><form method="post" action="<?= e($post . '/training') ?>" class="filters"><?= Csrf::field() ?>
+<div><label for="tt">Training</label><select id="tt" name="training_type_id"><?php foreach ($types as $t): ?><option value="<?= (int) $t['id'] ?>"><?= e($t['name']) ?></option><?php endforeach; ?></select></div>
+<div><label for="ts">Status</label><select id="ts" name="status"><option value="completed">Completed</option><option value="in_progress">In progress</option><option value="not_started">Not started</option><option value="waived">Waived</option></select></div>
+<div><label for="tc">Completed on</label><input id="tc" type="date" name="completed_on" max="<?= e(today_local()) ?>"></div><div><button class="btn">Record</button></div></form><?php else: ?><p class="hint">Add training types first (Administration → Training types).</p><?php endif; ?><?php endif; ?></div>
+<?php if (Gate::allows('reviews.write')): ?><p><a class="btn secondary" href="<?= e(url('/volunteers/' . $v['id'] . '/reviews')) ?>">Performance reviews</a></p><?php endif; ?>
 <?php if (Gate::allows('notes.view')): ?><div class="card"><h2 class="section-title">Notes</h2>
 <p class="hint">Notes are never visible to the volunteer. Supervisors see only project notes for projects they supervise.</p>
 <?php if ($v['anonymised_at'] === null): ?><form method="post" action="<?= e($post . '/notes') ?>"><?= Csrf::field() ?>

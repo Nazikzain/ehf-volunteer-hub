@@ -1,0 +1,6 @@
+<?php use App\Core\Csrf; ?>
+<h1>Email outbox</h1>
+<div class="card"><p>Transport: <strong><?= e($transport) ?></strong><?= $transport === 'log' ? ' (development only: messages are written to storage/logs/mail.log and are not sent)' : '' ?><?= $transport === 'disabled' ? ' (messages stay queued)' : '' ?>.</p>
+<form method="post" action="<?= e(url('/admin/outbox')) ?>"><?= Csrf::field() ?><button class="btn">Process queue now</button></form><p class="hint">Message bodies are erased once sent or finally failed. Internal notifications work without email.</p></div>
+<div class="card table-wrap"><?php if (!$rows): ?><p class="empty">The outbox is empty.</p><?php else: ?><table><thead><tr><th>#</th><th>To</th><th>Template</th><th>Subject</th><th>Status</th><th>Attempts</th><th>Last error</th><th>Created</th></tr></thead><tbody>
+<?php foreach ($rows as $m): ?><tr><td><?= (int) $m['id'] ?></td><td><?= e($m['to_email']) ?></td><td><?= e($m['template']) ?></td><td><?= e($m['subject']) ?></td><td><?= e($m['status']) ?></td><td><?= (int) $m['attempts'] ?></td><td><?= e($m['last_error'] ?? '') ?></td><td><?= e(local_dt($m['created_at'])) ?></td></tr><?php endforeach; ?></tbody></table><?php endif; ?></div>
